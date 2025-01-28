@@ -1,1 +1,0 @@
-import{l as t}from"./chunk-SYFQ2XB5-CVuq2gj1.js";const o=()=>t.jsx("header",{className:"absolute top-5 left-5 text-lg font-bold text-white",children:"Mentor Program"}),r=()=>t.jsx("footer",{className:"absolute bottom-5 left-5 text-xs text-white",children:"© 2025"});export{r as F,o as H};
