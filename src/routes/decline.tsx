@@ -2,8 +2,7 @@ import { useEffect } from "react";
 import { useSearchParams } from "react-router";
 import { StatusMessage } from "../components/status-message";
 
-
-const Accept = () => {
+const Decline = () => {
     const [searchParams] = useSearchParams();
 
     useEffect(() => {
@@ -36,10 +35,10 @@ const Accept = () => {
 
     return (
         <StatusMessage
-            title="Accepted Spot"
-            message="Thank you for accepting your spot! 😊"
+            title="Cancelled Spot"
+            message="Thank you for cancelling and giving a spot to someone else 😊"
         />
     );
 };
 
-export default Accept;
+export default Decline;

@@ -5,7 +5,7 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: 'webapp',
+  base: '/webapp',
   plugins: [react(), tailwindcss()],
   server: {
     open: true,
