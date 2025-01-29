@@ -1,7 +1,3 @@
-import { useState, useEffect } from "react";
-
-type FetchStatus = "idle" | "loading" | "success" | "error";
-
 export function useApiRequest(apiUrl: string | null, allParams: URLSearchParams) {
   const [status, setStatus] = useState<FetchStatus>("idle");
 
@@ -17,10 +13,12 @@ export function useApiRequest(apiUrl: string | null, allParams: URLSearchParams)
         const params = new URLSearchParams(allParams);
         params.delete("api_url");
 
-        const fetchUrl = `${apiUrl}?${params.toString()}`;
+        const separator = apiUrl.includes("?") ? "&" : "?";
+        const fetchUrl = `${apiUrl}${separator}${params.toString()}`;
 
         const response = await fetch(fetchUrl, {
-          "redirect": "follow",
+          method: "GET",
+          redirect: "follow",
         });
 
         if (!response.ok) {
