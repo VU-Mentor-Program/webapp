@@ -17,10 +17,11 @@ export function useApiRequest(apiUrl: string | null, allParams: URLSearchParams)
         const params = new URLSearchParams(allParams);
         params.delete("api_url");
 
-        const fetchUrl = `${apiUrl}&${params.toString()}`;
-        console.log("fetchUrl:", fetchUrl);
+        const fetchUrl = `${apiUrl}?${params.toString()}`;
 
-        const response = await fetch(fetchUrl);
+        const response = await fetch(fetchUrl, {
+          "redirect": "follow",
+        });
 
         if (!response.ok) {
           setStatus("error");

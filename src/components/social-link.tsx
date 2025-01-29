@@ -1,4 +1,3 @@
-import React from "react";
 import { FaGithub, FaInstagram, FaWhatsapp } from "react-icons/fa";
 
 const SocialIcon = ({ children, ...rest }: React.LinkHTMLAttributes<HTMLAnchorElement>) => {
