@@ -34,6 +34,12 @@ const Accept: React.FC = () => {
           title="Error"
           message="Something went wrong while accepting your spot."
         />
+        
+        <div>
+          <h2>Debug Information</h2>
+          <p>apiUrl: {apiUrl}</p>
+          <p>status: {status}</p>
+        </div>
       </>
     );
   }
