@@ -1,5 +1,6 @@
 import { Header } from "./header";
 import { Footer } from "./footer";
+import { Logo } from "./logo";
 
 interface StatusMessageProps {
   title: string;
@@ -8,7 +9,8 @@ interface StatusMessageProps {
 
 export const StatusMessage = ({ title, message }: StatusMessageProps) => {
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-800 text-white text-center">
+    <div className="flex flex-col items-center justify-center h-screen bg-gray-800 text-white text-center pr-5 pl-5">
+      <Logo />
       <Header />
       <h1 className="text-3xl">{title}</h1>
       <p className="text-xl">{message}</p>

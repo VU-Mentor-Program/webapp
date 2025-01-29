@@ -5,7 +5,7 @@ import { Logo } from "../components/logo";
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-800 text-white text-center">
+    <div className="flex flex-col items-center justify-center h-screen bg-gray-800 text-white text-center pr-5 pl-5">
       <Header />
       <Logo />
       <h1 className="text-2xl font-bold">Mentor Program</h1>
