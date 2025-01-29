@@ -1,44 +1,56 @@
-import { useEffect } from "react";
+import React from "react";
 import { useSearchParams } from "react-router";
+import { useApiRequest } from "../hooks/useApiRequest";
+
 import { StatusMessage } from "../components/status-message";
+import { LoadingAnimation } from "../components/LoadingAnimation";
+import { ErrorAnimation } from "../components/ErrorAnimation";
+import { SuccessAnimation } from "../components/SuccessAnimation";
 
-const Decline = () => {
-    const [searchParams] = useSearchParams();
+const Decline: React.FC = () => {
+  const [searchParams] = useSearchParams();
+  const apiUrl = searchParams.get("api_url");
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const baseApiUrl = searchParams.get("api_url"); // Get the base API URL
-            if (baseApiUrl) {
-                // Extract all other query parameters except 'api_url'
-                const params = new URLSearchParams(searchParams);
-                params.delete("api_url"); // Remove the base URL parameter itself
+  const status = useApiRequest(apiUrl, searchParams);
 
-                // Build the full fetch URL
-                const fetchUrl = `${baseApiUrl}&${params.toString()}`;
-                console.log("fetchUrl:", fetchUrl);
-
-                try {
-                    const response = await fetch(fetchUrl);
-                    if (!response.ok) {
-                        alert(`Error: ${response.status} - ${response.statusText}`);
-                    }
-                } catch (error: any) {
-                    alert("Failed to fetch: " + error.message);
-                }
-            } else {
-                console.error("API URL (api_url) not provided in query parameters");
-            }
-        };
-
-        fetchData();
-    }, [searchParams]);
-
+  if (!apiUrl) {
     return (
-        <StatusMessage
-            title="Cancelled Spot"
-            message="Thank you for cancelling and giving a spot to someone else 😊"
-        />
+      <StatusMessage
+        title="Missing API URL"
+        message="No api_url provided in the query parameters."
+      />
     );
+  }
+
+  if (status === "loading") {
+    return <LoadingAnimation />;
+  }
+
+  if (status === "error") {
+    return (
+      <>
+        <ErrorAnimation />
+        <StatusMessage
+          title="Error"
+          message="Something went wrong while declining the spot."
+        />
+      </>
+    );
+  }
+
+  if (status === "success") {
+    return (
+      <>
+        <SuccessAnimation />
+        <StatusMessage
+          title="Cancelled Spot"
+          message="Thank you for cancelling and giving a spot to someone else! 😊"
+        />
+      </>
+    );
+  }
+
+  return null;
 };
 
 export default Decline;

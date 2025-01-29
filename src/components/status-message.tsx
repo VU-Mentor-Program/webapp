@@ -11,10 +11,10 @@ export const StatusMessage = ({ title, message }: StatusMessageProps) => {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-800 text-white text-center pr-5 pl-5">
       <Logo />
-      <Header />
-      <h1 className="text-3xl">{title}</h1>
-      <p className="text-xl">{message}</p>
-      <Footer />
+        <Header />
+          <h1 className="text-3xl">{title}</h1>
+          <p className="text-xl">{message}</p>
+        <Footer />
     </div>
   );
 };
