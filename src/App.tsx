@@ -7,7 +7,7 @@ import Decline from "./routes/decline";
 function App() {
 
   return (
-  <Router>
+    <Router>
       <Routes>
         <Route index path="/" element={<Home />} />
         <Route path="/accept" element={<Accept />} />
