@@ -1,3 +1,7 @@
+import { useState, useEffect } from "react";
+
+type FetchStatus = "idle" | "loading" | "success" | "error";
+
 export function useApiRequest(apiUrl: string | null, allParams: URLSearchParams) {
   const [status, setStatus] = useState<FetchStatus>("idle");
 
