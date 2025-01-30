@@ -10,8 +10,8 @@ export default function Home() {
       <Header />
       <div className="flex-grow flex flex-col items-center justify-center">
         <Logo />
-        <h1 className="text-2xl font-bold mt-4">Mentor Program</h1>
-        <p className="text-base">
+        <h1 className="text-2xl font-bold pt-1">Mentor Program</h1>
+        <p className="text-base pt-1 pb-1">
           Aiming to bring first-year students together 😊
         </p>
         <SocialLinks />
