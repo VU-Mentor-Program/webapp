@@ -3,6 +3,7 @@ import { SocialLinks } from "../components/social-link";
 import { Footer } from "../components/footer";
 import { Logo } from "../components/logo";
 import { Calendar } from "../components/Calendar";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   return (
@@ -15,6 +16,14 @@ export default function Home() {
           Aiming to bring first-year students together 😊
         </p>
         <SocialLinks />
+
+        <Link
+          to="/minigames"
+          className="mt-6 bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 transition-colors"
+        >
+          🕹️ Play Minigames! 🕹️
+        </Link>
+
         <Calendar />
       </div>
       <Footer />
