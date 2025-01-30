@@ -8,7 +8,13 @@ const Accept: React.FC = () => {
   const apiUrl = searchParams.get("api_url") || null;
   const status = useApiRequest(apiUrl, searchParams);
 
-  return <StatusMessage status={status} apiUrl={apiUrl} />;
+  return (
+    <StatusMessage 
+      status={status} 
+      apiUrl={apiUrl} 
+      type="accept" 
+    />
+  );
 };
 
 export default Accept;
