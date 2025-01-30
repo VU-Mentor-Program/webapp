@@ -1,34 +1,46 @@
 import React, { useEffect, useRef, useState } from "react";
 import mpLogo from "../assets/mp_logo-CIRCLE.png";
 
+/**
+ * Flappy Logo with a logical 800x600 area,
+ * scaled to fit smaller screens.
+ * We hide overflow so it won't scroll if something goes off-canvas.
+ */
 export const FlappyLogoGame: React.FC = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const logoRef = useRef<HTMLImageElement | null>(null);
+  const LOGICAL_WIDTH = 800;
+  const LOGICAL_HEIGHT = 600;
 
-  // Basic constants
-  const canvasWidth = 800;
-  const canvasHeight = 600;
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [canvasSize, setCanvasSize] = useState({ width: 800, height: 600 });
+
+  useEffect(() => {
+    function handleResize() {
+      const maxWidth = Math.min(window.innerWidth * 0.9, LOGICAL_WIDTH);
+      const scale = maxWidth / LOGICAL_WIDTH;
+      setCanvasSize({ width: maxWidth, height: LOGICAL_HEIGHT * scale });
+    }
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const [gameOver, setGameOver] = useState(false);
+
+  // Game state in logical coords
   const birdSize = 40;
   const birdX = 100;
   const gravity = 0.5;
   const pipeWidth = 50;
   const pipeSpeed = 3;
-  // Pillars closer: reduce gap from 150 to 120
   const gapHeight = 120;
 
-  // Use React state *only* for gameOver
-  const [gameOver, setGameOver] = useState(false);
-
-  // Store game state in refs so we don’t have stale closures
   const birdYRef = useRef(300);
   const birdVYRef = useRef(0);
-  const pipeXRef = useRef(canvasWidth);
+  const pipeXRef = useRef(LOGICAL_WIDTH);
   const gapYRef = useRef(200);
-
-  // For spinning logo
   const rotationRef = useRef(0);
 
-  // Load the logo image
+  const logoRef = useRef<HTMLImageElement | null>(null);
   useEffect(() => {
     const img = new Image();
     img.src = mpLogo;
@@ -37,7 +49,7 @@ export const FlappyLogoGame: React.FC = () => {
     };
   }, []);
 
-  // Key listener
+  // Key for jump
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === " " || e.key === "ArrowUp") jump();
@@ -46,7 +58,7 @@ export const FlappyLogoGame: React.FC = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [gameOver]);
 
-  // Game loop
+  // Main loop
   useEffect(() => {
     let animId: number;
     const loop = () => {
@@ -55,14 +67,11 @@ export const FlappyLogoGame: React.FC = () => {
       animId = requestAnimationFrame(loop);
     };
     animId = requestAnimationFrame(loop);
-
     return () => cancelAnimationFrame(animId);
-  }, [gameOver]);
+  }, [gameOver, canvasSize]);
 
   function updateGame() {
     if (gameOver) return;
-
-    // Spin the logo a bit each frame
     rotationRef.current += 2;
 
     birdYRef.current += birdVYRef.current;
@@ -70,10 +79,9 @@ export const FlappyLogoGame: React.FC = () => {
 
     pipeXRef.current -= pipeSpeed;
     if (pipeXRef.current < -pipeWidth) {
-      pipeXRef.current = canvasWidth;
-      gapYRef.current = Math.random() * 300 + 100; 
+      pipeXRef.current = LOGICAL_WIDTH;
+      gapYRef.current = Math.random() * 300 + 100;
     }
-
     checkCollision();
   }
 
@@ -84,13 +92,13 @@ export const FlappyLogoGame: React.FC = () => {
     const holeStart = gapYRef.current;
     const holeEnd = holeStart + gapHeight;
 
-    // Collide with top/bottom
-    if (birdTop < 0 || birdBottom > canvasHeight) {
+    // top/bottom
+    if (birdTop < 0 || birdBottom > LOGICAL_HEIGHT) {
       setGameOver(true);
       return;
     }
 
-    // Collide with pipe
+    // pipe
     const birdLeft = birdX;
     const birdRight = birdLeft + birdSize;
     if (birdRight > px && birdLeft < px + pipeWidth) {
@@ -106,37 +114,54 @@ export const FlappyLogoGame: React.FC = () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const scaleX = canvasSize.width / LOGICAL_WIDTH;
+    const scaleY = canvasSize.height / LOGICAL_HEIGHT;
 
     // Pipes
     ctx.fillStyle = "green";
-    ctx.fillRect(pipeXRef.current, 0, pipeWidth, gapYRef.current);
+    const pxScaled = pipeXRef.current * scaleX;
+    ctx.fillRect(pxScaled, 0, pipeWidth * scaleX, gapYRef.current * scaleY);
+
+    const lowerY = (gapYRef.current + gapHeight) * scaleY;
     ctx.fillRect(
-      pipeXRef.current,
-      gapYRef.current + gapHeight,
-      pipeWidth,
-      canvasHeight - (gapYRef.current + gapHeight)
+      pxScaled,
+      lowerY,
+      pipeWidth * scaleX,
+      canvasSize.height - lowerY
     );
 
-    // Bird (logo or fallback)
+    // Bird
     const img = logoRef.current;
     if (img) {
       ctx.save();
-      // Translate & rotate around the bird's center
-      ctx.translate(birdX + birdSize / 2, birdYRef.current + birdSize / 2);
+      const cx = (birdX + birdSize / 2) * scaleX;
+      const cy = (birdYRef.current + birdSize / 2) * scaleY;
+      ctx.translate(cx, cy);
       ctx.rotate((rotationRef.current * Math.PI) / 180);
-      ctx.drawImage(img, -birdSize / 2, -birdSize / 2, birdSize, birdSize);
+      ctx.drawImage(
+        img,
+        -((birdSize * scaleX) / 2),
+        -((birdSize * scaleY) / 2),
+        birdSize * scaleX,
+        birdSize * scaleY
+      );
       ctx.restore();
     } else {
       ctx.fillStyle = "yellow";
-      ctx.fillRect(birdX, birdYRef.current, birdSize, birdSize);
+      ctx.fillRect(
+        birdX * scaleX,
+        birdYRef.current * scaleY,
+        birdSize * scaleX,
+        birdSize * scaleY
+      );
     }
 
-    // "Game Over" text
     if (gameOver) {
       ctx.fillStyle = "white";
-      ctx.font = "30px Arial";
-      ctx.fillText("GAME OVER!", 320, 250);
+      ctx.font = `${30 * Math.min(scaleX, scaleY)}px Arial`;
+      ctx.fillText("GAME OVER!", canvasSize.width / 2 - 80 * scaleX, canvasSize.height / 2);
     }
   }
 
@@ -150,23 +175,30 @@ export const FlappyLogoGame: React.FC = () => {
     jump();
   }
 
-  // Restart
   function restart() {
     birdYRef.current = 300;
     birdVYRef.current = 0;
-    pipeXRef.current = canvasWidth;
+    pipeXRef.current = LOGICAL_WIDTH;
     gapYRef.current = 200;
     rotationRef.current = 0;
     setGameOver(false);
   }
 
   return (
-    <div style={{ marginBottom: "1rem" }}>
+    // Hide overflow so any off-canvas objects don't create scrollbars
+    <div
+      style={{
+        marginBottom: "1rem",
+        textAlign: "center",
+        color: "white",
+        overflow: "hidden",
+      }}
+    >
       <h3>Flappy Logo</h3>
       <canvas
         ref={canvasRef}
-        width={canvasWidth}
-        height={canvasHeight}
+        width={canvasSize.width}
+        height={canvasSize.height}
         style={{ background: "#444" }}
         onClick={handleCanvasClick}
       />

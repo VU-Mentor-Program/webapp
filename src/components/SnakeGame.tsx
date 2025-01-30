@@ -1,8 +1,28 @@
 import React, { useEffect, useRef, useState } from "react";
-import mpLogo from "../assets/mp_logo.png"; // Adjust path
+import mpLogo from "../assets/mp_logo.png";
 
+/**
+ * Snake with bigger arrow buttons (background, radius),
+ * scaled from a 400x400 logical board.
+ */
 export const SnakeGame: React.FC = () => {
+  const LOGICAL_SIZE = 400;
+  const tileCount = 20;
+  const tileSize = 20;
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [canvasSize, setCanvasSize] = useState({ width: 400, height: 400 });
+
+  // Resize canvas to keep square ratio
+  useEffect(() => {
+    function handleResize() {
+      const maxWidth = Math.min(window.innerWidth * 0.9, LOGICAL_SIZE);
+      setCanvasSize({ width: maxWidth, height: maxWidth });
+    }
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const [direction, setDirection] = useState<"UP" | "DOWN" | "LEFT" | "RIGHT">("RIGHT");
   const [snake, setSnake] = useState<{ x: number; y: number }[]>([
@@ -13,9 +33,6 @@ export const SnakeGame: React.FC = () => {
   const [logoLoaded, setLogoLoaded] = useState(false);
   const logoImg = useRef<HTMLImageElement | null>(null);
 
-  const gridSize = 20;
-  const tileCount = 20;
-
   useEffect(() => {
     const img = new Image();
     img.src = mpLogo;
@@ -25,7 +42,7 @@ export const SnakeGame: React.FC = () => {
     };
   }, []);
 
-  // Game loop
+  // Move snake every 200ms
   useEffect(() => {
     const interval = setInterval(() => {
       moveSnake();
@@ -40,16 +57,15 @@ export const SnakeGame: React.FC = () => {
     if (direction === "LEFT") head.x -= 1;
     if (direction === "RIGHT") head.x += 1;
 
-    // Wrap around edges
+    // wrap edges
     if (head.x < 0) head.x = tileCount - 1;
-    if (head.x > tileCount - 1) head.x = 0;
+    if (head.x >= tileCount) head.x = 0;
     if (head.y < 0) head.y = tileCount - 1;
-    if (head.y > tileCount - 1) head.y = 0;
+    if (head.y >= tileCount) head.y = 0;
 
     const newSnake = [head, ...snake];
-    // Check food collision
+    // check food
     if (head.x === food.x && head.y === food.y) {
-      // spawn new food
       setFood({
         x: Math.floor(Math.random() * tileCount),
         y: Math.floor(Math.random() * tileCount),
@@ -57,22 +73,23 @@ export const SnakeGame: React.FC = () => {
     } else {
       newSnake.pop();
     }
-    // Check self collision
+    // self-collision => reset except head
     for (let i = 1; i < newSnake.length; i++) {
       if (newSnake[i].x === head.x && newSnake[i].y === head.y) {
-        // restart
         newSnake.splice(1);
       }
     }
     setSnake(newSnake);
   }
 
+  // Keyboard
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowUp" || e.key.toLowerCase() === "w") setDirection("UP");
-      if (e.key === "ArrowDown" || e.key.toLowerCase() === "s") setDirection("DOWN");
-      if (e.key === "ArrowLeft" || e.key.toLowerCase() === "a") setDirection("LEFT");
-      if (e.key === "ArrowRight" || e.key.toLowerCase() === "d") setDirection("RIGHT");
+      const k = e.key.toLowerCase();
+      if (k === "arrowup" || k === "w") setDirection("UP");
+      if (k === "arrowdown" || k === "s") setDirection("DOWN");
+      if (k === "arrowleft" || k === "a") setDirection("LEFT");
+      if (k === "arrowright" || k === "d") setDirection("RIGHT");
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
@@ -82,6 +99,7 @@ export const SnakeGame: React.FC = () => {
     setDirection(dir);
   }
 
+  // Draw
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -90,45 +108,100 @@ export const SnakeGame: React.FC = () => {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw food
-    ctx.fillStyle = "red";
-    ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize, gridSize);
+    const scale = canvasSize.width / LOGICAL_SIZE;
 
-    // Draw snake
-    snake.forEach((segment, idx) => {
+    // Food
+    ctx.fillStyle = "red";
+    ctx.fillRect(
+      food.x * tileSize * scale,
+      food.y * tileSize * scale,
+      tileSize * scale,
+      tileSize * scale
+    );
+
+    // Snake
+    snake.forEach((seg, idx) => {
+      const x = seg.x * tileSize * scale;
+      const y = seg.y * tileSize * scale;
+      const size = tileSize * scale;
       if (idx === 0 && logoLoaded && logoImg.current) {
-        // Draw logo for head
-        ctx.drawImage(
-          logoImg.current,
-          segment.x * gridSize,
-          segment.y * gridSize,
-          gridSize,
-          gridSize
-        );
+        ctx.drawImage(logoImg.current, x, y, size, size);
       } else {
         ctx.fillStyle = "lime";
-        ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize, gridSize);
+        ctx.fillRect(x, y, size, size);
       }
     });
   });
 
   return (
-    <div style={{ marginBottom: "1rem" }}>
+    <div style={{ marginBottom: "1rem", textAlign: "center", color: "white" }}>
       <h3>Snake Game</h3>
       <canvas
         ref={canvasRef}
-        width={gridSize * tileCount}
-        height={gridSize * tileCount}
+        width={canvasSize.width}
+        height={canvasSize.height}
         style={{ background: "#222", border: "1px solid #fff" }}
       />
-      {/* Simple on-screen arrows for touch */}
-      <div style={{ marginTop: "1rem" }}>
-        <button onClick={() => handleTouch("UP")}>↑</button>
+      {/* On-screen arrows with bigger buttons */}
+      <div style={{ marginTop: "1rem", display: "inline-block" }}>
         <div>
-          <button onClick={() => handleTouch("LEFT")}>←</button>
-          <button onClick={() => handleTouch("RIGHT")}>→</button>
+          <button
+            onClick={() => handleTouch("UP")}
+            style={{
+              fontSize: "1.5rem",
+              background: "#444",
+              color: "#fff",
+              borderRadius: "8px",
+              padding: "0.5rem 1rem",
+              margin: "0.3rem",
+            }}
+          >
+            ↑
+          </button>
         </div>
-        <button onClick={() => handleTouch("DOWN")}>↓</button>
+        <div>
+          <button
+            onClick={() => handleTouch("LEFT")}
+            style={{
+              fontSize: "1.5rem",
+              background: "#444",
+              color: "#fff",
+              borderRadius: "8px",
+              padding: "0.5rem 1rem",
+              margin: "0.3rem",
+            }}
+          >
+            ←
+          </button>
+          <button
+            onClick={() => handleTouch("RIGHT")}
+            style={{
+              fontSize: "1.5rem",
+              background: "#444",
+              color: "#fff",
+              borderRadius: "8px",
+              padding: "0.5rem 1rem",
+              margin: "0.3rem",
+            }}
+          >
+            →
+          </button>
+        </div>
+        <div>
+          <button
+            onClick={() => handleTouch("DOWN")}
+            style={{
+              fontSize: "1.5rem",
+              background: "#444",
+              color: "#fff",
+              borderRadius: "8px",
+              padding: "0.5rem 1rem",
+              margin: "0.3rem",
+            }}
+          >
+            ↓
+          </button>
+        </div>
       </div>
     </div>
   );
