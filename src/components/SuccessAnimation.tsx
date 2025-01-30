@@ -3,8 +3,8 @@ import Confetti from "react-confetti";
 
 export const SuccessAnimation: React.FC = () => {
   return (
-    <div style={{ position: "relative" }}>
-      <Confetti />
+    <div style={{ position: "relative" }} className="pb-10">
+      <Confetti className="!fixed"/>
       <div style={{ textAlign: "center", marginTop: "2rem", color: "green" }}>
         <div style={{ fontSize: "3rem" }}>✓</div>
         <p>Success!</p>
