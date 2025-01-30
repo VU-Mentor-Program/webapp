@@ -2,7 +2,7 @@ import logo from "../assets/mp_logo.png";
 
 export const Logo = () => {
   return (
-    <div className="flex items-center justify-center rounded-full">
+    <div className="flex items-center justify-center rounded-full pt-20">
       <img className="size-30 mb-5 rounded-full" src={logo} alt="Mentor Program Logo" />
     </div>
   );

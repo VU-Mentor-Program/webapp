@@ -10,7 +10,7 @@ const SocialIcon = ({ children, ...rest }: React.LinkHTMLAttributes<HTMLAnchorEl
 
 export const SocialLinks = () => {
   return (
-    <div className="flex justify-center gap-2.5 mt-2.5">
+    <div className="flex justify-center gap-2.5 mt-2.5 pb-5">
       <SocialIcon href="https://github.com/VU-Mentor-Program">
         <FaGithub />
       </SocialIcon>
