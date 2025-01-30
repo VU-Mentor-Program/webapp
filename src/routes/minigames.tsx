@@ -1,7 +1,12 @@
 import React, { useState } from "react";
-import { OnePersonPong } from "../components/OnePersonPong";
-import { SnakeGame } from "../components/SnakeGame";
-import { FlappyLogoGame } from "../components/FlappyLogoGame";
+import { OnePersonPong } from "../minigames/OnePersonPong";
+import { SnakeGame } from "../minigames/SnakeGame";
+import { FlappyLogoGame } from "../minigames/FlappyLogoGame";
+import { LogoRacerGame } from "../minigames/LogoRacer";
+import { TowerBuilderGame } from "../minigames/LogoTowerBuilder";
+import { LogoSpaceShooterGame } from "../minigames/LogoSpaceShooter";
+import { LogoCatchGame } from "../minigames/LogoCatch";
+import { LogoDodgeGame } from "../minigames/LogoDodge";
 import { Header } from "../components/header";
 import { Footer } from "../components/footer";
 import { Logo } from "../components/logo";
@@ -21,7 +26,7 @@ export const MinigamesPage: React.FC = () => {
         <h1 className="text-2xl font-bold pt-1">Minigames</h1>
         <p className="text-base pt-1 pb-3">Choose a game to play!</p>
 
-        <div className="flex gap-4 mb-5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-5 p-2">
           <button
             onClick={() => handleSelectGame("brickBreaker")}
             className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
@@ -40,12 +45,49 @@ export const MinigamesPage: React.FC = () => {
           >
             🪂 Flappy Logo
           </button>
+          <button
+            onClick={() => handleSelectGame("logoDodge")}
+            className="bg-gray-600 px-4 py-2 rounded hover:bg-gray-700"
+          >
+            🚗 Logo Dodge
+          </button>
+          <button
+            onClick={() => handleSelectGame("logoRacer")}
+            className="bg-yellow-600 px-4 py-2 rounded hover:bg-yellow-700"
+          >
+            🏎️ Logo Racer
+          </button>
+          {/* <button
+            onClick={() => handleSelectGame("towerBuilder")}
+            className="bg-red-600 px-4 py-2 rounded hover:bg-red-700"
+          >
+            🏗️ Tower Builder
+          </button> */}
+          <button
+            onClick={() => handleSelectGame("spaceShooter")}
+            className="bg-indigo-600 px-4 py-2 rounded hover:bg-indigo-700"
+          >
+            🚀 Space Shooter
+          </button>
+          {/* <button
+            onClick={() => handleSelectGame("logoCatch")}
+            className="bg-pink-600 px-4 py-2 rounded hover:bg-pink-700"
+          >
+            🧺 Logo Catch
+          </button> */}
         </div>
+
+
 
         <div className="w-full max-w-4xl">
           {selectedGame === "brickBreaker" && <OnePersonPong />}
           {selectedGame === "snake" && <SnakeGame />}
           {selectedGame === "flappy" && <FlappyLogoGame />}
+          {selectedGame === "logoRacer" && <LogoRacerGame />}
+          {/* {selectedGame === "towerBuilder" && <TowerBuilderGame />} */}
+          {selectedGame === "spaceShooter" && <LogoSpaceShooterGame />}
+          {/* {selectedGame === "logoCatch" && <LogoCatchGame />} */}
+          {selectedGame === "logoDodge" && <LogoDodgeGame />}
         </div>
       </div>
       <Footer />
