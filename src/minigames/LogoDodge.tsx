@@ -21,7 +21,7 @@ export const LogoDodgeGame: React.FC = () => {
 
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
-  const [gameTime, setGameTime] = useState(0); // Track time in seconds
+  // const [gameTime, setGameTime] = useState(0); // Track time in seconds
 
   const playerSize = 40;
   const [playerX, setPlayerX] = useState(180);
@@ -58,7 +58,7 @@ export const LogoDodgeGame: React.FC = () => {
     const loop = (timestamp: number) => {
       if (!startTimeRef.current) startTimeRef.current = timestamp;
       const elapsedSeconds = (timestamp - startTimeRef.current) / 1000;
-      setGameTime(elapsedSeconds);
+      // setGameTime(elapsedSeconds);
 
       updateGame(elapsedSeconds);
       drawGame();
@@ -167,7 +167,7 @@ export const LogoDodgeGame: React.FC = () => {
     setScore(0);
     setObstacles([]);
     setPlayerX(180);
-    setGameTime(0);
+    // setGameTime(0);
     frameRef.current = 0;
     startTimeRef.current = null;
   }

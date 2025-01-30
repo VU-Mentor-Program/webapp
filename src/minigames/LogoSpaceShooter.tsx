@@ -30,7 +30,7 @@ export const LogoSpaceShooterGame: React.FC = () => {
   const [canvasSize, setCanvasSize] = useState({ width: LOGICAL_WIDTH, height: LOGICAL_HEIGHT });
 
   // For UI
-  const [score, setScore] = useState(0);
+  // const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
 
   // Load the ship/logo
@@ -186,7 +186,7 @@ export const LogoSpaceShooterGame: React.FC = () => {
           st.enemies.splice(i, 1);
           st.bullets.splice(j, 1);
           // add 10 points to score
-          setScore((prev) => prev + 10);
+          // setScore((prev) => prev + 10);
           // trigger explosion
           createExplosion(e.x + 15, e.y + 15);
           break;
@@ -314,7 +314,7 @@ export const LogoSpaceShooterGame: React.FC = () => {
   // ------------- restart() -------------
   function restart() {
     setGameOver(false);
-    setScore(0);
+    // setScore(0);
     gameRef.current = {
       shipX: 200,
       shipY: 550,
