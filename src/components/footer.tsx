@@ -1,6 +1,6 @@
 export const Footer = () => {
   return (
-    <footer className="absolute bottom-5 left-5 text-xs text-white">
+    <footer className="text-xs text-white mt-auto p-10 text-left">
       © 2025
     </footer>
   );
