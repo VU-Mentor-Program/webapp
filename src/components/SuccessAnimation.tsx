@@ -112,9 +112,12 @@ export const SuccessAnimation: React.FC = () => {
             padding: "0.5rem 1rem",
             fontSize: "1rem",
             cursor: "pointer",
+            color: "white",
+            backgroundColor: "#673AB7",
+            borderRadius: "0.5rem",
           }}
         >
-          Confetti Burst!
+          🎉 Confetti Burst! 🎉
         </button>
       </div>
     </div>
