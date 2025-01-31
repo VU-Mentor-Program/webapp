@@ -11,7 +11,7 @@ export const SnakeGame: React.FC = () => {
   const tileSize = 20;
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [canvasSize, setCanvasSize] = useState({ width: 400, height: 400 });
+  const [canvasSize, setCanvasSize] = useState({ width: 300, height: 300 });
 
   // Resize canvas to keep square ratio
   useEffect(() => {

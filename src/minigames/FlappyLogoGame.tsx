@@ -1,11 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import mpLogo from "../assets/mp_logo-CIRCLE.png";
+import GameOverModal from "../components/minigame page/GameOverModal";
 
-/**
- * Flappy Logo with a logical 800x600 area,
- * scaled to fit smaller screens.
- * We hide overflow so it won't scroll if something goes off-canvas.
- */
 export const FlappyLogoGame: React.FC = () => {
   const LOGICAL_WIDTH = 800;
   const LOGICAL_HEIGHT = 600;
@@ -13,6 +9,7 @@ export const FlappyLogoGame: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [canvasSize, setCanvasSize] = useState({ width: 800, height: 600 });
 
+  // ✅ Fix: Responsive canvas
   useEffect(() => {
     function handleResize() {
       const maxWidth = Math.min(window.innerWidth * 0.9, LOGICAL_WIDTH);
@@ -25,8 +22,9 @@ export const FlappyLogoGame: React.FC = () => {
   }, []);
 
   const [gameOver, setGameOver] = useState(false);
+  const [score, setScore] = useState(0);
 
-  // Game state in logical coords
+  // Game state
   const birdSize = 40;
   const birdX = 100;
   const gravity = 0.5;
@@ -39,6 +37,7 @@ export const FlappyLogoGame: React.FC = () => {
   const pipeXRef = useRef(LOGICAL_WIDTH);
   const gapYRef = useRef(200);
   const rotationRef = useRef(0);
+  const passedPipeRef = useRef(false); // ✅ Track if the bird has passed a pipe
 
   const logoRef = useRef<HTMLImageElement | null>(null);
   useEffect(() => {
@@ -49,7 +48,7 @@ export const FlappyLogoGame: React.FC = () => {
     };
   }, []);
 
-  // Key for jump
+  // ✅ Handle key press to jump
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === " " || e.key === "ArrowUp") jump();
@@ -58,7 +57,7 @@ export const FlappyLogoGame: React.FC = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [gameOver]);
 
-  // Main loop
+  // ✅ Main loop
   useEffect(() => {
     let animId: number;
     const loop = () => {
@@ -81,7 +80,15 @@ export const FlappyLogoGame: React.FC = () => {
     if (pipeXRef.current < -pipeWidth) {
       pipeXRef.current = LOGICAL_WIDTH;
       gapYRef.current = Math.random() * 300 + 100;
+      passedPipeRef.current = false; // ✅ Reset flag for new pipe
     }
+
+    // ✅ Check if bird has passed a pipe and increase score
+    if (!passedPipeRef.current && pipeXRef.current + pipeWidth < birdX) {
+      setScore((prev) => prev + 100);
+      passedPipeRef.current = true; // ✅ Prevent duplicate scoring for same pipe
+    }
+
     checkCollision();
   }
 
@@ -92,13 +99,13 @@ export const FlappyLogoGame: React.FC = () => {
     const holeStart = gapYRef.current;
     const holeEnd = holeStart + gapHeight;
 
-    // top/bottom
+    // ✅ Collision: Top/Bottom
     if (birdTop < 0 || birdBottom > LOGICAL_HEIGHT) {
       setGameOver(true);
       return;
     }
 
-    // pipe
+    // ✅ Collision: Pipes
     const birdLeft = birdX;
     const birdRight = birdLeft + birdSize;
     if (birdRight > px && birdLeft < px + pipeWidth) {
@@ -119,7 +126,7 @@ export const FlappyLogoGame: React.FC = () => {
     const scaleX = canvasSize.width / LOGICAL_WIDTH;
     const scaleY = canvasSize.height / LOGICAL_HEIGHT;
 
-    // Pipes
+    // ✅ Draw Pipes
     ctx.fillStyle = "green";
     const pxScaled = pipeXRef.current * scaleX;
     ctx.fillRect(pxScaled, 0, pipeWidth * scaleX, gapYRef.current * scaleY);
@@ -132,7 +139,7 @@ export const FlappyLogoGame: React.FC = () => {
       canvasSize.height - lowerY
     );
 
-    // Bird
+    // ✅ Draw Bird (Logo or Placeholder)
     const img = logoRef.current;
     if (img) {
       ctx.save();
@@ -158,9 +165,13 @@ export const FlappyLogoGame: React.FC = () => {
       );
     }
 
+    // ✅ Display Score
+    ctx.fillStyle = "white";
+    ctx.font = `${30 * Math.min(scaleX, scaleY)}px Arial`;
+    ctx.fillText(`Score: ${score}`, 20 * scaleX, 40 * scaleY);
+
+    // ✅ Display "GAME OVER" if applicable
     if (gameOver) {
-      ctx.fillStyle = "white";
-      ctx.font = `${30 * Math.min(scaleX, scaleY)}px Arial`;
       ctx.fillText("GAME OVER!", canvasSize.width / 2 - 80 * scaleX, canvasSize.height / 2);
     }
   }
@@ -181,11 +192,12 @@ export const FlappyLogoGame: React.FC = () => {
     pipeXRef.current = LOGICAL_WIDTH;
     gapYRef.current = 200;
     rotationRef.current = 0;
+    passedPipeRef.current = false;
+    setScore(0); // ✅ Reset score
     setGameOver(false);
   }
 
   return (
-    // Hide overflow so any off-canvas objects don't create scrollbars
     <div
       style={{
         marginBottom: "1rem",
@@ -195,6 +207,8 @@ export const FlappyLogoGame: React.FC = () => {
       }}
     >
       <h3>Flappy Logo</h3>
+      <p className="text-lg font-bold">Score: {score}</p>
+
       <canvas
         ref={canvasRef}
         width={canvasSize.width}
@@ -202,12 +216,11 @@ export const FlappyLogoGame: React.FC = () => {
         style={{ background: "#444" }}
         onClick={handleCanvasClick}
       />
+
       <p>Click or press Space/Up Arrow to jump!</p>
-      {gameOver && (
-        <button onClick={restart} style={{ marginTop: "1rem" }}>
-          Restart
-        </button>
-      )}
+
+      {/* ✅ Show Game Over Modal when game ends */}
+      <GameOverModal isOpen={gameOver} score={score} gameName={"flappy"} onClose={restart} onRestart={restart} />
     </div>
   );
 };
