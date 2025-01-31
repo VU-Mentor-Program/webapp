@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import mpLogo from "../assets/mp_logo-CIRCLE.png";
+import GameOverModal from "../components/GameOverModal";
 
 /**
  * Logo Racer:
@@ -244,11 +245,8 @@ export const LogoRacerGame: React.FC = () => {
         className="border border-white flex"
       />
       <p>Tap/click or press Up/Space to jump!</p>
-      {gameOver && (
-        <button onClick={restart} style={{ marginTop: "1rem" }}>
-          Restart
-        </button>
-      )}
+
+      <GameOverModal isOpen={gameOver} score={score} gameName="logoRacer" onClose={restart} onRestart={restart} />
     </div>
   );
 };
