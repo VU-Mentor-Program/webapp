@@ -10,6 +10,7 @@ import { LogoDodgeGame } from "../minigames/LogoDodge";
 import { Header } from "../components/header";
 import { Footer } from "../components/footer";
 import { Logo } from "../components/logo";
+import LeaderBoard from "../components/LeaderBoard"
 
 export const MinigamesPage: React.FC = () => {
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
@@ -17,6 +18,15 @@ export const MinigamesPage: React.FC = () => {
   const handleSelectGame = (game: string) => {
     setSelectedGame(game);
   };
+
+  const minigames = [
+    "brickBreaker",
+    "snake",
+    "flappy",
+    "logoDodge",
+    "logoRacer",
+    "spaceShooter",
+  ];
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-800 text-white text-center px-5">
@@ -77,8 +87,6 @@ export const MinigamesPage: React.FC = () => {
           </button> */}
         </div>
 
-
-
         <div className="w-full max-w-4xl">
           {selectedGame === "brickBreaker" && <OnePersonPong />}
           {selectedGame === "snake" && <SnakeGame />}
@@ -90,6 +98,9 @@ export const MinigamesPage: React.FC = () => {
           {selectedGame === "logoDodge" && <LogoDodgeGame />}
         </div>
       </div>
+
+      <LeaderBoard games={minigames} />
+      
       <Footer />
     </div>
   );

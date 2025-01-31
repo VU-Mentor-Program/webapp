@@ -46,12 +46,12 @@ export const OnePersonPong: React.FC = () => {
     if (canvasSize.width < 500) {
       // smaller layout
       return {
-        brickCols: 4,
+        brickCols: 8,
         brickRows: 2,
         brickWidth: 70,
         brickHeight: 20,
         padding: 10,
-        offsetLeft: 50,
+        offsetLeft: 35,
         offsetTop: 50,
       };
     } else {
@@ -109,8 +109,8 @@ export const OnePersonPong: React.FC = () => {
   }
   const [ballX, setBallX] = useState(() => rand(100, 600));
   const [ballY, setBallY] = useState(() => rand(100, 400));
-  const [ballDX, setBallDX] = useState(() => rand(-3, 3) || 2);
-  const [ballDY, setBallDY] = useState(() => rand(-3, -1));
+  const [ballDX, setBallDX] = useState(5);
+  const [ballDY, setBallDY] = useState(5);
   const [ballRotation, setBallRotation] = useState(0);
   const ballRadius = 15;
 

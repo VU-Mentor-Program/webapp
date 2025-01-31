@@ -15,8 +15,7 @@ export const LogoRacerGame: React.FC = () => {
   const LOGICAL_HEIGHT = 400;
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [canvasSize, setCanvasSize] = useState({ width: LOGICAL_WIDTH, height: LOGICAL_HEIGHT });
-
+  const [canvasSize, setCanvasSize] = useState({ width: 250, height: 600 });
   // Dynamically resize (maintaining aspect ratio)
   useEffect(() => {
     function handleResize() {
@@ -242,6 +241,7 @@ export const LogoRacerGame: React.FC = () => {
         height={canvasSize.height}
         style={{ background: "#555" }}
         onClick={handleCanvasClick}
+        className="border border-white flex"
       />
       <p>Tap/click or press Up/Space to jump!</p>
       {gameOver && (
