@@ -1,23 +1,24 @@
 import React, { useEffect, useState } from "react";
-// Must use the final "exec" URL from your Web App deployment
 import { GET_API_URL } from "../utils/apiUtils.ts";
 import { LoadingAnimation } from "./LoadingAnimation";
 
-// Models
+// Types
 interface Score {
   username: string;
   score: number;
 }
+
 interface LeaderboardData {
   [game: string]: Score[];
 }
+
 interface LeaderBoardProps {
   games: string[];
 }
 
 declare global {
   interface Window {
-    leaderBoardCallback: (data: LeaderboardData) => void;
+    leaderBoardCallback?: (data: LeaderboardData) => void;
   }
 }
 
@@ -27,71 +28,73 @@ const LeaderBoard: React.FC<LeaderBoardProps> = ({ games }) => {
   const [error, setError] = useState("");
 
   /**
-   * Removes old <script> tag if present
+   * Removes old <script> tag (to avoid duplicates)
    */
   const removeScript = () => {
     const oldScript = document.getElementById("leaderboardScript");
     if (oldScript) {
-      console.debug("Removing old <script> tag for Leaderboard...");
+      console.debug("🔄 Removing old <script> tag for Leaderboard...");
       oldScript.remove();
     }
   };
 
   /**
-   * The JSONP callback function that Apps Script calls
+   * JSONP callback function Apps Script calls
    */
   window.leaderBoardCallback = (data: LeaderboardData) => {
-    console.debug("leaderBoardCallback received data:", data);
-    setLeaderboard(data);
+    console.debug("✅ leaderBoardCallback received data:", data);
+    if (!data || Object.keys(data).length === 0) {
+      setError("No leaderboard data received.");
+    } else {
+      setLeaderboard(data);
+      setError("");
+    }
     setLoading(false);
   };
 
   /**
-   * Creates a <script> tag to load data from Apps Script
+   * Creates a <script> for JSONP, pointing to our Web App
    */
   const fetchLeaderboard = () => {
-    console.debug("fetchLeaderboard() invoked...");
+    console.debug("🟢 fetchLeaderboard() invoked...");
     setLoading(true);
     setError("");
     removeScript();
 
     const url = `${GET_API_URL}?callback=leaderBoardCallback`;
-    console.debug("Creating <script> for JSONP GET:", url);
+    console.debug("🌐 Fetching JSONP from:", url);
 
     const script = document.createElement("script");
     script.id = "leaderboardScript";
     script.src = url;
     script.async = true;
 
-    // If the script 404s or can't load
     script.onerror = (ev) => {
-      console.error("Script onerror event:", ev);
-      setError("Failed to load leaderboard data (script error). Check console.");
+      console.error("❌ Script failed to load:", ev);
+      setError("Failed to load leaderboard data. Check console.");
       setLoading(false);
     };
 
-    // If it loads, we'll see this log, but the actual data
-    // arrives only when Apps Script calls leaderBoardCallback(...)
     script.onload = () => {
-      console.debug("LeaderBoard JSONP <script> loaded (onload).");
+      console.debug("✅ Script successfully loaded!");
     };
 
     document.body.appendChild(script);
   };
 
-  // On mount, fetch once
+  /**
+   * On mount, fetch leaderboard data
+   */
   useEffect(() => {
     fetchLeaderboard();
-    // Cleanup on unmount
-    return removeScript;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return removeScript; // Cleanup when unmounting
   }, [games]);
 
   return (
     <div className="w-full max-w-4xl mx-auto my-8 p-5 bg-gray-900 text-white rounded-lg shadow-lg">
       <h2 className="text-3xl font-bold text-center mb-4">🏆 Leaderboards</h2>
 
-      {/* Refresh Button */}
+      {/* Button to manually refresh */}
       <div className="text-right mb-4">
         <button
           onClick={fetchLeaderboard}
@@ -101,11 +104,11 @@ const LeaderBoard: React.FC<LeaderBoardProps> = ({ games }) => {
         </button>
       </div>
 
-      {/* Loading or Error */}
+      {/* Show loading or error state */}
       {loading && <LoadingAnimation />}
-      {error && <p className="text-red-400">{error}</p>}
+      {error && <p className="text-red-400 text-center">{error}</p>}
 
-      {/* Show Data if no error && not loading */}
+      {/* Render leaderboard if no error and not loading */}
       {!loading && !error && (
         <>
           {games.map((game) => {
