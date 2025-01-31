@@ -8,7 +8,7 @@ export const LogoDodgeGame: React.FC = () => {
   const LOGICAL_HEIGHT = 600;
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [canvasSize, setCanvasSize] = useState({ width: 400, height: 600 });
+  const [canvasSize, setCanvasSize] = useState({ width: 300, height: 600 });
   const [gameOver, setGameOver] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [score, setScore] = useState(0);
@@ -30,6 +30,10 @@ export const LogoDodgeGame: React.FC = () => {
     };
   }, []);
 
+  // 🎨 Background State
+  const [bgColor, setBgColor] = useState("#1a1a2e");
+  const [clouds, setClouds] = useState<{ x: number; y: number; speed: number }[]>([]);
+
   // ✅ Responsive canvas
   useEffect(() => {
     function handleResize() {
@@ -40,6 +44,24 @@ export const LogoDodgeGame: React.FC = () => {
     window.addEventListener("resize", handleResize);
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // 🎨 Background Color Changing
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setBgColor(`hsl(${Math.random() * 360}, 50%, 15%)`);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // ☁️ Clouds Initialization
+  useEffect(() => {
+    const initialClouds = Array.from({ length: 3 }, () => ({
+      x: Math.random() * LOGICAL_WIDTH,
+      y: Math.random() * 100,
+      speed: Math.random() * 0.5 + 0.2,
+    }));
+    setClouds(initialClouds);
   }, []);
 
   // ✅ Movement Handling
@@ -94,15 +116,13 @@ export const LogoDodgeGame: React.FC = () => {
         setGameOver(true);
       }
     });
-  }
 
-  function checkCollide(ox: number, oy: number, px: number, py: number) {
-    const obsSize = 30;
-    return !(
-      ox + obsSize < px ||
-      ox > px + playerSize ||
-      oy + obsSize < py ||
-      oy > py + playerSize
+    // Move clouds
+    setClouds((c) =>
+      c.map((cloud) => ({
+        ...cloud,
+        x: (cloud.x + cloud.speed) % LOGICAL_WIDTH,
+      }))
     );
   }
 
@@ -116,6 +136,18 @@ export const LogoDodgeGame: React.FC = () => {
     const scaleX = canvasSize.width / LOGICAL_WIDTH;
     const scaleY = canvasSize.height / LOGICAL_HEIGHT;
 
+    // 🎨 Background Gradient
+    ctx.fillStyle = bgColor; 
+    ctx.fillRect(0, 0, canvas.width, canvas.height); 
+
+    // ☁️ Draw Clouds
+    ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+    clouds.forEach((cloud) => {
+      ctx.beginPath();
+      ctx.arc(cloud.x * scaleX, cloud.y * scaleY, 20 * scaleX, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
     // Obstacles
     ctx.fillStyle = "red";
     obstacles.forEach((o) => {
@@ -127,14 +159,6 @@ export const LogoDodgeGame: React.FC = () => {
     if (img) {
       ctx.drawImage(
         img,
-        playerX * scaleX,
-        playerY * scaleY,
-        playerSize * scaleX,
-        playerSize * scaleY
-      );
-    } else {
-      ctx.fillStyle = "yellow";
-      ctx.fillRect(
         playerX * scaleX,
         playerY * scaleY,
         playerSize * scaleX,
@@ -165,6 +189,16 @@ export const LogoDodgeGame: React.FC = () => {
     setPlayerX(Math.min(Math.max(logicX, 0), LOGICAL_WIDTH - playerSize));
   }
 
+  function checkCollide(ox: number, oy: number, px: number, py: number) {
+    const obsSize = 30;
+    return !(
+      ox + obsSize < px ||
+      ox > px + playerSize ||
+      oy + obsSize < py ||
+      oy > py + playerSize
+    );
+  }
+
   function restart() {
     setGameOver(false);
     setIsPaused(false);
@@ -175,10 +209,6 @@ export const LogoDodgeGame: React.FC = () => {
     startTimeRef.current = null;
   }
 
-  function togglePause() {
-    setIsPaused((prev) => !prev);
-  }
-
   return (
     <div style={{ textAlign: "center", color: "white" }}>
       <h3>Logo Dodge</h3>
@@ -187,7 +217,6 @@ export const LogoDodgeGame: React.FC = () => {
         ref={canvasRef}
         width={canvasSize.width}
         height={canvasSize.height}
-        style={{ background: "#333" }}
         onMouseMove={handlePointerMove}
         onTouchMove={handlePointerMove}
       />
@@ -195,7 +224,7 @@ export const LogoDodgeGame: React.FC = () => {
       <p>Move left/right. Survive as long as possible!</p>
 
       {/* ✅ Pause Button */}
-      <PauseButton isPaused={isPaused} onTogglePause={togglePause} />
+      <PauseButton isPaused={isPaused} onTogglePause={() => setIsPaused(!isPaused)} />
 
       {/* ✅ Show GameOverModal when game ends */}
       <GameOverModal isOpen={gameOver} score={score} gameName={"logoDodge"} onClose={restart} onRestart={restart} />
