@@ -1,84 +1,90 @@
 import React, { useEffect, useState } from "react";
-import { API_URL } from "../utils/apiUtils.ts";
-import { LoadingAnimation } from "./LoadingAnimation"; // or wherever your loading component is
+// Must use the final "exec" URL from your Web App deployment
+import { GET_API_URL } from "../utils/apiUtils.ts";
+import { LoadingAnimation } from "./LoadingAnimation";
 
+// Models
 interface Score {
   username: string;
   score: number;
 }
-
 interface LeaderboardData {
   [game: string]: Score[];
 }
-
 interface LeaderBoardProps {
   games: string[];
 }
 
+declare global {
+  interface Window {
+    leaderBoardCallback: (data: LeaderboardData) => void;
+  }
+}
+
 const LeaderBoard: React.FC<LeaderBoardProps> = ({ games }) => {
   const [leaderboard, setLeaderboard] = useState<LeaderboardData>({});
-  const [overallScores, setOverallScores] = useState<Score[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const fetchLeaderboard = async () => {
-    try {
-      setLoading(true);
-
-      // Fetch once from your Apps Script endpoint with requestType=GET
-      // But your script returns data grouped by game, e.g. {snake:[...], flappy:[...], ...}
-      // We'll do exactly that call:
-      const response = await fetch(`${API_URL}?requestType=GET`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch data");
-      }
-
-      // The data is in the format:
-      // {
-      //   brickBreaker: [{username, score}, ...],
-      //   snake: [{username, score}, ...],
-      //   ...
-      // }
-      const data: LeaderboardData = await response.json();
-
-      // Now let's produce top 3 per game
-      const newLeaderboard: LeaderboardData = {};
-      const overallMap: { [username: string]: number } = {};
-
-      // For each game in the `games` array, handle data
-      games.forEach((game) => {
-        const gameArray = data[game] || [];
-        // Sort descending by score, take top 3
-        const topThree = gameArray
-          .sort((a, b) => b.score - a.score)
-          .slice(0, 3);
-
-        newLeaderboard[game] = topThree;
-
-        // Add to overall map
-        gameArray.forEach(({ username, score }) => {
-          if (!overallMap[username]) overallMap[username] = 0;
-          overallMap[username] += score;
-        });
-      });
-
-      // Calculate top 5 overall
-      const sortedOverall = Object.entries(overallMap)
-        .map(([username, score]) => ({ username, score }))
-        .sort((a, b) => b.score - a.score)
-        .slice(0, 5);
-
-      setLeaderboard(newLeaderboard);
-      setOverallScores(sortedOverall);
-    } catch (error) {
-      console.error("Error fetching leaderboard:", error);
-    } finally {
-      setLoading(false);
+  /**
+   * Removes old <script> tag if present
+   */
+  const removeScript = () => {
+    const oldScript = document.getElementById("leaderboardScript");
+    if (oldScript) {
+      console.debug("Removing old <script> tag for Leaderboard...");
+      oldScript.remove();
     }
   };
 
-  // Initial fetch on mount
+  /**
+   * The JSONP callback function that Apps Script calls
+   */
+  window.leaderBoardCallback = (data: LeaderboardData) => {
+    console.debug("leaderBoardCallback received data:", data);
+    setLeaderboard(data);
+    setLoading(false);
+  };
+
+  /**
+   * Creates a <script> tag to load data from Apps Script
+   */
+  const fetchLeaderboard = () => {
+    console.debug("fetchLeaderboard() invoked...");
+    setLoading(true);
+    setError("");
+    removeScript();
+
+    const url = `${GET_API_URL}?callback=leaderBoardCallback`;
+    console.debug("Creating <script> for JSONP GET:", url);
+
+    const script = document.createElement("script");
+    script.id = "leaderboardScript";
+    script.src = url;
+    script.async = true;
+
+    // If the script 404s or can't load
+    script.onerror = (ev) => {
+      console.error("Script onerror event:", ev);
+      setError("Failed to load leaderboard data (script error). Check console.");
+      setLoading(false);
+    };
+
+    // If it loads, we'll see this log, but the actual data
+    // arrives only when Apps Script calls leaderBoardCallback(...)
+    script.onload = () => {
+      console.debug("LeaderBoard JSONP <script> loaded (onload).");
+    };
+
+    document.body.appendChild(script);
+  };
+
+  // On mount, fetch once
   useEffect(() => {
     fetchLeaderboard();
+    // Cleanup on unmount
+    return removeScript;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [games]);
 
   return (
@@ -95,48 +101,34 @@ const LeaderBoard: React.FC<LeaderBoardProps> = ({ games }) => {
         </button>
       </div>
 
-      {/* If loading, show spinner */}
-      {loading ? (
-        <LoadingAnimation />
-      ) : (
-        <>
-          {/* Individual Game Leaderboards */}
-          {games.map((game) => (
-            <div key={game} className="mb-6">
-              <h3 className="text-2xl font-semibold text-blue-400 mb-3">
-                {game.toUpperCase()} Leaderboard
-              </h3>
-              <div className="bg-gray-800 p-4 rounded-lg">
-                {leaderboard[game] && leaderboard[game].length > 0 ? (
-                  leaderboard[game].map((player, index) => (
-                    <p key={index} className="text-lg">
-                      🏅 {index + 1}. {player.username} - {player.score} points
-                    </p>
-                  ))
-                ) : (
-                  <p className="text-gray-400">No data available</p>
-                )}
-              </div>
-            </div>
-          ))}
+      {/* Loading or Error */}
+      {loading && <LoadingAnimation />}
+      {error && <p className="text-red-400">{error}</p>}
 
-          {/* Overall Leaderboard */}
-          <div className="mt-8">
-            <h3 className="text-2xl font-semibold text-yellow-400 mb-3">
-              🏅 Overall Leaderboard
-            </h3>
-            <div className="bg-gray-800 p-4 rounded-lg">
-              {overallScores.length > 0 ? (
-                overallScores.map((player, index) => (
-                  <p key={index} className="text-lg">
-                    🏆 {index + 1}. {player.username} - {player.score} points
-                  </p>
-                ))
-              ) : (
-                <p className="text-gray-400">No data available</p>
-              )}
-            </div>
-          </div>
+      {/* Show Data if no error && not loading */}
+      {!loading && !error && (
+        <>
+          {games.map((game) => {
+            const scores = leaderboard[game] || [];
+            return (
+              <div key={game} className="mb-6">
+                <h3 className="text-2xl font-semibold text-blue-400 mb-3">
+                  {game.toUpperCase()} Leaderboard
+                </h3>
+                <div className="bg-gray-800 p-4 rounded-lg">
+                  {scores.length > 0 ? (
+                    scores.map((player, index) => (
+                      <p key={index} className="text-lg">
+                        🏅 {index + 1}. {player.username} - {player.score}
+                      </p>
+                    ))
+                  ) : (
+                    <p className="text-gray-400">No data available</p>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </>
       )}
     </div>

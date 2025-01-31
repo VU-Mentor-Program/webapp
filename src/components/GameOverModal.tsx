@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { API_URL } from "../utils/apiUtils.ts";
+import { POST_API_URL } from "../utils/apiUtils.ts";
 
 interface GameOverModalProps {
   isOpen: boolean;
@@ -9,39 +9,99 @@ interface GameOverModalProps {
   onRestart: () => void;
 }
 
-const GameOverModal: React.FC<GameOverModalProps> = ({ isOpen, score, gameName, onClose, onRestart }) => {
+// We'll define a global callback for the "posting" response
+declare global {
+  interface Window {
+    saveScoreCallback: (result: any) => void;
+  }
+}
+
+const GameOverModal: React.FC<GameOverModalProps> = ({
+  isOpen,
+  score,
+  gameName,
+  onClose,
+  onRestart
+}) => {
   const [username, setUsername] = useState("");
   const [error, setError] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleSubmit = async () => {
+  /**
+   * Remove old script if any
+   */
+  const removeScript = () => {
+    const old = document.getElementById("saveScoreScript");
+    if (old) {
+      console.debug("Removing old <script> for saveScore...");
+      old.remove();
+    }
+  };
+
+  /**
+   * JSONP callback
+   */
+  window.saveScoreCallback = (result: any) => {
+    console.debug("saveScoreCallback called with:", result);
+    setSubmitting(false);
+
+    if (result && result.error) {
+      setError(`Error: ${result.error}`);
+      setSuccessMsg("");
+    } else if (result && result.success) {
+      setSuccessMsg("Score submitted successfully!");
+      setError("");
+    } else {
+      setError("Unknown error from server");
+      setSuccessMsg("");
+    }
+  };
+
+  /**
+   * Handle submission
+   */
+  const handleSubmit = () => {
     if (!username.trim()) {
       setError("Username cannot be empty!");
       return;
     }
 
     setError("");
-    setIsSubmitting(true);
+    setSuccessMsg("");
+    setSubmitting(true);
+    removeScript();
 
-    try {
-      const response = await fetch(
-        `${API_URL}?requestType=POST&gameName=${encodeURIComponent(gameName)}&userName=${encodeURIComponent(username)}&score=${score}`,
-        { method: "POST" }
-      );
+    // Build the query string
+    const qs = new URLSearchParams({
+      callback: "saveScoreCallback",
+      gameName: gameName,
+      username: username,
+      score: String(score),
+    }).toString();
 
-      if (response.ok) {
-        setSuccessMessage("Score submitted successfully!");
-      } else {
-        setError("Failed to submit score. Try again later.");
-      }
-    } catch (err) {
-      setError("Error submitting score. Check your connection.");
-    } finally {
-      setIsSubmitting(false);
-    }
+    const scriptUrl = `${POST_API_URL}?${qs}`;
+    console.debug("Inserting <script> for JSONP POST:", scriptUrl);
+
+    const script = document.createElement("script");
+    script.id = "saveScoreScript";
+    script.src = scriptUrl;
+    script.async = true;
+
+    script.onerror = (ev) => {
+      console.error("saveScoreScript onerror event:", ev);
+      setError("Failed to load saveScore script (see console).");
+      setSubmitting(false);
+    };
+
+    script.onload = () => {
+      console.debug("saveScoreScript loaded (onload).");
+      // The server will call window.saveScoreCallback(...)
+    };
+
+    document.body.appendChild(script);
   };
 
   return (
@@ -51,46 +111,41 @@ const GameOverModal: React.FC<GameOverModalProps> = ({ isOpen, score, gameName, 
     >
       <div
         className="bg-gray-900 bg-opacity-90 text-white p-6 rounded-lg shadow-lg max-w-md w-full relative"
-        onClick={(e) => e.stopPropagation()} // Prevent modal from closing when clicking inside
+        onClick={(e) => e.stopPropagation()}
       >
-        {/* Close Button */}
-        <button onClick={onClose} className="absolute top-2 right-2 text-gray-400 hover:text-white text-xl">
+        <button
+          onClick={onClose}
+          className="absolute top-2 right-2 text-gray-400 hover:text-white text-xl"
+        >
           ❌
         </button>
-
-        {/* Modal Content */}
         <h2 className="text-2xl font-bold text-center mb-4">Game Over</h2>
-        <p className="text-lg text-center mb-2">Your Score: <span className="font-bold">{score}</span></p>
+        <p className="text-lg text-center mb-2">Your Score: {score}</p>
 
-        {/* Username Input */}
         <div className="mb-4">
-          <label htmlFor="username" className="block text-sm font-medium">Enter Username:</label>
+          <label className="block text-sm font-medium">Enter Username:</label>
           <input
-            id="username"
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="w-full p-2 mt-1 rounded bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Your name"
+            className="w-full p-2 mt-1 rounded bg-gray-800 border border-gray-700 focus:outline-none"
           />
           {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
         </div>
 
-        {/* Submit Score Button */}
+        {successMsg && <p className="text-green-400 mb-2">{successMsg}</p>}
+
         <button
           onClick={handleSubmit}
-          disabled={isSubmitting}
+          disabled={submitting}
           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-3 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isSubmitting ? "Submitting..." : "Submit Score"}
+          {submitting ? "Submitting..." : "Submit Score"}
         </button>
 
-        {successMessage && <p className="text-green-500 text-center">{successMessage}</p>}
-
-        {/* Play Again Button */}
         <button
           onClick={onRestart}
-          className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-3"
+          className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
         >
           Play Again
         </button>
