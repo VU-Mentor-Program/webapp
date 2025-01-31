@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import Confetti from "react-confetti";
 import mpLogo from "../assets/mp_logo-CIRCLE.png";
+import PauseButton from "../components/PauseButton";
+import RestartButton from "../components/RestartButton";
+import GameOverModal from "../components/GameOverModal";  
 
 /**
  * Brick Breaker with dynamic brick layouts for smaller screens:
@@ -14,6 +17,7 @@ export const OnePersonPong: React.FC = () => {
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const requestRef = useRef<number | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
 
   // We'll resize the <canvas> to fit user screen while maintaining aspect ratio
   const [canvasSize, setCanvasSize] = useState({ width: 300, height: 600 });
@@ -31,6 +35,17 @@ export const OnePersonPong: React.FC = () => {
   }, []);
 
   const [hasWon, setHasWon] = useState(false);
+
+  function togglePause() {
+    if (isPaused) {
+      // Resume game
+      requestRef.current = requestAnimationFrame(render);
+    } else {
+      // Pause game
+      if (requestRef.current) cancelAnimationFrame(requestRef.current);
+    }
+    setIsPaused((prev) => !prev);
+  }
 
   // Determine columns/rows/brick sizes depending on final canvas width
   // We'll recalc whenever we "restartGame"
@@ -168,6 +183,19 @@ export const OnePersonPong: React.FC = () => {
     brickSetup,
   ]);
 
+    const render = () => {
+    if (!isPaused) {
+      const ctx = canvasRef.current?.getContext("2d");
+      if (!ctx) return;
+      if (canvasRef.current) {
+        ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+      }
+      drawAll(ctx);
+      updateBall();
+      requestRef.current = requestAnimationFrame(render);
+    }
+  };
+
   function drawAll(ctx: CanvasRenderingContext2D) {
     const scaleX = canvasSize.width / LOGICAL_WIDTH;
     const scaleY = canvasSize.height / LOGICAL_HEIGHT;
@@ -301,10 +329,6 @@ export const OnePersonPong: React.FC = () => {
     resetBall();
   }
 
-  function pauseGame() {
-    if (requestRef.current) cancelAnimationFrame(requestRef.current);
-  }
-
   // Convert pointer coords => logical coords
   function handlePointerMove(e: React.MouseEvent | React.TouchEvent) {
     const canvas = canvasRef.current;
@@ -331,6 +355,7 @@ export const OnePersonPong: React.FC = () => {
           recycle={false}
         />
       )}
+      <GameOverModal isOpen={hasWon} score={500} gameName={"brickBreaker"} onClose={restartGame} onRestart={restartGame} />
       <canvas
         ref={canvasRef}
         width={canvasSize.width}
@@ -340,10 +365,8 @@ export const OnePersonPong: React.FC = () => {
         onTouchMove={handlePointerMove}
       />
       <p>Move the paddle with mouse or finger; break all the tiles!</p>
-      <button onClick={restartGame} style={{ marginRight: "1rem" }}>
-        Restart
-      </button>
-      <button onClick={pauseGame}>Pause</button>
+      <PauseButton isPaused={isPaused} onTogglePause={togglePause} />
+      <RestartButton onRestart={restartGame} />
     </div>
   );
 };

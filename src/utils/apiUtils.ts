@@ -16,4 +16,4 @@
 // # also dont tell my mom
 
 export const GET_API_URL = "https://script.google.com/macros/s/AKfycbzv0awFVkoABOfvu0mygTliki47lhpFpj9zgAZuP0qhqEgbv8iykYMcp2wX0WYhQNJu/exec";
-export const POST_API_URL = "https://script.google.com/macros/s/AKfycbzv0awFVkoABOfvu0mygTliki47lhpFpj9zgAZuP0qhqEgbv8iykYMcp2wX0WYhQNJu/exec";
+export const POST_API_URL = "https://script.google.com/macros/s/AKfycby50Vx_YW8rUNHvsk50n2dgNfMTOjGR1IPBwBgMR-0rA24UbJHEuSS2TXt6YcWuR14E/exec";

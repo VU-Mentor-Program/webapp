@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { OnePersonPong } from "../minigames/OnePersonPong";
+import { OnePersonPong } from "../minigames/BrickBreaker";
 import { SnakeGame } from "../minigames/SnakeGame";
 import { FlappyLogoGame } from "../minigames/FlappyLogoGame";
 import { LogoRacerGame } from "../minigames/LogoRacer";
