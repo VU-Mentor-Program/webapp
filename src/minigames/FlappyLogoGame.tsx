@@ -5,11 +5,12 @@ import GameOverModal from "../components/minigame page/GameOverModal";
 export const FlappyLogoGame: React.FC = () => {
   const LOGICAL_WIDTH = 800;
   const LOGICAL_HEIGHT = 600;
+  const FLOOR_Y = 540; // Raised floor
+  const FLOOR_HEIGHT = 80;
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [canvasSize, setCanvasSize] = useState({ width: 800, height: 600 });
 
-  // ✅ Fix: Responsive canvas
   useEffect(() => {
     function handleResize() {
       const maxWidth = Math.min(window.innerWidth * 0.9, LOGICAL_WIDTH);
@@ -30,14 +31,21 @@ export const FlappyLogoGame: React.FC = () => {
   const gravity = 0.5;
   const pipeWidth = 50;
   const pipeSpeed = 3;
-  const gapHeight = 120;
+  const gapHeight = 140; // Slightly larger gap for balance
 
   const birdYRef = useRef(300);
   const birdVYRef = useRef(0);
   const pipeXRef = useRef(LOGICAL_WIDTH);
   const gapYRef = useRef(200);
   const rotationRef = useRef(0);
-  const passedPipeRef = useRef(false); // ✅ Track if the bird has passed a pipe
+  const passedPipeRef = useRef(false);
+  const scoreRef = useRef(0);
+
+  // Background state
+  const bgXRef = useRef(0);
+  const cloudXRef = useRef(LOGICAL_WIDTH);
+  const bgSpeed = 1.5;
+  const cloudSpeed = 0.6;
 
   const logoRef = useRef<HTMLImageElement | null>(null);
   useEffect(() => {
@@ -48,16 +56,26 @@ export const FlappyLogoGame: React.FC = () => {
     };
   }, []);
 
-  // ✅ Handle key press to jump
+  // Handle key press for jump
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === " " || e.key === "ArrowUp") jump();
+    const handleJump = () => {
+      if (!gameOver) {
+        birdVYRef.current = -8; // Properly apply jump
+      }
     };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+
+    // Attach event listener for click/touch
+    window.addEventListener("click", handleJump);
+    window.addEventListener("touchstart", handleJump);
+
+    return () => {
+      window.removeEventListener("click", handleJump);
+      window.removeEventListener("touchstart", handleJump);
+    };
   }, [gameOver]);
 
-  // ✅ Main loop
+
+  // Main loop
   useEffect(() => {
     let animId: number;
     const loop = () => {
@@ -80,13 +98,26 @@ export const FlappyLogoGame: React.FC = () => {
     if (pipeXRef.current < -pipeWidth) {
       pipeXRef.current = LOGICAL_WIDTH;
       gapYRef.current = Math.random() * 300 + 100;
-      passedPipeRef.current = false; // ✅ Reset flag for new pipe
+      passedPipeRef.current = false;
     }
 
-    // ✅ Check if bird has passed a pipe and increase score
+    // Move background for parallax effect
+    bgXRef.current -= bgSpeed;
+    if (bgXRef.current < -LOGICAL_WIDTH) {
+      bgXRef.current = 0;
+    }
+
+    // Move clouds slower than the background
+    cloudXRef.current -= cloudSpeed;
+    if (cloudXRef.current < -LOGICAL_WIDTH) {
+      cloudXRef.current = LOGICAL_WIDTH;
+    }
+
+    // Check if bird has passed a pipe and increase score
     if (!passedPipeRef.current && pipeXRef.current + pipeWidth < birdX) {
-      setScore((prev) => prev + 100);
-      passedPipeRef.current = true; // ✅ Prevent duplicate scoring for same pipe
+      scoreRef.current += 100; // Update ref
+      setScore(scoreRef.current); // Trigger re-render
+      passedPipeRef.current = true; // Prevent duplicate scoring
     }
 
     checkCollision();
@@ -99,13 +130,13 @@ export const FlappyLogoGame: React.FC = () => {
     const holeStart = gapYRef.current;
     const holeEnd = holeStart + gapHeight;
 
-    // ✅ Collision: Top/Bottom
-    if (birdTop < 0 || birdBottom > LOGICAL_HEIGHT) {
+    // Collision: Top/Bottom
+    if (birdTop < 0 || birdBottom > FLOOR_Y) {
       setGameOver(true);
       return;
     }
 
-    // ✅ Collision: Pipes
+    // Collision: Pipes
     const birdLeft = birdX;
     const birdRight = birdLeft + birdSize;
     if (birdRight > px && birdLeft < px + pipeWidth) {
@@ -126,20 +157,21 @@ export const FlappyLogoGame: React.FC = () => {
     const scaleX = canvasSize.width / LOGICAL_WIDTH;
     const scaleY = canvasSize.height / LOGICAL_HEIGHT;
 
-    // ✅ Draw Pipes
-    ctx.fillStyle = "green";
+    // Draw Background
+    drawBackground(ctx, scaleX, scaleY);
+
+    // Draw Pipes
+    ctx.fillStyle = "#004d00"; // Darker green pipes
     const pxScaled = pipeXRef.current * scaleX;
     ctx.fillRect(pxScaled, 0, pipeWidth * scaleX, gapYRef.current * scaleY);
-
-    const lowerY = (gapYRef.current + gapHeight) * scaleY;
     ctx.fillRect(
       pxScaled,
-      lowerY,
+      (gapYRef.current + gapHeight) * scaleY,
       pipeWidth * scaleX,
-      canvasSize.height - lowerY
+      canvasSize.height - (gapYRef.current + gapHeight) * scaleY
     );
 
-    // ✅ Draw Bird (Logo or Placeholder)
+    // Draw Bird
     const img = logoRef.current;
     if (img) {
       ctx.save();
@@ -155,35 +187,51 @@ export const FlappyLogoGame: React.FC = () => {
         birdSize * scaleY
       );
       ctx.restore();
-    } else {
-      ctx.fillStyle = "yellow";
+    }
+
+    // Display Score
+    ctx.fillStyle = "white";
+    ctx.font = `${30 * Math.min(scaleX, scaleY)}px Arial`;
+    ctx.fillText(`Score: ${scoreRef.current}`, 20 * scaleX, 40 * scaleY);
+  }
+
+  function drawBackground(ctx: CanvasRenderingContext2D, scaleX: number, scaleY: number) {
+    ctx.fillStyle = "#0A0A32"; // Deep blue sky
+    ctx.fillRect(0, 0, canvasSize.width, canvasSize.height);
+
+    // Stars (5-7 at a time, lasting longer)
+    ctx.fillStyle = "white";
+    for (let i = 0; i < 7; i++) {
       ctx.fillRect(
-        birdX * scaleX,
-        birdYRef.current * scaleY,
-        birdSize * scaleX,
-        birdSize * scaleY
+        (Math.random() * canvasSize.width) + (i * 50),
+        Math.random() * 150 * scaleY,
+        2,
+        2
       );
     }
 
-    // ✅ Display Score
-    ctx.fillStyle = "white";
-    ctx.font = `${30 * Math.min(scaleX, scaleY)}px Arial`;
-    ctx.fillText(`Score: ${score}`, 20 * scaleX, 40 * scaleY);
-
-    // ✅ Display "GAME OVER" if applicable
-    if (gameOver) {
-      ctx.fillText("GAME OVER!", canvasSize.width / 2 - 80 * scaleX, canvasSize.height / 2);
+    // City Silhouette
+    ctx.fillStyle = "#1E1E4C";
+    for (let i = 0; i < 8; i++) {
+      ctx.fillRect((bgXRef.current + i * 180) * scaleX, 320 * scaleY, 80 * scaleX, 100 * scaleY);
     }
-  }
 
-  function jump() {
-    if (!gameOver) {
-      birdVYRef.current = -8;
+    // 🏙️ Buildings
+    ctx.fillStyle = "#2E2E6A";
+    for (let i = 0; i < 6; i++) {
+      ctx.fillRect((bgXRef.current + i * 230) * scaleX, 350 * scaleY, 60 * scaleX, 130 * scaleY);
     }
-  }
 
-  function handleCanvasClick() {
-    jump();
+    // Clouds (moving)
+    ctx.fillStyle = "#AAAAAA";
+    ctx.beginPath();
+    ctx.arc(cloudXRef.current * scaleX, 100 * scaleY, 40 * scaleX, 0, Math.PI * 2);
+    ctx.arc((cloudXRef.current + 60) * scaleX, 110 * scaleY, 30 * scaleX, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Ground
+    ctx.fillStyle = "#008000";
+    ctx.fillRect(0, FLOOR_Y * scaleY, canvasSize.width, FLOOR_HEIGHT * scaleY);
   }
 
   function restart() {
@@ -193,33 +241,15 @@ export const FlappyLogoGame: React.FC = () => {
     gapYRef.current = 200;
     rotationRef.current = 0;
     passedPipeRef.current = false;
-    setScore(0); // ✅ Reset score
+    setScore(0);
+    scoreRef.current = 0;
     setGameOver(false);
   }
 
   return (
-    <div
-      style={{
-        marginBottom: "1rem",
-        textAlign: "center",
-        color: "white",
-        overflow: "hidden",
-      }}
-    >
+    <div style={{ textAlign: "center", color: "white", overflow: "hidden" }}>
       <h3>Flappy Logo</h3>
-      <p className="text-lg font-bold">Score: {score}</p>
-
-      <canvas
-        ref={canvasRef}
-        width={canvasSize.width}
-        height={canvasSize.height}
-        style={{ background: "#444" }}
-        onClick={handleCanvasClick}
-      />
-
-      <p>Click or press Space/Up Arrow to jump!</p>
-
-      {/* ✅ Show Game Over Modal when game ends */}
+      <canvas ref={canvasRef} width={canvasSize.width} height={canvasSize.height} />
       <GameOverModal isOpen={gameOver} score={score} gameName={"flappy"} onClose={restart} onRestart={restart} />
     </div>
   );
