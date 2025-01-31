@@ -21,12 +21,12 @@ interface Particle {
   maxLife: number; // used for fade-out
 }
 
-interface Star {
-  x: number;
-  y: number;
-  size: number;
-  speed: number;
-}
+// interface Star {
+//   x: number;
+//   y: number;
+//   size: number;
+//   speed: number;
+// }
 
 // ---------- Component ----------
 export const LogoSpaceShooterGame: React.FC = () => {
