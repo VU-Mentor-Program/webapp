@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import mpLogo from "../assets/mp_logo-CIRCLE.png";
+import GameOverModal from "../components/minigame page/GameOverModal";
+import PauseButton from "../components/minigame page/PauseButton";
 
 export const LogoDodgeGame: React.FC = () => {
   const LOGICAL_WIDTH = 400;
@@ -7,21 +9,9 @@ export const LogoDodgeGame: React.FC = () => {
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [canvasSize, setCanvasSize] = useState({ width: 400, height: 600 });
-
-  useEffect(() => {
-    function handleResize() {
-      const maxWidth = Math.min(window.innerWidth * 0.9, LOGICAL_WIDTH);
-      const scale = maxWidth / LOGICAL_WIDTH;
-      setCanvasSize({ width: maxWidth, height: LOGICAL_HEIGHT * scale });
-    }
-    window.addEventListener("resize", handleResize);
-    handleResize();
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   const [gameOver, setGameOver] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [score, setScore] = useState(0);
-  // const [gameTime, setGameTime] = useState(0); // Track time in seconds
 
   const playerSize = 40;
   const [playerX, setPlayerX] = useState(180);
@@ -40,9 +30,22 @@ export const LogoDodgeGame: React.FC = () => {
     };
   }, []);
 
+  // ✅ Responsive canvas
+  useEffect(() => {
+    function handleResize() {
+      const maxWidth = Math.min(window.innerWidth * 0.9, LOGICAL_WIDTH);
+      const scale = maxWidth / LOGICAL_WIDTH;
+      setCanvasSize({ width: maxWidth, height: LOGICAL_HEIGHT * scale });
+    }
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // ✅ Movement Handling
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
-      if (gameOver) return;
+      if (gameOver || isPaused) return;
       if (e.key === "ArrowLeft" || e.key.toLowerCase() === "a") {
         setPlayerX((x) => Math.max(0, x - 10));
       } else if (e.key === "ArrowRight" || e.key.toLowerCase() === "d") {
@@ -51,32 +54,29 @@ export const LogoDodgeGame: React.FC = () => {
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [gameOver]);
+  }, [gameOver, isPaused]);
 
+  // ✅ Game Loop
   useEffect(() => {
     let animId: number;
     const loop = (timestamp: number) => {
       if (!startTimeRef.current) startTimeRef.current = timestamp;
       const elapsedSeconds = (timestamp - startTimeRef.current) / 1000;
-      // setGameTime(elapsedSeconds);
 
-      updateGame(elapsedSeconds);
-      drawGame();
+      if (!isPaused && !gameOver) {
+        updateGame(elapsedSeconds);
+        drawGame();
+      }
       animId = requestAnimationFrame(loop);
     };
     animId = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(animId);
-  }, [gameOver, playerX, obstacles, score, canvasSize]);
+  }, [gameOver, isPaused, playerX, obstacles, score, canvasSize]);
 
   function updateGame(elapsedSeconds: number) {
-    if (gameOver) return;
     setScore((s) => s + 1);
-
-    // Speed ramp logic: starts slow, gets very fast by 8 seconds
     const speedMultiplier = Math.min(1 + Math.pow(elapsedSeconds / 8, 3), 7);
-    const obstacleSpeed = 2 + speedMultiplier * 2; // Starts at 2px, ramps up
-
-    // Spawn obstacles more frequently over time
+    const obstacleSpeed = 2 + speedMultiplier * 2;
     const spawnRate = Math.max(50 - Math.floor(elapsedSeconds * 2), 10);
     frameRef.current++;
 
@@ -113,15 +113,16 @@ export const LogoDodgeGame: React.FC = () => {
     if (!ctx) return;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
     const scaleX = canvasSize.width / LOGICAL_WIDTH;
     const scaleY = canvasSize.height / LOGICAL_HEIGHT;
 
+    // Obstacles
     ctx.fillStyle = "red";
     obstacles.forEach((o) => {
       ctx.fillRect(o.x * scaleX, o.y * scaleY, 30 * scaleX, 30 * scaleY);
     });
 
+    // Player Logo
     const img = logoRef.current;
     if (img) {
       ctx.drawImage(
@@ -141,17 +142,19 @@ export const LogoDodgeGame: React.FC = () => {
       );
     }
 
+    // Score
     ctx.fillStyle = "white";
     ctx.font = `${20 * Math.min(scaleX, scaleY)}px Arial`;
     ctx.fillText(`Score: ${score}`, 10, 30 * scaleY);
 
+    // Game Over
     if (gameOver) {
       ctx.fillText("GAME OVER!", 100 * scaleX, 200 * scaleY);
     }
   }
 
   function handlePointerMove(e: React.MouseEvent | React.TouchEvent) {
-    if (gameOver) return;
+    if (gameOver || isPaused) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
@@ -164,17 +167,22 @@ export const LogoDodgeGame: React.FC = () => {
 
   function restart() {
     setGameOver(false);
+    setIsPaused(false);
     setScore(0);
     setObstacles([]);
     setPlayerX(180);
-    // setGameTime(0);
     frameRef.current = 0;
     startTimeRef.current = null;
+  }
+
+  function togglePause() {
+    setIsPaused((prev) => !prev);
   }
 
   return (
     <div style={{ textAlign: "center", color: "white" }}>
       <h3>Logo Dodge</h3>
+
       <canvas
         ref={canvasRef}
         width={canvasSize.width}
@@ -183,12 +191,14 @@ export const LogoDodgeGame: React.FC = () => {
         onMouseMove={handlePointerMove}
         onTouchMove={handlePointerMove}
       />
+
       <p>Move left/right. Survive as long as possible!</p>
-      {gameOver && (
-        <button onClick={restart} style={{ marginTop: "1rem" }}>
-          Restart
-        </button>
-      )}
+
+      {/* ✅ Pause Button */}
+      <PauseButton isPaused={isPaused} onTogglePause={togglePause} />
+
+      {/* ✅ Show GameOverModal when game ends */}
+      <GameOverModal isOpen={gameOver} score={score} gameName={"logoDodge"} onClose={restart} onRestart={restart} />
     </div>
   );
 };
