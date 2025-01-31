@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import mpLogo from "../assets/mp_logo-CIRCLE.png";
+import GameOverModal from "../components/minigame page/GameOverModal";
+import PauseButton from "../components/minigame page/PauseButton";
 
 // ---------- Types ----------
 interface Bullet {
@@ -19,11 +21,18 @@ interface Particle {
   maxLife: number; // used for fade-out
 }
 
+interface Star {
+  x: number;
+  y: number;
+  size: number;
+  speed: number;
+}
+
 // ---------- Component ----------
 export const LogoSpaceShooterGame: React.FC = () => {
   // Logical "game world" dimensions
-  const LOGICAL_WIDTH = 400;
-  const LOGICAL_HEIGHT = 600;
+  const LOGICAL_WIDTH = 300;
+  const LOGICAL_HEIGHT = 650;
 
   // Canvas
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -32,6 +41,17 @@ export const LogoSpaceShooterGame: React.FC = () => {
   // For UI
   // const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [stars, setStars] = useState(
+    Array.from({ length: 100 }, () => ({
+      x: Math.random() * LOGICAL_WIDTH,
+      y: Math.random() * LOGICAL_HEIGHT,
+      size: Math.random() * 2 + 1,
+      speed: Math.random() * 2 + 0.5,
+    }))
+  );
+  const [score, setScore] = useState(0);
+  const scoreRef = useRef(0);
 
   // Load the ship/logo
   const logoRef = useRef<HTMLImageElement | null>(null);
@@ -78,6 +98,24 @@ export const LogoSpaceShooterGame: React.FC = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setScore(scoreRef.current); // ✅ Sync scoreRef to state every 100ms
+    }, 100);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    setStars(
+      Array.from({ length: 100 }, () => ({
+        x: Math.random() * LOGICAL_WIDTH,
+        y: Math.random() * LOGICAL_HEIGHT,
+        size: Math.random() * 2 + 1,
+        speed: Math.random() * 2 + 0.5,
+      }))
+    );
+  }, []);
+
   // ----------- Keyboard & pointer controls -----------
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
@@ -97,7 +135,7 @@ export const LogoSpaceShooterGame: React.FC = () => {
 
   // Pointer => move ship
   function handlePointerMove(e: React.MouseEvent | React.TouchEvent) {
-    if (gameOver) return;
+    if (gameOver || isPaused) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
@@ -120,15 +158,16 @@ export const LogoSpaceShooterGame: React.FC = () => {
     let animId = 0;
 
     const loop = () => {
-      updateGame();
-      drawGame();
-      animId = requestAnimationFrame(loop);
+      if (!isPaused) {
+        updateGame();
+        drawGame();
+        animId = requestAnimationFrame(loop);
+      }
     };
     loop();
 
     return () => cancelAnimationFrame(animId);
-    // no dependency array => run once
-  }, []);
+  }, [gameOver, isPaused]);
 
   // ------------- updateGame() -------------
   function updateGame() {
@@ -149,11 +188,14 @@ export const LogoSpaceShooterGame: React.FC = () => {
 
     // Spawn enemies
     st.frameCount++;
-    if (st.frameCount % 60 === 0) {
-      st.enemies.push({
-        x: Math.random() * (LOGICAL_WIDTH - 30),
-        y: -30,
-      });
+    if (st.frameCount % Math.max(40 - Math.floor(st.speedFactor * 4), 10) === 0) {
+      const numEnemies = Math.min(1 + Math.floor(st.speedFactor / 3), 3); // Up to 3 enemies
+      for (let i = 0; i < numEnemies; i++) {
+        st.enemies.push({
+          x: Math.random() * (LOGICAL_WIDTH - 30),
+          y: -30,
+        });
+      }
     }
 
     // Move enemies
@@ -185,8 +227,9 @@ export const LogoSpaceShooterGame: React.FC = () => {
           // remove enemy & bullet
           st.enemies.splice(i, 1);
           st.bullets.splice(j, 1);
-          // add 10 points to score
-          // setScore((prev) => prev + 10);
+
+          scoreRef.current += 50;
+
           // trigger explosion
           createExplosion(e.x + 15, e.y + 15);
           break;
@@ -233,6 +276,13 @@ export const LogoSpaceShooterGame: React.FC = () => {
       ctx.fillRect(st.shipX, st.shipY, st.shipSize, st.shipSize);
     }
 
+    stars.forEach((star) => {
+      ctx.fillStyle = `rgba(255,255,255,${Math.random()})`;
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
     // Draw bullets
     ctx.fillStyle = "cyan";
     for (const b of st.bullets) {
@@ -252,10 +302,11 @@ export const LogoSpaceShooterGame: React.FC = () => {
       ctx.fillRect(p.x, p.y, 3, 3);
     }
 
-    // UI
-    // ctx.fillStyle = "white";
-    // ctx.font = "20px Arial";
-    // ctx.fillText(`Score: ${score}`, 10, 30);
+    // Score Display
+    ctx.fillStyle = "white";
+    ctx.font = `${20 * Math.min(scaleX, scaleY)}px Arial`;
+    ctx.fillText(`Score: ${scoreRef.current}`, 10, 30);
+
 
     if (gameOver) {
       ctx.fillText("GAME OVER!", 100, 200);
@@ -314,7 +365,8 @@ export const LogoSpaceShooterGame: React.FC = () => {
   // ------------- restart() -------------
   function restart() {
     setGameOver(false);
-    // setScore(0);
+    setScore(0);
+    scoreRef.current = 0;
     gameRef.current = {
       shipX: 200,
       shipY: 550,
@@ -342,11 +394,8 @@ export const LogoSpaceShooterGame: React.FC = () => {
       <p style={{ fontSize: "0.9rem" }}>
         Move with mouse/finger. Click or press Space to shoot.
       </p>
-      {gameOver && (
-        <button onClick={restart} style={{ marginTop: "1rem" }}>
-          Restart
-        </button>
-      )}
+      <PauseButton isPaused={isPaused} onTogglePause={() => setIsPaused(!isPaused)} />
+      <GameOverModal score={score} isOpen={gameOver} gameName={"spaceShooter"} onClose={restart} onRestart={restart} />
     </div>
   );
 };
