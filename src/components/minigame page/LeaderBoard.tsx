@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { GET_API_URL } from "../utils/apiUtils.ts";
-import { LoadingAnimation } from "./LoadingAnimation";
+import { GET_API_URL } from "../../utils/apiUtils.ts";
+import { LoadingAnimation } from "../LoadingAnimation.tsx";
 
 // Types
 interface Score {

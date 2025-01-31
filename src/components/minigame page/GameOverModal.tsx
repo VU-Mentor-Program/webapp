@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { POST_API_URL } from "../utils/apiUtils.ts";
+import { POST_API_URL } from "../../utils/apiUtils.ts";
 
 interface GameOverModalProps {
   isOpen: boolean;

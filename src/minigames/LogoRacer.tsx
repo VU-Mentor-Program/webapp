@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import mpLogo from "../assets/mp_logo-CIRCLE.png";
-import GameOverModal from "../components/GameOverModal";
-import PauseButton from "../components/PauseButton";
-import RestartButton from "../components/RestartButton";
+import GameOverModal from "../components/minigame page/GameOverModal";
+import PauseButton from "../components/minigame page/PauseButton";
+import RestartButton from "../components/minigame page/RestartButton";
 
 export const LogoRacerGame: React.FC = () => {
   const LOGICAL_WIDTH = 800;

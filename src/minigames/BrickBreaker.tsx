@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import Confetti from "react-confetti";
 import mpLogo from "../assets/mp_logo-CIRCLE.png";
-import PauseButton from "../components/PauseButton";
-import RestartButton from "../components/RestartButton";
-import GameOverModal from "../components/GameOverModal";  
+import PauseButton from "../components/minigame page/PauseButton";
+import RestartButton from "../components/minigame page/RestartButton";
+import GameOverModal from "../components/minigame page/GameOverModal";  
 
 /**
  * Brick Breaker with dynamic brick layouts for smaller screens:

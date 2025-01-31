@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import mpLogo from "../assets/mp_logo.png";
+import PauseButton from "../components/minigame page/PauseButton";
+import RestartButton from "../components/minigame page/RestartButton";
+import SpeedSlider from "../components/minigame page/SpeedSlider";
+import GameOverModal from "../components/minigame page/GameOverModal";
 
-/**
- * Snake with bigger arrow buttons (background, radius),
- * scaled from a 400x400 logical board.
- */
 export const SnakeGame: React.FC = () => {
   const LOGICAL_SIZE = 400;
   const tileCount = 20;
@@ -30,6 +30,11 @@ export const SnakeGame: React.FC = () => {
     { x: 4, y: 10 },
   ]);
   const [food, setFood] = useState<{ x: number; y: number }>({ x: 10, y: 10 });
+  const [score, setScore] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
+  const [speed, setSpeed] = useState(200); // Speed in ms
+
   const [logoLoaded, setLogoLoaded] = useState(false);
   const logoImg = useRef<HTMLImageElement | null>(null);
 
@@ -42,13 +47,16 @@ export const SnakeGame: React.FC = () => {
     };
   }, []);
 
-  // Move snake every 200ms
+  // Move snake at set interval
   useEffect(() => {
+    if (isPaused || gameOver) return;
+
     const interval = setInterval(() => {
       moveSnake();
-    }, 200);
+    }, speed);
+
     return () => clearInterval(interval);
-  }, [snake, direction]);
+  }, [snake, direction, isPaused, gameOver, speed]);
 
   function moveSnake() {
     const head = { ...snake[0] };
@@ -57,49 +65,70 @@ export const SnakeGame: React.FC = () => {
     if (direction === "LEFT") head.x -= 1;
     if (direction === "RIGHT") head.x += 1;
 
-    // wrap edges
+    // Wrap edges
     if (head.x < 0) head.x = tileCount - 1;
     if (head.x >= tileCount) head.x = 0;
     if (head.y < 0) head.y = tileCount - 1;
     if (head.y >= tileCount) head.y = 0;
 
     const newSnake = [head, ...snake];
-    // check food
+
+    // Check collision with food
     if (head.x === food.x && head.y === food.y) {
       setFood({
         x: Math.floor(Math.random() * tileCount),
         y: Math.floor(Math.random() * tileCount),
       });
+      setScore((prev) => prev + 30); // 🏆 Increase score by 30
     } else {
       newSnake.pop();
     }
-    // self-collision => reset except head
+
+    // Check collision with self
     for (let i = 1; i < newSnake.length; i++) {
       if (newSnake[i].x === head.x && newSnake[i].y === head.y) {
-        newSnake.splice(1);
+        setGameOver(true);
+        return;
       }
     }
+
     setSnake(newSnake);
   }
 
-  // Keyboard
+  // Keyboard controls
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
-      const k = e.key.toLowerCase();
-      if (k === "arrowup" || k === "w") setDirection("UP");
-      if (k === "arrowdown" || k === "s") setDirection("DOWN");
-      if (k === "arrowleft" || k === "a") setDirection("LEFT");
-      if (k === "arrowright" || k === "d") setDirection("RIGHT");
+      if (e.key === "ArrowUp" && direction !== "DOWN") setDirection("UP");
+      if (e.key === "ArrowDown" && direction !== "UP") setDirection("DOWN");
+      if (e.key === "ArrowLeft" && direction !== "RIGHT") setDirection("LEFT");
+      if (e.key === "ArrowRight" && direction !== "LEFT") setDirection("RIGHT");
     };
     window.addEventListener("keydown", handleKey);
+    
     return () => window.removeEventListener("keydown", handleKey);
-  }, []);
+  }, [direction]);
 
   function handleTouch(dir: "UP" | "DOWN" | "LEFT" | "RIGHT") {
     setDirection(dir);
   }
 
-  // Draw
+  function restartGame() {
+    setSnake([
+      { x: 5, y: 10 },
+      { x: 4, y: 10 },
+    ]);
+    setFood({ x: 10, y: 10 });
+    setScore(0);
+    setGameOver(false);
+    setIsPaused(false);
+    setDirection("RIGHT");
+  }
+
+  function togglePause() {
+    setIsPaused((prev) => !prev);
+  }
+
+  // Draw canvas
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -135,13 +164,16 @@ export const SnakeGame: React.FC = () => {
 
   return (
     <div style={{ marginBottom: "1rem", textAlign: "center", color: "white" }}>
-      <h3>Snake Game</h3>
+      <h3>🐍 Snake Game</h3>
+      <p className="text-lg font-bold">Score: {score}</p>
+
       <canvas
         ref={canvasRef}
         width={canvasSize.width}
         height={canvasSize.height}
         style={{ background: "#222", border: "1px solid #fff" }}
       />
+
       {/* On-screen arrows with bigger buttons */}
       <div style={{ marginTop: "1rem", display: "inline-block" }}>
         <div>
@@ -203,6 +235,15 @@ export const SnakeGame: React.FC = () => {
           </button>
         </div>
       </div>
+
+      <SpeedSlider speed={speed} onChange={setSpeed} />
+
+      <div className="flex justify-center gap-4 mt-4">
+        <PauseButton isPaused={isPaused} onTogglePause={togglePause} />
+        <RestartButton onRestart={restartGame} />
+      </div>
+
+      <GameOverModal isOpen={gameOver} score={score} gameName={"snake"} onClose={restartGame} onRestart={restartGame} />
     </div>
   );
 };

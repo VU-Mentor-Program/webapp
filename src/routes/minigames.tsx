@@ -10,7 +10,7 @@ import { LogoDodgeGame } from "../minigames/LogoDodge";
 import { Header } from "../components/header";
 import { Footer } from "../components/footer";
 import { Logo } from "../components/logo";
-import LeaderBoard from "../components/LeaderBoard"
+import LeaderBoard from "../components/minigame page/LeaderBoard"
 
 export const MinigamesPage: React.FC = () => {
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
