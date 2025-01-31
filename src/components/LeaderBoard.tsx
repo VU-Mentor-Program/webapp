@@ -24,6 +24,7 @@ declare global {
 
 const LeaderBoard: React.FC<LeaderBoardProps> = ({ games }) => {
   const [leaderboard, setLeaderboard] = useState<LeaderboardData>({});
+  const [overallScores, setOverallScores] = useState<Score[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -43,12 +44,38 @@ const LeaderBoard: React.FC<LeaderBoardProps> = ({ games }) => {
    */
   window.leaderBoardCallback = (data: LeaderboardData) => {
     console.debug("✅ leaderBoardCallback received data:", data);
+
     if (!data || Object.keys(data).length === 0) {
       setError("No leaderboard data received.");
-    } else {
-      setLeaderboard(data);
-      setError("");
+      setLoading(false);
+      return;
     }
+
+    // Process game-specific leaderboards
+    const sortedLeaderboard: LeaderboardData = {};
+    const overallScoreMap: { [username: string]: number } = {};
+
+    games.forEach((game) => {
+      const scores = data[game] || [];
+      // Sort by highest score and limit to top 3
+      const topThree = scores.sort((a, b) => b.score - a.score).slice(0, 3);
+      sortedLeaderboard[game] = topThree;
+
+      // Build overall scores
+      scores.forEach(({ username, score }) => {
+        overallScoreMap[username] = (overallScoreMap[username] || 0) + score;
+      });
+    });
+
+    // Convert overall scores to an array and sort
+    const sortedOverall = Object.entries(overallScoreMap)
+      .map(([username, score]) => ({ username, score }))
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 5); // Show only top 5 overall
+
+    setLeaderboard(sortedLeaderboard);
+    setOverallScores(sortedOverall);
+    setError("");
     setLoading(false);
   };
 
@@ -111,6 +138,7 @@ const LeaderBoard: React.FC<LeaderBoardProps> = ({ games }) => {
       {/* Render leaderboard if no error and not loading */}
       {!loading && !error && (
         <>
+          {/* Game-Specific Leaderboards */}
           {games.map((game) => {
             const scores = leaderboard[game] || [];
             return (
@@ -132,6 +160,24 @@ const LeaderBoard: React.FC<LeaderBoardProps> = ({ games }) => {
               </div>
             );
           })}
+
+          {/* Overall Leaderboard */}
+          <div className="mt-8">
+            <h3 className="text-2xl font-semibold text-yellow-400 mb-3">
+              🏅 Overall Leaderboard
+            </h3>
+            <div className="bg-gray-800 p-4 rounded-lg">
+              {overallScores.length > 0 ? (
+                overallScores.map((player, index) => (
+                  <p key={index} className="text-lg">
+                    🏆 {index + 1}. {player.username} - {player.score}
+                  </p>
+                ))
+              ) : (
+                <p className="text-gray-400">No data available</p>
+              )}
+            </div>
+          </div>
         </>
       )}
     </div>
