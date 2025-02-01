@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import mpLogo from "../assets/mp_logo-CIRCLE.png";
 import GameOverModal from "../components/minigame page/GameOverModal";
+import PauseButton from "../components/minigame page/PauseButton";
 
 export const FlappyLogoGame: React.FC = () => {
   const LOGICAL_WIDTH = 800;
@@ -24,6 +25,7 @@ export const FlappyLogoGame: React.FC = () => {
 
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   // Game state
   const birdSize = 40;
@@ -79,13 +81,15 @@ export const FlappyLogoGame: React.FC = () => {
   useEffect(() => {
     let animId: number;
     const loop = () => {
-      updateGame();
-      drawGame();
+      if (!isPaused) {
+        updateGame();
+        drawGame();
+      }
       animId = requestAnimationFrame(loop);
     };
     animId = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(animId);
-  }, [gameOver, canvasSize]);
+  }, [gameOver, canvasSize, isPaused]);
 
   function updateGame() {
     if (gameOver) return;
@@ -121,6 +125,10 @@ export const FlappyLogoGame: React.FC = () => {
     }
 
     checkCollision();
+  }
+
+  function togglePause() {
+    setIsPaused((prev) => !prev);
   }
 
   function checkCollision() {
@@ -244,6 +252,7 @@ export const FlappyLogoGame: React.FC = () => {
     setScore(0);
     scoreRef.current = 0;
     setGameOver(false);
+    setIsPaused(false);
   }
 
   return (
@@ -251,6 +260,7 @@ export const FlappyLogoGame: React.FC = () => {
       <h3>Flappy Logo</h3>
       <canvas ref={canvasRef} width={canvasSize.width} height={canvasSize.height} />
       <GameOverModal isOpen={gameOver} score={score} gameName={"flappy"} onClose={restart} onRestart={restart} />
+      <PauseButton isPaused={isPaused} onTogglePause={togglePause} />
     </div>
   );
 };
