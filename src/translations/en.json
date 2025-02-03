@@ -1,4 +1,10 @@
 {
+  "header": {
+    "title": "Mentor Program",
+    "link1": "PLACEHOLDER1",
+    "link2": "PLACEHOLDER2",
+    "link3": "PLACEHOLDER3"
+  },
   "faq": {
     "title": "Frequently asked questions",
     "question1": "q1",
@@ -13,8 +19,5 @@
     "answer5": "a5",
     "question6": "q6",
     "answer6": "a6"
-  },
-  "anotherNamespace": {
-    "key": "value"
   }
 }
