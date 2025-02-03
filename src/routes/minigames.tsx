@@ -30,7 +30,6 @@ export const MinigamesPage: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-800 text-white text-center px-5">
-      <Header />
       <div className="flex-grow flex flex-col items-center justify-center">
         <Logo />
         <h1 className="text-2xl font-bold pt-1">Minigames</h1>
@@ -100,8 +99,6 @@ export const MinigamesPage: React.FC = () => {
       </div>
 
       <LeaderBoard games={minigames} />
-      
-      <Footer />
     </div>
   );
 };
