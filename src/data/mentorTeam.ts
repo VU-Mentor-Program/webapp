@@ -51,7 +51,7 @@ export const mentorTeam = {
     { 
       "name": "Frank",
       "full_name": "Frank Würthner",
-      "photo": "http://localhost:5173/webapp/src/assets/mp_logo.png",
+      "photo": "",
       "linkedin_github": "",
       "study": "3rd year CS",
       "country": "de",

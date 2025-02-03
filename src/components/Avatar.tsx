@@ -16,6 +16,10 @@ const Avatar: React.FC<AvatarProps> = ({
   role,
   country,
 }) => {
+
+  if (src == "") {
+    src = "/webapp/default person.jpg";
+  }
   return (
     <div className="w-[186px] h-[196px] flex-col text-center flex justify-center items-center pb-5">
       <a href={linkedin_github} target="_blank" rel="noopener noreferrer">
