@@ -51,7 +51,7 @@ const MonthlyEvents: React.FC = () => {
             </div>
           </div>
           <a
-            href="https://chat.whatsapp.com/EJrnbX25fO2B8nFecKRRTl"
+            href="https://chat.whatsapp.com/I6CQX1yyYM830oTZks5lX7"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300"

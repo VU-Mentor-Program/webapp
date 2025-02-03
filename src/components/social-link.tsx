@@ -17,7 +17,7 @@ export const SocialLinks = () => {
       <SocialIcon href="https://www.instagram.com/bscmentorsprogram?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==">
         <FaInstagram />
       </SocialIcon>
-      <SocialIcon href="https://chat.whatsapp.com/EJrnbX25fO2B8nFecKRRTl">
+      <SocialIcon href="https://chat.whatsapp.com/I6CQX1yyYM830oTZks5lX7">
         <FaWhatsapp />
       </SocialIcon>
     </div>
