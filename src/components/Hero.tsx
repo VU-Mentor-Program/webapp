@@ -2,6 +2,7 @@ import React from "react";
 import { Logo } from "./logo";         
 import { SocialLinks } from "./social-link";
 import { useTranslations } from "../contexts/TranslationContext";
+import JoinCommunityButton from "./JoinCommunityButton";
 
 export const Hero: React.FC = () => {
   const t = useTranslations("hero");
@@ -18,6 +19,7 @@ export const Hero: React.FC = () => {
           {t("text")}
         </p>
 
+        <JoinCommunityButton />
         <SocialLinks />
       </div>
     </section>
