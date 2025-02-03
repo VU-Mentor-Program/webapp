@@ -24,10 +24,17 @@ export const Header: React.FC = () => {
   const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
     if (path.startsWith("#")) {
       e.preventDefault();
-      const elementId = path.substring(1);
-      const element = document.getElementById(elementId);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
+      // If we're on a routed page (hash starts with "#/") such as minigames,
+      // navigate to the homepage with the anchor.
+      if (window.location.hash.startsWith("#/")) {
+        window.location.href = "/webapp";
+      } else {
+        // Otherwise, attempt smooth scrolling.
+        const elementId = path.substring(1);
+        const element = document.getElementById(elementId);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
       }
       setMobileMenuOpen(false);
     }
@@ -76,7 +83,7 @@ export const Header: React.FC = () => {
           {navLinks.map((link) => (
             <Link
               key={link.path}
-              to={link.path}
+              to={link.path.startsWith("/minigames") ? link.path : "#"}
               onClick={(e) => handleAnchorClick(e, link.path)}
               className="text-white hover:text-gray-300 transition"
             >
@@ -120,7 +127,7 @@ export const Header: React.FC = () => {
         </div>
       </header>
 
-      {/* Mobile Side Menu with Blur Overlay (Always rendered, but hidden via CSS when closed) */}
+      {/* Mobile Side Menu with Blur Overlay */}
       <div
         className={`fixed inset-0 backdrop-blur-sm z-40 transition-opacity duration-300 ${
           mobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
@@ -144,7 +151,7 @@ export const Header: React.FC = () => {
           {navLinks.map((link) => (
             <Link
               key={link.path}
-              to={link.path}
+              to={link.path.startsWith("/minigames") ? link.path : "#"}
               onClick={(e) => handleAnchorClick(e, link.path)}
               className="text-white hover:text-gray-300 transition"
             >
