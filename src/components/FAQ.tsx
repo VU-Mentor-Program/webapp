@@ -12,7 +12,7 @@ const FAQItem: React.FC<FAQItemProps> = ({ question, answer }) => {
 
   return (
     <div
-      className={`border-t border-gray-700 ${
+      className={`border-t border-gray-700 rounded ${
         isOpen ? "bg-gray-700" : "bg-gray-800"
       } transition-all duration-200`}
     >
