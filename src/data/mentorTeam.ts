@@ -59,7 +59,7 @@ export const mentorTeam = {
     { 
       "name": "Gintarė",
       "full_name": "Gintarė Rutkutė",
-      "photo": "https://media.licdn.com/dms/image/v2/D4E03AQGieNQFOKHzYA/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1700142079144?e=1744243200&v=beta&t=JhYjPSyEXqzGsVXU_8cfapufs9qFAz5OiojgJLa08wU",
+      "photo": "/webapp/gin.png",
       "linkedin_github": "https://www.linkedin.com/in/gintar%C4%97-rutkut%C4%97-590929272/",
       "study": "2nd year AI",
       "country": "lt",
