@@ -201,6 +201,7 @@ export const SnakeGame: React.FC = () => {
               borderRadius: "8px",
               padding: "0.5rem 1rem",
               margin: "0.3rem",
+              marginRight: "1.5rem"
             }}
           >
             ←
@@ -214,6 +215,7 @@ export const SnakeGame: React.FC = () => {
               borderRadius: "8px",
               padding: "0.5rem 1rem",
               margin: "0.3rem",
+              marginLeft: "1.5rem"
             }}
           >
             →
