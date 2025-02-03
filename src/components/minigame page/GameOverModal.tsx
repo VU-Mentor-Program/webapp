@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { POST_API_URL } from "../../utils/apiUtils.ts";
+import { POST_API_URL } from "../../utils/apiUtils";
 
 interface GameOverModalProps {
   isOpen: boolean;
@@ -21,7 +21,7 @@ const GameOverModal: React.FC<GameOverModalProps> = ({
   score,
   gameName,
   onClose,
-  onRestart
+  onRestart,
 }) => {
   const [username, setUsername] = useState("");
   const [error, setError] = useState("");
@@ -105,10 +105,8 @@ const GameOverModal: React.FC<GameOverModalProps> = ({
   };
 
   return (
-    <div
-      className="fixed inset-0 flex items-center justify-center backdrop-blur-md z-50"
-      onClick={onClose}
-    >
+    <div className="fixed inset-0 flex items-center justify-center backdrop-blur-md z-50">
+      {/* Prevent closing the modal by clicking the backdrop */}
       <div
         className="bg-gray-900 bg-opacity-90 text-white p-6 rounded-lg shadow-lg max-w-md w-full relative"
         onClick={(e) => e.stopPropagation()}
