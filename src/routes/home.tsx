@@ -36,7 +36,7 @@ export default function Home() {
             to="/minigames"
             className="mt-6 bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 transition-colors"
           >
-            🕹️ Play Minigames! 🕹️
+            {t("minigames")}
           </Link>
         </IntlProvider>
       </div>
