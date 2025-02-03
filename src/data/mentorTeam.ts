@@ -25,8 +25,8 @@ export const mentorTeam = {
       "country": "nl",
     },
     { 
-      "name": "Lucy",
-      "full_name": "Lucia Šikulová",
+      "name": "Lucia Šikulová",
+      "full_name": "Lucy",
       "photo": "/webapp/lucy.png",
       "linkedin_github": "https://www.linkedin.com/in/lucy-sikulova/",
       "study": "MsC AI",
