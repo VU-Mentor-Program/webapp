@@ -35,7 +35,7 @@ export const mentorTeam = {
     { 
       "name": "Vitor",
       "full_name": "Vitor Castro",
-      "photo": "https://media.licdn.com/dms/image/v2/D4E03AQEUW4YbrMBuUg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1722213048551?e=1744243200&v=beta&t=pxebasRdiMG3DUE9AFb5B2FF7Id7l_hEHl572_omg_E",
+      "photo": "/webapp/vitor.png",
       "linkedin_github": "https://www.linkedin.com/in/vitor-castro-24584a220/",
       "study": "2nd year CS",
       "country": "br",
