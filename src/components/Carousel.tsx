@@ -1,7 +1,5 @@
-// Carousel.tsx
 import React, { useState, useEffect, useRef } from "react";
 
-// The raw images array (without clones)
 const rawImages = [
   "/webapp/IMG_2333.JPG",
   "/webapp/IMG_3302.JPG",
@@ -29,6 +27,11 @@ const Carousel: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(1);
   const sliderRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<number>();
+
+  // For swiping:
+  const touchStartXRef = useRef<number>(0);
+  const touchEndXRef = useRef<number>(0);
+  const minSwipeDistance = 50; // threshold in pixels
 
   // Each slide takes 80% of the container's width.
   const slideWidthPercentage = 80;
@@ -72,11 +75,9 @@ const Carousel: React.FC = () => {
     if (currentIndex === 0) {
       // If at clone of last slide (index 0), jump to the real last image.
       setCurrentIndex(rawImages.length);
-      // Temporarily disable transition to avoid animation on jump.
       if (sliderRef.current) {
         sliderRef.current.style.transition = "none";
         sliderRef.current.style.transform = `translateX(-${rawImages.length * slideWidthPercentage}%)`;
-        // Force reflow, then re-enable transition.
         void sliderRef.current.offsetWidth;
         sliderRef.current.style.transition = "transform 500ms ease-in-out";
       }
@@ -92,10 +93,35 @@ const Carousel: React.FC = () => {
     }
   };
 
+  // Touch handlers for swiping.
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartXRef.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndXRef.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    const distance = touchStartXRef.current - touchEndXRef.current;
+    if (distance > minSwipeDistance) {
+      // Swiped left -> next slide.
+      nextSlide();
+    } else if (distance < -minSwipeDistance) {
+      // Swiped right -> previous slide.
+      prevSlide();
+    }
+  };
+
   return (
     <div className="relative w-full max-w-4xl mx-auto pb-10">
-      {/* Carousel Container */}
-      <div className="overflow-hidden rounded">
+      {/* Carousel Container with touch handlers */}
+      <div
+        className="overflow-hidden rounded"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         {/* Slider */}
         <div
           ref={sliderRef}
