@@ -7,6 +7,7 @@ import { IntlProvider } from "react-intl";
 import FAQ from "../components/FAQ"
 import Hero from "../components/Hero"
 import { useTranslations } from "../contexts/TranslationContext";
+import Carousel from "../components/Carousel"
 
 const locale = "nl";
 
@@ -28,6 +29,7 @@ export default function Home() {
           }}
         >
           <Hero />
+          <Carousel />
           <FAQ />
           <Team title={t("title")} description={t("subtitle")} />
           <Link
