@@ -19,7 +19,7 @@ export const mentorTeam = {
     { 
       "name": "Noor",
       "full_name": "Noor Dooper",
-      "photo": "https://media.licdn.com/dms/image/v2/D4D03AQGwzQiTsQXyWQ/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1701354451156?e=1744243200&v=beta&t=WuMPVEZetfMrBobIjXAPdAICRVk0j_TztVF2fu1bXes",
+      "photo": "/webapp/noor.png",
       "linkedin_github": "https://www.linkedin.com/in/noor-dooper-aab77b29b/",
       "study": "2nd year AI",
       "country": "nl",
