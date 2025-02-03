@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import Team from "../components/Team";
 import { IntlProvider } from "react-intl";
 import FAQ from "../components/FAQ"
+import Hero from "../components/Hero"
 
 const locale = "nl";
 
@@ -26,12 +27,7 @@ export default function Home() {
             throw err;
           }}
         >
-          <Logo />
-          <h1 className="text-2xl font-bold pt-1">Mentor Program</h1>
-          <p className="text-base pt-1 pb-1">
-            Aiming to bring first-year students together 😊
-          </p>
-          <SocialLinks />
+          <Hero />
           <FAQ />
           <Team title={"Team"} description={"Meet our amazing team"} />
           <Link
