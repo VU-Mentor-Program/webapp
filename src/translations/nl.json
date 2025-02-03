@@ -1,23 +1,32 @@
 {
   "header": {
     "title": "Mentor Program",
-    "link1": "PLACEHOLDER1",
-    "link2": "PLACEHOLDER2",
-    "link3": "PLACEHOLDER3"
+    "link1": "FAQ",
+    "link2": "Team",
+    "link3": "Agenda"
   },
   "faq": {
-    "title": "Frequently asked questions",
-    "question1": "q1",
-    "answer1": "a1",
-    "question2": "q2",
-    "answer2": "a2",
-    "question3": "q3",
-    "answer3": "a3",
-    "question4": "q4",
-    "answer4": "a4",
-    "question5": "q5",
-    "answer5": "a5",
-    "question6": "q6",
-    "answer6": "a6"
+    "title": "Veelgestelde vragen",
+    "question1": "Ik heb me ingeschreven voor een evenement, maar ik kan toch niet meer aanwezig zijn. Wat moet ik doen?",
+    "answer1": "Stuur ons een bericht! Of wacht op de geautomatiseerde bevestigingsmail, waarin je kunt annuleren en je plek aan iemand anders kunt geven. Als je al hebt bevestigd, kun je ook gewoon nogmaals op de Annuleren-knop klikken, waardoor de plek automatisch wordt vrijgegeven. Zorg er alsjeblieft voor dat je dit minstens 24 uur voor het evenement doet, want later annuleren kan ertoe leiden dat je op de zwarte lijst komt voor het volgende evenement!",
+    "question2": "Het evenement waarvoor ik me wil inschrijven zit vol. Kan ik een eigen ticket kopen?",
+    "answer2": "Helaas niet, er zijn organisatorische redenen waardoor we onze leden niet hun eigen tickets kunnen laten kopen :(",
+    "question3": "Mag ik iemand meenemen naar het evenement? (mogelijk niet van de universiteit)",
+    "answer3": "Helaas is het programma alleen voor eerstejaars AI- en CS-studenten aan de VU. We staan geen plus-ones toe. Neem echter contact met ons op als er uitzonderlijke omstandigheden zijn!",
+    "question4": "Hoe schrijf ik me in voor een evenement?",
+    "answer4": "We sturen de inschrijflinks via onze WhatsApp-groepen! Schrijf je in via de Google Forms en wacht op de geautomatiseerde e-mails om je plek te bevestigen!",
+    "question5": "Wat wordt het volgende evenement en wanneer is het?",
+    "answer5": "We sturen elke maand onze agenda via ons WhatsApp-kanaal! Ook plaatsen we meldingen op onze Instagram-pagina. Als je het nog steeds niet zeker weet, aarzel dan niet om contact met ons op te nemen!",
+    "question6": "Ik sta op de zwarte lijst, wat kan ik doen?",
+    "answer6": "Stuur ons een bericht! Als er een fout is gemaakt, zorgen we dat dit wordt opgelost. Als je op de zwarte lijst staat, komt dat waarschijnlijk doordat je je hebt ingeschreven voor een evenement en niet bent komen opdagen zonder ons dit minstens 24 uur voor het evenement te melden. We doen dit om ervoor te zorgen dat iedereen die wil deelnemen die kans krijgt! Bij de meeste evenementen hebben we meer aanmeldingen dan plekken, en we willen dat iedereen kan deelnemen!",
+    "question7": "Wat is het Mentorprogramma?",
+    "answer7": "Het Mentorprogramma is een ondersteunend initiatief speciaal ontworpen voor eerstejaars AI- en CS-studenten aan de VU. Het biedt gratis sociale evenementen, studiebijeenkomsten en examenvoorbereidingen om je te helpen soepel over te stappen naar het universiteitsleven in Amsterdam, zodat je zowel academisch als sociaal kunt floreren.",
+    "question8": "Hoe sluit je je aan bij het Mentorprogramma?",
+    "answer8": "Je kunt je aansluiten bij het Mentorprogramma door de verstrekte WhatsApp-link te volgen!"
+  },
+  "hero": {
+    "title": "Mentorprogramma voor CS & AI",
+    "subtitle": "Om eerstejaars studenten samen te brengen 😊",
+    "text": "Begin je eerste jaar in AI of CS? Het Mentorprogramma van de VU voor Computer Science en Artificial Intelligence staat klaar om je te ondersteunen bij je overgang naar het universiteitsleven in Amsterdam. Het programma biedt een scala aan gratis sociale evenementen, studiebijeenkomsten en examenvoorbereidingen, allemaal ontworpen om je te helpen zowel academisch als sociaal te floreren. Of je nu nieuwe mensen wilt ontmoeten of begeleiding zoekt bij je studie, het Mentorprogramma biedt een warme en uitnodigende community om een soepele en succesvolle start te garanderen. Sluit je aan via onze WhatsApp-link en haal het maximale uit je eerste jaar!"
   }
 }

@@ -2,13 +2,15 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import logo from "../assets/mp_logo-CIRCLE.png";
-import { useTranslations } from "../contexts/TranslationContext";
+import { useTranslations, useSetLanguage, useCurrentLanguage } from "../contexts/TranslationContext";
 
 export const Header: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isHeaderHidden, setHeaderHidden] = useState(false);
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const t = useTranslations("header");
+  const setLanguage = useSetLanguage();
+  const currentLanguage = useCurrentLanguage();
 
   const navLinks = [
     { name: t("link1"), path: "#faq" },
@@ -52,8 +54,8 @@ export const Header: React.FC = () => {
       <header
         onClick={() => setHeaderHidden(false)}
         className={`fixed left-0 right-0 px-4 py-2 flex items-center justify-between z-50 
-                    bg-gray-800 bg-opacity-90 backdrop-blur-sm rounded transition-transform duration-300 
-                    ${isHeaderHidden ? "-translate-y-20" : "translate-y-0"} md:translate-y-0`}
+          bg-gray-800 bg-opacity-90 backdrop-blur-sm rounded transition-transform duration-300 
+          ${isHeaderHidden ? "-translate-y-20" : "translate-y-0"} md:translate-y-0`}
       >
         {/* Left side: Logo + Title */}
         <div className="flex items-center space-x-3">
@@ -80,8 +82,32 @@ export const Header: React.FC = () => {
           ))}
         </nav>
 
-        {/* Mobile Hamburger Icon */}
-        <div className="md:hidden z-50">
+        {/* Language Switcher */}
+        <div className="hidden md:flex items-center space-x-2 relative">
+          <button
+            onClick={() => setLanguage("en")}
+            className={`px-2 py-1 transition-colors ${currentLanguage === "en" ? "bg-gray-700 rounded" : ""}`}
+          >
+            EN
+          </button>
+          <button
+            onClick={() => setLanguage("nl")}
+            className={`px-2 py-1 transition-colors ${currentLanguage === "nl" ? "bg-gray-700 rounded" : ""}`}
+          >
+            NL
+          </button>
+        </div>
+
+        {/* Mobile Hamburger Icon & Language Switcher */}
+        <div className="md:hidden flex items-center space-x-2 z-50">
+          <select
+            onChange={(e) => setLanguage(e.target.value)}
+            value={currentLanguage}
+            className="bg-transparent text-white border border-gray-600 rounded p-1 focus:outline-none"
+          >
+            <option value="en">EN</option>
+            <option value="nl">NL</option>
+          </select>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="text-white hover:text-gray-300 transition focus:outline-none"
@@ -94,7 +120,7 @@ export const Header: React.FC = () => {
       {/* Mobile Side Menu with Blur Overlay */}
       {mobileMenuOpen && (
         <>
-          {/* Overlay with blur effect on the rest of the screen */}
+          {/* Overlay with blur effect */}
           <div
             className="fixed inset-0 backdrop-blur-sm z-40 transition-opacity duration-200 opacity-100"
             onClick={() => setMobileMenuOpen(false)}
