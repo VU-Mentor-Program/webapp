@@ -54,6 +54,22 @@ const FAQ: React.FC = () => {
       question: t("question3"),
       answer: t("answer3"),
     },
+    {
+      question: t("question5"),
+      answer: t("answer5"),
+    },
+    {
+      question: t("question6"),
+      answer: t("answer6"),
+    },
+        {
+      question: t("question7"),
+      answer: t("answer7"),
+    },
+        {
+      question: t("question8"),
+      answer: t("answer8"),
+    },
   ];
 
   return (

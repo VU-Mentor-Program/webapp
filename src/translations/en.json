@@ -7,17 +7,21 @@
   },
   "faq": {
     "title": "Frequently asked questions",
-    "question1": "q1",
-    "answer1": "a1",
-    "question2": "q2",
-    "answer2": "a2",
-    "question3": "q3",
-    "answer3": "a3",
-    "question4": "q4",
-    "answer4": "a4",
-    "question5": "q5",
-    "answer5": "a5",
-    "question6": "q6",
-    "answer6": "a6"
+    "question1": "I signed up for an event but I can't attend anymore, what should I do?",
+    "answer1": "Send us a message! Or wait for the automated confirmation email, where you can cancel and give your spot to someone else! If you already accepted then you can also just click on the Cancel button again, this automatically reassigns the spot! Please make sure to do this at least 24h before the event though, any later may result in being blacklisted for the next event!",
+    "question2": "The event I want to sign up for is full, can I buy my own ticket?",
+    "answer2": "Unfortunately no, there are some organizational issues, where we can not let our members buy their own tickets :(",
+    "question3": "Can I bring a +1 to the event? (possibly not from uni)",
+    "answer3": "Unfortunately, the program is only for first year AI and CS students from VU. We can't allow any plus ones. However, do reach out if there are some exceptional circumstances!",
+    "question4": "How do I sign up for an event?",
+    "answer4": "We send the signup links through our WhatsApp groups! Sign up through the Google Forms and wait for the automated emails to confirm your spot!",
+    "question5": "What will the next event be and when is it?",
+    "answer5": "We send out our calendars for each month through our WhatsApp channel! Also we post notifications on our Instagram page, if you're still not sure do not hesitate to reach out to us!",
+    "question6": "I got blacklisted, what can I do?",
+    "answer6": "Send us a message! If there has been a mistake, we will make sure to fix it. If you got blacklisted then it is probably due to signing up to an event and failing to show up without communicating this to us at least 24h before the event. We do this to ensure that people who would like to show up get that oppurtunity! Most of our events have more signups that we have spots and we'd like everyone that want to be able to attend!",
+    "question7": "What is the Mentor Program?",
+    "answer7": "The Mentor Program is a supportive initiative designed for first-year students in AI or CS at VU. It offers free social events, study sessions, and exam preparations to help you transition smoothly into university life in Amsterdam, ensuring you thrive both academically and socially.",
+    "question8": "How do you join the Mentor Program?",
+    "answer8": "You can join the Mentor Program by following the provided WhatsApp link!"
   }
 }
