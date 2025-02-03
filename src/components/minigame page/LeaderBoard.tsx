@@ -96,7 +96,7 @@ const LeaderBoard: React.FC<LeaderBoardProps> = ({ games }) => {
     script.async = true;
 
     script.onerror = (ev) => {
-      setError("Failed to load leaderboard data. Check console.");
+      setError("Failed to load leaderboard data. Check console." + ev);
       setLoading(false);
     };
 
