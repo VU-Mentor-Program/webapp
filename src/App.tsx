@@ -5,6 +5,7 @@ import Accept from './routes/accept';
 import Decline from "./routes/decline";
 import { MinigamesPage } from "./routes/minigames";
 import { TranslationProvider } from "./contexts/TranslationContext";
+import { Layout } from "./components/Layout"
 
 function App() {
 
@@ -12,10 +13,22 @@ function App() {
     < TranslationProvider >
       <Router>
         <Routes>
-          <Route index path="/" element={<Home />} />
-          <Route path="/accept" element={<Accept />} />
-          <Route path="/decline" element={<Decline />} />
-          <Route path="/minigames" element={<MinigamesPage />} />
+          <Route path="/" element={
+            <Layout>
+              <Home />
+            </Layout>}/>
+          <Route path="/accept" element={
+            <Layout>
+              <Accept />
+            </Layout>} />
+          <Route path="/decline" element={
+            <Layout>
+              <Decline />
+            </Layout>} />
+          <Route path="/minigames" element={
+            <Layout>
+              <MinigamesPage />
+            </Layout>} />
         </Routes>
       </Router>
     </TranslationProvider>
