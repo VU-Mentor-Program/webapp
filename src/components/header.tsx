@@ -12,10 +12,12 @@ export const Header: React.FC = () => {
   const setLanguage = useSetLanguage();
   const currentLanguage = useCurrentLanguage();
 
+  // Navigation links array.
   const navLinks = [
     { name: t("link1"), path: "#faq" },
     { name: t("link2"), path: "#team" },
     { name: t("link3"), path: "#calendar" },
+    { name: t("link4"), path: "/minigames" },
   ];
 
   const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
@@ -53,12 +55,12 @@ export const Header: React.FC = () => {
       {/* Header */}
       <header
         onClick={() => setHeaderHidden(false)}
-        className={`fixed left-0 right-0 px-4 py-2 flex items-center justify-between z-50 
+        className={`fixed left-0 right-0 px-24 py-4 flex items-center z-50 
           bg-gray-800 bg-opacity-90 backdrop-blur-sm rounded transition-transform duration-300 
           ${isHeaderHidden ? "-translate-y-20" : "translate-y-0"} md:translate-y-0`}
       >
-        {/* Left side: Logo + Title */}
-        <div className="flex items-center space-x-3">
+        {/* Left Section: Logo + Title */}
+        <div className="flex items-center space-x-3 flex-1">
           <img src={logo} alt="Logo" className="h-10 w-10" />
           <Link
             to="/"
@@ -68,8 +70,8 @@ export const Header: React.FC = () => {
           </Link>
         </div>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex space-x-6">
+        {/* Center Section: Navigation Links */}
+        <nav className="hidden md:flex space-x-6 flex-1 justify-center">
           {navLinks.map((link) => (
             <Link
               key={link.path}
@@ -82,23 +84,23 @@ export const Header: React.FC = () => {
           ))}
         </nav>
 
-        {/* Language Switcher */}
-        <div className="hidden md:flex items-center space-x-2 relative">
+        {/* Right Section: Language Switcher */}
+        <div className="hidden md:flex items-center space-x-2 flex-1 justify-end">
           <button
             onClick={() => setLanguage("en")}
-            className={`px-2 py-1 transition-colors ${currentLanguage === "en" ? "bg-gray-700 rounded" : ""}`}
+            className={`px-3 py-1 transition-colors ${currentLanguage === "en" ? "bg-gray-700 rounded" : ""}`}
           >
             EN
           </button>
           <button
             onClick={() => setLanguage("nl")}
-            className={`px-2 py-1 transition-colors ${currentLanguage === "nl" ? "bg-gray-700 rounded" : ""}`}
+            className={`px-3 py-1 transition-colors ${currentLanguage === "nl" ? "bg-gray-700 rounded" : ""}`}
           >
             NL
           </button>
         </div>
 
-        {/* Mobile Hamburger Icon & Language Switcher */}
+        {/* Mobile: Hamburger Icon & Language Switcher */}
         <div className="md:hidden flex items-center space-x-2 z-50">
           <select
             onChange={(e) => setLanguage(e.target.value)}
@@ -155,3 +157,5 @@ export const Header: React.FC = () => {
     </>
   );
 };
+
+export default Header;
