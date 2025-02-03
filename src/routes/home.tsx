@@ -6,6 +6,7 @@ import FAQ from "../components/FAQ"
 import Hero from "../components/Hero"
 import { useTranslations } from "../contexts/TranslationContext";
 import Carousel from "../components/Carousel"
+import MonthlyEvents from "../components/MonthlyEvents";
 
 const locale = "nl";
 
@@ -27,6 +28,7 @@ export default function Home() {
         >
           <Hero />
           <Carousel />
+          <MonthlyEvents />
           <FAQ />
           <Team title={t("title")} description={t("subtitle")} />
           <Calendar />

@@ -93,7 +93,7 @@ const Carousel: React.FC = () => {
   };
 
   return (
-    <div className="relative w-full max-w-4xl mx-auto">
+    <div className="relative w-full max-w-4xl mx-auto pb-10">
       {/* Carousel Container */}
       <div className="overflow-hidden rounded">
         {/* Slider */}

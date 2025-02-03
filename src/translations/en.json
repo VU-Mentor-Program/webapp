@@ -31,8 +31,15 @@
     "text": "Starting your first year in AI or CS? VU’s Mentor Program for Computer Science and Artificial Intelligence is here to support your transition to university life in Amsterdam. The program offers a range of free social events, study sessions, and exam preparations, all designed to help you thrive academically and socially. Whether you’re looking to meet new people or need guidance with your studies, Mentor’s Program offers a welcoming community to ensure a smooth and successful start. Join via our WhatsApp link and make the most of your first year!",
     "join": "Join the Community!"
   },
-  "team" : {
+  "team": {
     "title": "Our Team",
     "subtitle": "Meet our amazing team"
+  },
+  "monthlyEvents": {
+    "title": "Monthly Events",
+    "description": "Typically, we aim to have one larger social event, two smaller social events, and one academic event per month. This changes based on the students' schedule and we're flexible about it. If first-year students have exams, we will always try to organize an exam preparation session. This session can replace either the academic event or one of the smaller social events.",
+    "eventName": "Go Karting & Laser Tag",
+    "counterLabel": "Time until next event:",
+    "signupLinkLabel": "Sign up now!"
   }
 }

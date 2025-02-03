@@ -34,5 +34,12 @@
   "team": {
     "title": "Ons Team",
     "subtitle": "Maak kennis met ons geweldige team"
+  },
+  "monthlyEvents": {
+    "title": "Maandelijkse Evenementen",
+    "description": "Gewoonlijk streven we ernaar om per maand één groot sociaal evenement, twee kleinere sociale evenementen en één academisch evenement te organiseren. Dit verandert op basis van het rooster van de studenten en we zijn hierin flexibel. Als eerstejaars examens hebben, proberen we altijd een examenvoorbereidingssessie te organiseren. Deze sessie kan het academische evenement of één van de kleinere sociale evenementen vervangen.",
+    "eventName": "Go Karting & Laser Tag",
+    "counterLabel": "Tijd tot het volgende evenement:",
+    "signupLinkLabel": "Schrijf je nu in!"
   }
 }
