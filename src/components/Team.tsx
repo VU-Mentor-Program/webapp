@@ -30,7 +30,7 @@ const Team: React.FC<TeamProps> = ({ title, description, background }) => {
       linkedin_github={member.linkedin_github}
       role={
         intl.formatMessage({
-          id: `roles.${member.role?.toLowerCase() ?? "defaultRole"}`,
+          id: `roles.${member.study?.toLowerCase() ?? "defaultRole"}`,
           defaultMessage: member.study ?? "Member",
         })
       }
