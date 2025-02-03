@@ -15,7 +15,7 @@ interface IMember {
   full_name: string;
   photo: string;
   linkedin_github?: string;
-  role?: string;
+  study?: string;
   country?: string;
 }
 
