@@ -42,5 +42,12 @@
     "eventName": "Go Karting & Laser Tag",
     "counterLabel": "Tijd tot het evenement:",
     "signupLinkLabel": "Schrijf je nu in!"
+  },
+  "leaderboard": {
+    "title": "Aanmeldingsranglijst",
+    "refreshButton": "Ranglijst vernieuwen",
+    "noData": "Geen inschrijfgegevens beschikbaar",
+    "errorLoading": "Laden van ranglijstgegevens mislukt.",
+    "subtitle": "Teller voor hoe vaak men zich heeft aangemeld voor onze evenementen! Er is een prijs voor degene die zich aan het einde van het academische jaar het meest aanmeldt!"
   }
 }

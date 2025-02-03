@@ -44,6 +44,7 @@ const LeaderBoard: React.FC = () => {
   return (
     <div className="w-full max-w-4xl mx-auto my-8 p-5 bg-gray-900 text-white rounded-lg shadow-lg">
       <h2 className="text-3xl font-bold text-center mb-4">{t("title")}</h2>
+      <p className="text-xl text-center mb-4">{t("subtitle")}</p>
 
       {/* Loading and Error States */}
       {loading && <LoadingAnimation />}

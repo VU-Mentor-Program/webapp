@@ -32,8 +32,8 @@ export default function Home() {
           <MonthlyEvents />
           <FAQ />
           <Team title={t("title")} description={t("subtitle")} />
-          <Calendar />
           <AttendanceLeaderBoard />
+          <Calendar />
           <Link
             to="/minigames"
             className="mt-6 bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 transition-colors"

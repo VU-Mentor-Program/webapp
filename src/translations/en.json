@@ -47,6 +47,7 @@
     "title": "Sign-Up Leaderboard",
     "refreshButton": "Refresh Leaderboard",
     "noData": "No sign-up data available",
-    "errorLoading": "Failed to load leaderboard data."
+    "errorLoading": "Failed to load leaderboard data.",
+    "subtitle": "Counter on how many times one has signed up to our events! There is a prize for the one who signs up the most at the end of the academic year!"
   }
 }
