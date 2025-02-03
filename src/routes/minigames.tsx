@@ -7,8 +7,6 @@ import { LogoRacerGame } from "../minigames/LogoRacer";
 import { LogoSpaceShooterGame } from "../minigames/LogoSpaceShooter";
 // import { LogoCatchGame } from "../minigames/LogoCatch";
 import { LogoDodgeGame } from "../minigames/LogoDodge";
-import { Header } from "../components/header";
-import { Footer } from "../components/footer";
 import { Logo } from "../components/logo";
 import LeaderBoard from "../components/minigame page/LeaderBoard"
 
