@@ -31,7 +31,7 @@ const Team: React.FC<TeamProps> = ({ title, description, background }) => {
       role={
         intl.formatMessage({
           id: `roles.${member.role?.toLowerCase() ?? "defaultRole"}`,
-          defaultMessage: member.role ?? "Member",
+          defaultMessage: member.study ?? "Member",
         })
       }
       country={member.country}
