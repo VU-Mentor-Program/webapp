@@ -6,10 +6,12 @@ import Team from "../components/Team";
 import { IntlProvider } from "react-intl";
 import FAQ from "../components/FAQ"
 import Hero from "../components/Hero"
+import { useTranslations } from "../contexts/TranslationContext";
 
 const locale = "nl";
 
 export default function Home() {
+  const t = useTranslations("team");
   return (
     <div className="flex flex-col min-h-screen bg-gray-800 text-white text-center px-5">
       <Header />
@@ -27,7 +29,7 @@ export default function Home() {
         >
           <Hero />
           <FAQ />
-          <Team title={"Team"} description={"Meet our amazing team"} />
+          <Team title={t("title")} description={t("subtitle")} />
           <Link
             to="/minigames"
             className="mt-6 bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 transition-colors"
