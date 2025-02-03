@@ -42,5 +42,11 @@
     "eventName": "Go Karting & Laser Tag",
     "counterLabel": "Time the event:",
     "signupLinkLabel": "Sign up now!"
+  },
+  "leaderboard": {
+    "title": "Sign-Up Leaderboard",
+    "refreshButton": "Refresh Leaderboard",
+    "noData": "No sign-up data available",
+    "errorLoading": "Failed to load leaderboard data."
   }
 }
