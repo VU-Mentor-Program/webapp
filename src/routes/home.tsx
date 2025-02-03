@@ -6,6 +6,7 @@ import { Calendar } from "../components/Calendar";
 import { Link } from "react-router-dom";
 import Team from "../components/Team";
 import { IntlProvider } from "react-intl";
+import FAQ from "../components/FAQ"
 
 const locale = "nl";
 
@@ -40,6 +41,7 @@ export default function Home() {
           </Link>
 
           <Calendar />
+          <FAQ />
           <Team title={"Team"} description={"Meet our amazing team"} />
         </IntlProvider>
       </div>

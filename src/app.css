@@ -13,3 +13,24 @@ body {
     color-scheme: dark;
   }
 }
+
+
+.faq-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  opacity: 0;
+}
+
+.faq-content.open {
+  max-height: 1000px;
+  opacity: 1;
+}
+
+.faq-icon {
+  transition: transform 0.3s ease-in-out;
+}
+
+.faq-icon.open {
+  transform: rotate(45deg);
+}
