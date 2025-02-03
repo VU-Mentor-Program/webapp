@@ -11,7 +11,7 @@ export const mentorTeam = {
     {
       "name": "Sven",
       "full_name": "Sven van Dijk",
-      "photo": "https://media.licdn.com/dms/image/v2/D4E03AQEhJ1jJLZn-2w/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1707259659796?e=1744243200&v=beta&t=OScGRPOc5botwYir7TJ92plCTMIcAsxHl-H-9VfXHDo",
+      "photo": "/webapp/sven.png",
       "linkedin_github": "https://www.linkedin.com/in/sven-van-dijk-b82641242/",
       "study": "3rd year CS",
       "country": "nl",
