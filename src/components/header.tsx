@@ -55,7 +55,7 @@ export const Header: React.FC = () => {
       {/* Header */}
       <header
         onClick={() => setHeaderHidden(false)}
-        className={`fixed left-0 right-0 px-24 py-4 flex items-center z-50 
+        className={`fixed left-0 right-0 px-4 md:px-24 py-4 flex items-center z-50 
           bg-gray-800 bg-opacity-90 backdrop-blur-sm rounded transition-transform duration-300 
           ${isHeaderHidden ? "-translate-y-20" : "translate-y-0"} md:translate-y-0`}
       >
