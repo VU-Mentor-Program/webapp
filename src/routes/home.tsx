@@ -1,7 +1,5 @@
 import { Header } from "../components/header";
-import { SocialLinks } from "../components/social-link";
 import { Footer } from "../components/footer";
-import { Logo } from "../components/logo";
 import { Calendar } from "../components/Calendar";
 import { Link } from "react-router-dom";
 import Team from "../components/Team";
