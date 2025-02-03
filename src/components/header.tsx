@@ -16,6 +16,7 @@ export const Header: React.FC = () => {
   const navLinks = [
     { name: t("link1"), path: "#faq" },
     { name: t("link2"), path: "#team" },
+    { name: t("link5"), path: "#leaderboard"},
     { name: t("link3"), path: "#calendar" },
     { name: t("link4"), path: "/minigames" },
   ];
