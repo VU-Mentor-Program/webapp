@@ -3,7 +3,7 @@ export const mentorTeam = {
     {
       "name": "Henri",
       "full_name": "Henri Korts",
-      "photo": "https://media.licdn.com/dms/image/v2/D4D03AQHopuMHNAEwXg/profile-displayphoto-shrink_400_400/B4DZRga9l_GkAs-/0/1736784469247?e=1744243200&v=beta&t=FYUfgt_K3El7aCLZC3qiyS-7dzxG5Xv3NvBNERoTSn8",
+      "photo": "/webapp/henri.png",
       "linkedin_github": "https://www.linkedin.com/in/henri-korts-007434266/",
       "study": "3rd year CS",
       "country": "ee",
