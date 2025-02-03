@@ -50,5 +50,23 @@
     "noData": "No sign-up data available",
     "errorLoading": "Failed to load leaderboard data.",
     "subtitle": "Counter on how many times one has signed up to our events! There is a prize for the one who signs up the most at the end of the academic year!"
+  },
+  "minigames": {
+    "title": "Minigames",
+    "game_choice": "Choose a game to play!",
+    "leaderboard_error": "No data available.",
+    "leaderboard_title": "Leaderboards",
+    "refresh_leaderboard": "Refresh Leaderboard",
+    "pergame_leaderboard": "Leaderboard",
+    "overall_leaderboard": "Overall Leaderboard",
+    "snake_speed": "Snake Speed:",
+    "game_over": "Game Over",
+    "your_score": "Your score: ",
+    "enter_username": "Enter Username:",
+    "play_again": "Play Again",
+    "brickBreaker_title": "One-Person Pong / Brick Breaker!",
+    "brickBreaker_instruction": "Move the paddle with mouse or finger; break all the tiles!",
+    "dodge_instruction": "Move left/right. Survive as long as possible!",
+    "shooter_instructions": "Move with mouse/finger. Click or press Space to shoot."
   }
 }

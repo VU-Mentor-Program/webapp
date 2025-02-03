@@ -9,6 +9,7 @@ import { LogoSpaceShooterGame } from "../minigames/LogoSpaceShooter";
 import { LogoDodgeGame } from "../minigames/LogoDodge";
 import { Logo } from "../components/logo";
 import LeaderBoard from "../components/minigame page/LeaderBoard"
+import { useTranslations } from "../contexts/TranslationContext";
 
 export const MinigamesPage: React.FC = () => {
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
@@ -26,12 +27,14 @@ export const MinigamesPage: React.FC = () => {
     "spaceShooter",
   ];
 
+  const t = useTranslations("minigames");
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-800 text-white text-center px-5">
       <div className="flex-grow flex flex-col items-center justify-center">
         <Logo />
-        <h1 className="text-2xl font-bold pt-1">Minigames</h1>
-        <p className="text-base pt-1 pb-3">Choose a game to play!</p>
+        <h1 className="text-2xl font-bold pt-1">{t("title")}</h1>
+        <p className="text-base pt-1 pb-3">{t("game_choice")}</p>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-5 p-2">
           <button

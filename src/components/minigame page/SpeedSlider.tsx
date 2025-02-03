@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslations } from "../../contexts/TranslationContext";
 
 interface SpeedSliderProps {
   speed: number;
@@ -6,9 +7,10 @@ interface SpeedSliderProps {
 }
 
 const SpeedSlider: React.FC<SpeedSliderProps> = ({ speed, onChange }) => {
+  const t = useTranslations("minigames")
   return (
     <div className="my-3">
-      <label className="block text-white text-lg">Snake Speed: {500 - speed}ms</label>
+      <label className="block text-white text-lg">{t("snake_speed")} {500 - speed}ms</label>
       <input
         type="range"
         min="50" // FASTEST speed

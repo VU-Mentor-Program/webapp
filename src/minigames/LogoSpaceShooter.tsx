@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import mpLogo from "../assets/mp_logo-CIRCLE.png";
 import GameOverModal from "../components/minigame page/GameOverModal";
 import PauseButton from "../components/minigame page/PauseButton";
+import { useTranslations } from "../contexts/TranslationContext";
 
 // ---------- Types ----------
 interface Bullet {
@@ -30,6 +31,8 @@ interface Particle {
 
 // ---------- Component ----------
 export const LogoSpaceShooterGame: React.FC = () => {
+  const t = useTranslations("minigames");
+
   // Logical "game world" dimensions
   const LOGICAL_WIDTH = 300;
   const LOGICAL_HEIGHT = 650;
@@ -392,7 +395,7 @@ export const LogoSpaceShooterGame: React.FC = () => {
         onClick={handleCanvasClick}
       />
       <p style={{ fontSize: "0.9rem" }}>
-        Move with mouse/finger. Click or press Space to shoot.
+        {t("shooter_instructions")}
       </p>
       <PauseButton isPaused={isPaused} onTogglePause={() => setIsPaused(!isPaused)} />
       <GameOverModal score={score} isOpen={gameOver} gameName={"spaceShooter"} onClose={restart} onRestart={restart} />

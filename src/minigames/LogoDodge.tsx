@@ -2,8 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import mpLogo from "../assets/mp_logo-CIRCLE.png";
 import GameOverModal from "../components/minigame page/GameOverModal";
 import PauseButton from "../components/minigame page/PauseButton";
+import { useTranslations } from "../contexts/TranslationContext";
 
 export const LogoDodgeGame: React.FC = () => {
+  const t = useTranslations("minigames");
+
   const LOGICAL_WIDTH = 400;
   const LOGICAL_HEIGHT = 600;
 
@@ -221,7 +224,7 @@ export const LogoDodgeGame: React.FC = () => {
         onTouchMove={handlePointerMove}
       />
 
-      <p>Move left/right. Survive as long as possible!</p>
+      <p>{t("dodge_instruction")}</p>
 
       {/* ✅ Pause Button */}
       <PauseButton isPaused={isPaused} onTogglePause={() => setIsPaused(!isPaused)} />

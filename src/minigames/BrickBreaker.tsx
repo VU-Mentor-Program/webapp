@@ -4,6 +4,7 @@ import mpLogo from "../assets/mp_logo-CIRCLE.png";
 import PauseButton from "../components/minigame page/PauseButton";
 import RestartButton from "../components/minigame page/RestartButton";
 import GameOverModal from "../components/minigame page/GameOverModal";  
+import { useTranslations } from "../contexts/TranslationContext";
 
 /**
  * Brick Breaker with dynamic brick layouts for smaller screens:
@@ -11,6 +12,8 @@ import GameOverModal from "../components/minigame page/GameOverModal";
  * Otherwise => normal layout (6 cols, 3 rows).
  */
 export const OnePersonPong: React.FC = () => {
+  const t = useTranslations("minigames");
+
   // "Logical" size for all calculations
   const LOGICAL_WIDTH = 700;
   const LOGICAL_HEIGHT = 600;
@@ -346,7 +349,7 @@ export const OnePersonPong: React.FC = () => {
 
   return (
     <div style={{ textAlign: "center", marginTop: "1rem", color: "white" }}>
-      <h2>One-Person Pong / Brick Breaker!</h2>
+      <h2>{t("brickBreaker_title")}</h2>
       {hasWon && (
         <Confetti
           width={window.innerWidth}
@@ -364,7 +367,7 @@ export const OnePersonPong: React.FC = () => {
         onMouseMove={handlePointerMove}
         onTouchMove={handlePointerMove}
       />
-      <p>Move the paddle with mouse or finger; break all the tiles!</p>
+      <p>{t("brickBreaker_instruction")}</p>
       <PauseButton isPaused={isPaused} onTogglePause={togglePause} />
       <RestartButton onRestart={restartGame} />
     </div>

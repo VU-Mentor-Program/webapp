@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { POST_API_URL } from "../../utils/apiUtils";
+import { useTranslations } from "../../contexts/TranslationContext";
 
 interface GameOverModalProps {
   isOpen: boolean;
@@ -23,6 +24,8 @@ const GameOverModal: React.FC<GameOverModalProps> = ({
   onClose,
   onRestart,
 }) => {
+  const t = useTranslations("minigames");
+
   const [username, setUsername] = useState("");
   const [error, setError] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
@@ -36,7 +39,6 @@ const GameOverModal: React.FC<GameOverModalProps> = ({
   const removeScript = () => {
     const old = document.getElementById("saveScoreScript");
     if (old) {
-      console.debug("Removing old <script> for saveScore...");
       old.remove();
     }
   };
@@ -45,7 +47,6 @@ const GameOverModal: React.FC<GameOverModalProps> = ({
    * JSONP callback
    */
   window.saveScoreCallback = (result: any) => {
-    console.debug("saveScoreCallback called with:", result);
     setSubmitting(false);
 
     if (result && result.error) {
@@ -83,7 +84,6 @@ const GameOverModal: React.FC<GameOverModalProps> = ({
     }).toString();
 
     const scriptUrl = `${POST_API_URL}?${qs}`;
-    console.debug("Inserting <script> for JSONP POST:", scriptUrl);
 
     const script = document.createElement("script");
     script.id = "saveScoreScript";
@@ -96,17 +96,11 @@ const GameOverModal: React.FC<GameOverModalProps> = ({
       setSubmitting(false);
     };
 
-    script.onload = () => {
-      console.debug("saveScoreScript loaded (onload).");
-      // The server will call window.saveScoreCallback(...)
-    };
-
     document.body.appendChild(script);
   };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center backdrop-blur-md z-50">
-      {/* Prevent closing the modal by clicking the backdrop */}
       <div
         className="bg-gray-900 bg-opacity-90 text-white p-6 rounded-lg shadow-lg max-w-md w-full relative"
         onClick={(e) => e.stopPropagation()}
@@ -117,11 +111,11 @@ const GameOverModal: React.FC<GameOverModalProps> = ({
         >
           ❌
         </button>
-        <h2 className="text-2xl font-bold text-center mb-4">Game Over</h2>
-        <p className="text-lg text-center mb-2">Your Score: {score}</p>
+        <h2 className="text-2xl font-bold text-center mb-4">{t("game_over")}</h2>
+        <p className="text-lg text-center mb-2">{t("your_score")} {score}</p>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium">Enter Username:</label>
+          <label className="block text-sm font-medium">{t("enter_username")}</label>
           <input
             type="text"
             value={username}
@@ -145,7 +139,7 @@ const GameOverModal: React.FC<GameOverModalProps> = ({
           onClick={onRestart}
           className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
         >
-          Play Again
+          {t("play_again")}
         </button>
       </div>
     </div>
