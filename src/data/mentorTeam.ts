@@ -27,7 +27,7 @@ export const mentorTeam = {
     { 
       "name": "Lucy",
       "full_name": "Lucia Šikulová",
-      "photo": "https://media.licdn.com/dms/image/v2/D4E03AQH4edO3syGWkw/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1689088016010?e=1744243200&v=beta&t=Mi7ZBrICvf_ZEsEV8pVPgRa-kaLFcwSAne3AvkehIY8",
+      "photo": "/webapp/lucy.png",
       "linkedin_github": "https://www.linkedin.com/in/lucy-sikulova/",
       "study": "MsC AI",
       "country": "sk",
@@ -43,7 +43,7 @@ export const mentorTeam = {
     { 
       "name": "Gaëlle",
       "full_name": "Gaëlle Nehme",
-      "photo": "https://media.licdn.com/dms/image/v2/D4E03AQHuxL2Q4X9gbA/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1727178697115?e=1744243200&v=beta&t=EyEPpIOV4DbjqQV35P36SWBfihPR3nVPjX_vz0kTZK0",
+      "photo": "/webapp/gaëlle.png",
       "linkedin_github": "https://www.linkedin.com/in/gaelle-nehme/",
       "study": "3rd year CS",
       "country": "lb",
