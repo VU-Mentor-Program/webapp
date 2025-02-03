@@ -49,5 +49,23 @@
     "noData": "Geen inschrijfgegevens beschikbaar",
     "errorLoading": "Laden van ranglijstgegevens mislukt.",
     "subtitle": "Teller voor hoe vaak studenten zich hebben aangemeld voor onze evenementen! Er is een prijs voor degene die aan het eind van het jaar met de meeste evenementen heeft meegedaan!"
+  },
+  "minigames": {
+    "title": "Minigames",
+    "game_choice": "Kies een spel om te spelen!",
+    "leaderboard_error": "Geen gegevens beschikbaar.",
+    "leaderboard_title": "Ranglijsten",
+    "refresh_leaderboard": "Vernieuw Ranglijst",
+    "pergame_leaderboard": "Ranglijst",
+    "overall_leaderboard": "Algemene Ranglijst",
+    "snake_speed": "Slangensnelheid:",
+    "game_over": "Game Over",
+    "your_score": "Jouw score: ",
+    "enter_username": "Voer gebruikersnaam in:",
+    "play_again": "Speel opnieuw",
+    "brickBreaker_title": "Eén-Persoons Pong / Brick Breaker!",
+    "brickBreaker_instruction": "Beweeg het batje met de muis of vinger; breek alle tegels!",
+    "dodge_instruction": "Beweeg naar links/rechts. Overleef zo lang mogelijk!",
+    "shooter_instructions": "Beweeg met muis/vinger. Klik of druk op Spatie om te schieten."
   }
 }
