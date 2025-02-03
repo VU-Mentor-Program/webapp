@@ -52,7 +52,7 @@ export const mentorTeam = {
       "name": "Frank",
       "full_name": "Frank Würthner",
       "photo": "",
-      "linkedin_github": "",
+      "linkedin_github": "https://github.com/FrankLawrence",
       "study": "3rd year CS",
       "country": "de",
     },
