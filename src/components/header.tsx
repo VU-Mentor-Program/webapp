@@ -16,7 +16,7 @@ export const Header: React.FC = () => {
   const navLinks = [
     { name: t("link1"), path: "#faq" },
     { name: t("link2"), path: "#team" },
-    { name: t("link5"), path: "#leaderboard"},
+    { name: t("link5"), path: "#leaderboard" },
     { name: t("link3"), path: "#calendar" },
     { name: t("link4"), path: "/minigames" },
   ];
@@ -120,41 +120,39 @@ export const Header: React.FC = () => {
         </div>
       </header>
 
-      {/* Mobile Side Menu with Blur Overlay */}
-      {mobileMenuOpen && (
-        <>
-          {/* Overlay with blur effect */}
-          <div
-            className="fixed inset-0 backdrop-blur-sm z-40 transition-opacity duration-200 opacity-100"
+      {/* Mobile Side Menu with Blur Overlay (Always rendered, but hidden via CSS when closed) */}
+      <div
+        className={`fixed inset-0 backdrop-blur-sm z-40 transition-opacity duration-300 ${
+          mobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={() => setMobileMenuOpen(false)}
+      ></div>
+      <div
+        className={`fixed top-0 left-0 h-full w-64 bg-gray-800 shadow-lg transform transition-transform duration-300 ease-in-out z-50 ${
+          mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="flex justify-end p-4">
+          <button
             onClick={() => setMobileMenuOpen(false)}
-          ></div>
-          {/* Side Menu */}
-          <div
-            className="fixed top-0 left-0 h-full w-64 bg-gray-800 shadow-lg transform transition-transform duration-200 ease-in-out z-50 translate-x-0"
+            className="text-white hover:text-gray-300 transition focus:outline-none"
           >
-            <div className="flex justify-end p-4">
-              <button
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-white hover:text-gray-300 transition focus:outline-none"
-              >
-                <XMarkIcon className="h-6 w-6" />
-              </button>
-            </div>
-            <nav className="flex flex-col p-4 space-y-4">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  onClick={(e) => handleAnchorClick(e, link.path)}
-                  className="text-white hover:text-gray-300 transition"
-                >
-                  {link.name}
-                </Link>
-              ))}
-            </nav>
-          </div>
-        </>
-      )}
+            <XMarkIcon className="h-6 w-6" />
+          </button>
+        </div>
+        <nav className="flex flex-col p-4 space-y-4">
+          {navLinks.map((link) => (
+            <Link
+              key={link.path}
+              to={link.path}
+              onClick={(e) => handleAnchorClick(e, link.path)}
+              className="text-white hover:text-gray-300 transition"
+            >
+              {link.name}
+            </Link>
+          ))}
+        </nav>
+      </div>
     </>
   );
 };
