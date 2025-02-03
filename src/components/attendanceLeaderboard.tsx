@@ -9,6 +9,23 @@ interface SignUp {
   count: number;
 }
 
+/**
+ * Formats a full name by returning the first name and
+ * the first letter of the last name followed by a period.
+ * 
+ * For example:
+ *  "John Doe" => "John D."
+ *  "Mary Jane Watson" => "Mary W."
+ */
+function formatName(fullName: string): string {
+  // Split by whitespace and filter out any empty strings.
+  const parts = fullName.split(" ").filter(part => part.trim() !== "");
+  if (parts.length === 0) return "";
+  if (parts.length === 1) return parts[0];
+  // Use the first word as the first name, and the first letter of the last word.
+  return `${parts[0]} ${parts[parts.length - 1].charAt(0).toUpperCase()}.`;
+}
+
 const LeaderBoard: React.FC = () => {
   const t = useTranslations("leaderboard");
   const [leaderboard, setLeaderboard] = useState<SignUp[]>([]);
@@ -60,7 +77,7 @@ const LeaderBoard: React.FC = () => {
                 className="flex justify-between items-center py-1 border-b border-gray-700 last:border-b-0"
               >
                 <span className="text-lg font-medium">
-                  {index + 1}. {entry.name}
+                  {index + 1}. {formatName(entry.name)}
                 </span>
                 <span className="text-lg">{entry.count}</span>
               </div>
