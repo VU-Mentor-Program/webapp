@@ -41,7 +41,8 @@
     "description": "We streven ernaar om per maand één groot sociaal evenement, twee kleinere sociale evenementen en één academisch evenement te organiseren. Dit verandert op basis van het rooster van de studenten en we zijn hierin flexibel. Als eerstejaars examens hebben, proberen we altijd een examenvoorbereidingssessie te organiseren. Deze sessie kan het academische evenement of één van de kleinere sociale evenementen vervangen.",
     "eventName": "Go Karting & Laser Tag",
     "counterLabel": "Tijd tot het evenement:",
-    "signupLinkLabel": "Schrijf je nu in!"
+    "signupLinkLabel": "Schrijf je nu in!",
+    "loading": "Evenementgegevens worden geladen..."
   },
   "leaderboard": {
     "title": "Aanmeldingsranglijst",

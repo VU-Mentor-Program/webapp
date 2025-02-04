@@ -42,7 +42,8 @@
     "description": "Typically, we aim to have one larger social event, two smaller social events, and one academic event per month. This changes based on the students' schedule and we're flexible about it. If first-year students have exams, we will always try to organize an exam preparation session. This session can replace either the academic event or one of the smaller social events.",
     "eventName": "Go Karting & Laser Tag",
     "counterLabel": "Time the event:",
-    "signupLinkLabel": "Sign up now!"
+    "signupLinkLabel": "Sign up now!",
+    "loading": "Loading event data..."
   },
   "leaderboard": {
     "title": "Sign-Up Leaderboard",
