@@ -22,13 +22,6 @@ interface Particle {
   maxLife: number; // used for fade-out
 }
 
-// interface Star {
-//   x: number;
-//   y: number;
-//   size: number;
-//   speed: number;
-// }
-
 // ---------- Component ----------
 export const LogoSpaceShooterGame: React.FC = () => {
   const t = useTranslations("minigames");
@@ -42,9 +35,15 @@ export const LogoSpaceShooterGame: React.FC = () => {
   const [canvasSize, setCanvasSize] = useState({ width: LOGICAL_WIDTH, height: LOGICAL_HEIGHT });
 
   // For UI
-  // const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [score, setScore] = useState(0);
+  const scoreRef = useRef(0);
+
+  // New: Track whether the game has started.
+  const [hasStarted, setHasStarted] = useState(false);
+
+  // Stars for background
   const [stars, setStars] = useState(
     Array.from({ length: 100 }, () => ({
       x: Math.random() * LOGICAL_WIDTH,
@@ -53,8 +52,6 @@ export const LogoSpaceShooterGame: React.FC = () => {
       speed: Math.random() * 2 + 0.5,
     }))
   );
-  const [score, setScore] = useState(0);
-  const scoreRef = useRef(0);
 
   // Load the ship/logo
   const logoRef = useRef<HTMLImageElement | null>(null);
@@ -67,7 +64,7 @@ export const LogoSpaceShooterGame: React.FC = () => {
   }, []);
 
   // ------------ Refs to store "live" game data ------------
-  // We'll store everything in here to avoid stale closures:
+  // We'll store everything here to avoid stale closures:
   const gameRef = useRef({
     // Player
     shipX: 200,
@@ -80,7 +77,7 @@ export const LogoSpaceShooterGame: React.FC = () => {
     particles: [] as Particle[],
 
     // Speed ramp
-    speedFactor: 2, // you had speedFactor: 2
+    speedFactor: 2,
 
     // For timing/spawning
     frameCount: 0,
@@ -103,7 +100,7 @@ export const LogoSpaceShooterGame: React.FC = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setScore(scoreRef.current); // ✅ Sync scoreRef to state every 100ms
+      setScore(scoreRef.current); // Sync scoreRef to state every 100ms
     }, 100);
     return () => clearInterval(interval);
   }, []);
@@ -147,13 +144,18 @@ export const LogoSpaceShooterGame: React.FC = () => {
     const st = gameRef.current;
     st.shipX = clientX - rect.left;
     st.shipX = st.shipX * scale - st.shipSize / 2;
-    // clamp
+    // Clamp ship position.
     st.shipX = Math.max(0, Math.min(LOGICAL_WIDTH - st.shipSize, st.shipX));
   }
 
-  // Click => shoot
+  // Combined handler for canvas clicks/touches.
+  // If the game hasn't started, start it; otherwise, shoot.
   function handleCanvasClick() {
-    shoot();
+    if (!hasStarted) {
+      setHasStarted(true);
+    } else {
+      shoot();
+    }
   }
 
   // ------------- Main Loop -------------
@@ -161,16 +163,17 @@ export const LogoSpaceShooterGame: React.FC = () => {
     let animId = 0;
 
     const loop = () => {
-      if (!isPaused) {
+      // Only update game if not paused, game not over, and game has started.
+      if (!isPaused && !gameOver && hasStarted) {
         updateGame();
-        drawGame();
-        animId = requestAnimationFrame(loop);
       }
+      drawGame();
+      animId = requestAnimationFrame(loop);
     };
     loop();
 
     return () => cancelAnimationFrame(animId);
-  }, [gameOver, isPaused]);
+  }, [gameOver, isPaused, hasStarted]);
 
   // ------------- updateGame() -------------
   function updateGame() {
@@ -227,13 +230,13 @@ export const LogoSpaceShooterGame: React.FC = () => {
       for (let j = st.bullets.length - 1; j >= 0; j--) {
         const b = st.bullets[j];
         if (checkCollide(e, b, 30, 30)) {
-          // remove enemy & bullet
+          // Remove enemy & bullet.
           st.enemies.splice(i, 1);
           st.bullets.splice(j, 1);
 
           scoreRef.current += 50;
 
-          // trigger explosion
+          // Trigger explosion.
           createExplosion(e.x + 15, e.y + 15);
           break;
         }
@@ -243,12 +246,12 @@ export const LogoSpaceShooterGame: React.FC = () => {
     // Collisions: enemies vs player or bottom
     for (let i = 0; i < st.enemies.length; i++) {
       const e = st.enemies[i];
-      // if enemy hits ship
-      if (checkCollide(e, { x: st.shipX, y: st.shipY }, 30, st.shipSize)) {
+      // If enemy hits ship.
+      if (checkCollide(e, { x: st.shipX, y: st.shipY }, 30, 30)) {
         setGameOver(true);
         return;
       }
-      // if enemy hits bottom => immediate game over
+      // If enemy hits bottom => immediate game over.
       if (e.y >= LOGICAL_HEIGHT - 30) {
         setGameOver(true);
         return;
@@ -279,6 +282,7 @@ export const LogoSpaceShooterGame: React.FC = () => {
       ctx.fillRect(st.shipX, st.shipY, st.shipSize, st.shipSize);
     }
 
+    // Draw stars
     stars.forEach((star) => {
       ctx.fillStyle = `rgba(255,255,255,${Math.random()})`;
       ctx.beginPath();
@@ -310,9 +314,20 @@ export const LogoSpaceShooterGame: React.FC = () => {
     ctx.font = `${20 * Math.min(scaleX, scaleY)}px Arial`;
     ctx.fillText(`Score: ${scoreRef.current}`, 10, 30);
 
-
+    // If game over, display text.
     if (gameOver) {
       ctx.fillText("GAME OVER!", 100, 200);
+    }
+
+    // If game hasn't started (and game is not over), display "Click to Start" overlay.
+    if (!hasStarted && !gameOver) {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
+      ctx.fillRect(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT);
+      ctx.fillStyle = "white";
+      ctx.font = "24px Arial";
+      const message = "Click to Start";
+      const textWidth = ctx.measureText(message).width;
+      ctx.fillText(message, (LOGICAL_WIDTH - textWidth) / 2, LOGICAL_HEIGHT / 2);
     }
 
     ctx.restore();
@@ -377,9 +392,11 @@ export const LogoSpaceShooterGame: React.FC = () => {
       bullets: [],
       enemies: [],
       particles: [],
-      speedFactor: 2, // keep same initial speed factor as above
+      speedFactor: 2,
       frameCount: 0,
     };
+    // Reset game start status so the static scene shows until the user clicks again.
+    setHasStarted(false);
   }
 
   return (

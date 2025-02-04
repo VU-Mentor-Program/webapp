@@ -16,6 +16,9 @@ export const LogoDodgeGame: React.FC = () => {
   const [isPaused, setIsPaused] = useState(false);
   const [score, setScore] = useState(0);
 
+  // New: Track whether the game has started.
+  const [hasStarted, setHasStarted] = useState(false);
+
   const playerSize = 40;
   const [playerX, setPlayerX] = useState(180);
   const [playerY] = useState(500);
@@ -88,15 +91,17 @@ export const LogoDodgeGame: React.FC = () => {
       if (!startTimeRef.current) startTimeRef.current = timestamp;
       const elapsedSeconds = (timestamp - startTimeRef.current) / 1000;
 
-      if (!isPaused && !gameOver) {
+      // Only update the game if it's not paused, not over, and has started.
+      if (!isPaused && !gameOver && hasStarted) {
         updateGame(elapsedSeconds);
-        drawGame();
       }
+      drawGame();
+
       animId = requestAnimationFrame(loop);
     };
     animId = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(animId);
-  }, [gameOver, isPaused, playerX, obstacles, score, canvasSize]);
+  }, [gameOver, isPaused, playerX, obstacles, score, canvasSize, hasStarted]);
 
   function updateGame(elapsedSeconds: number) {
     setScore((s) => s + 1);
@@ -140,8 +145,8 @@ export const LogoDodgeGame: React.FC = () => {
     const scaleY = canvasSize.height / LOGICAL_HEIGHT;
 
     // 🎨 Background Gradient
-    ctx.fillStyle = bgColor; 
-    ctx.fillRect(0, 0, canvas.width, canvas.height); 
+    ctx.fillStyle = bgColor;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // ☁️ Draw Clouds
     ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
@@ -174,9 +179,20 @@ export const LogoDodgeGame: React.FC = () => {
     ctx.font = `${20 * Math.min(scaleX, scaleY)}px Arial`;
     ctx.fillText(`Score: ${score}`, 10, 30 * scaleY);
 
-    // Game Over
+    // Game Over text if game ended.
     if (gameOver) {
       ctx.fillText("GAME OVER!", 100 * scaleX, 200 * scaleY);
+    }
+
+    // If game hasn't started yet (and game is not over), overlay a "Click to Start" message.
+    if (!hasStarted && !gameOver) {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "white";
+      ctx.font = `${24 * Math.min(scaleX, scaleY)}px Arial`;
+      const message = "Click to Start";
+      const textWidth = ctx.measureText(message).width;
+      ctx.fillText(message, (canvas.width - textWidth) / 2, canvas.height / 2);
     }
   }
 
@@ -210,6 +226,13 @@ export const LogoDodgeGame: React.FC = () => {
     setPlayerX(180);
     frameRef.current = 0;
     startTimeRef.current = null;
+    setHasStarted(false);
+  }
+
+  function handleStart() {
+    if (!hasStarted) {
+      setHasStarted(true);
+    }
   }
 
   return (
@@ -222,6 +245,8 @@ export const LogoDodgeGame: React.FC = () => {
         height={canvasSize.height}
         onMouseMove={handlePointerMove}
         onTouchMove={handlePointerMove}
+        onClick={handleStart}
+        onTouchStart={handleStart}
       />
 
       <p>{t("dodge_instruction")}</p>

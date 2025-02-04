@@ -16,6 +16,9 @@ export const LogoRacerGame: React.FC = () => {
   const [isPaused, setPaused] = useState(false);
   const [score, setScore] = useState(0);
 
+  // New: Track whether the game has started.
+  const [hasStarted, setHasStarted] = useState(false);
+
   // Game Properties
   const carX = 100;
   const groundY = 300;
@@ -53,54 +56,43 @@ export const LogoRacerGame: React.FC = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Click => jump, but only if the logo is on the ground
-  useEffect(() => {
-    const handleCanvasClick = () => {
-      if (!gameOver && !isPaused && carY >= groundY) {
-        jump();
-      }
-    };
-
-    // Attach event listener for both mouse click and touch events
-    window.addEventListener("click", handleCanvasClick);
-    window.addEventListener("touchstart", handleCanvasClick);
-
-    return () => {
-      window.removeEventListener("click", handleCanvasClick);
-      window.removeEventListener("touchstart", handleCanvasClick);
-    };
-  }, [gameOver, isPaused, carY]);
+  // Remove the global click/touch jump listener.
+  // Instead, we attach a handler on the canvas (see below).
 
   // Game Loop
   useEffect(() => {
     let animId: number;
 
     const loop = () => {
-      if (!isPaused && !gameOver) {
+      // Only update the game if it has started, is not paused, and not over.
+      if (!isPaused && !gameOver && hasStarted) {
         updateGame();
-        drawGame();
       }
+      drawGame();
       animId = requestAnimationFrame(loop);
     };
 
     animId = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(animId);
-  }, [isPaused, gameOver, carY, carVY, obstacles, speed, score, canvasSize]);
+  }, [isPaused, gameOver, carY, carVY, obstacles, speed, score, canvasSize, hasStarted]);
 
   function updateGame() {
     if (gameOver || isPaused) return;
 
+    // Apply gravity and update car position.
     setCarVY((vy) => vy + gravity);
     setCarY((y) => (y + carVY > groundY ? groundY : y + carVY));
 
     setCarAngle((angle) => angle + 3);
 
+    // Update obstacles: move them left and filter out off-screen ones.
     setObstacles((obs) =>
       obs
         .map((o) => ({ ...o, x: o.x - speed }))
         .filter((o) => o.x + o.w > 0)
     );
 
+    // Increase speed slightly over time.
     setSpeed((s) => s + 0.005);
 
     spawnFrameRef.current++;
@@ -112,12 +104,14 @@ export const LogoRacerGame: React.FC = () => {
       ]);
     }
 
+    // Check for collision between car and obstacles.
     obstacles.forEach((o) => {
       if (carX < o.x + o.w && carX + carSize > o.x && carY + carSize > o.y) {
         setGameOver(true);
       }
     });
 
+    // Increase score continuously.
     setScore((s) => s + 1);
   }
 
@@ -128,21 +122,23 @@ export const LogoRacerGame: React.FC = () => {
     if (!ctx) return;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
     const scaleX = canvasSize.width / LOGICAL_WIDTH;
     const scaleY = canvasSize.height / LOGICAL_HEIGHT;
 
     ctx.save();
     ctx.scale(scaleX, scaleY);
 
+    // Draw ground.
     ctx.fillStyle = "green";
     ctx.fillRect(0, groundY + carSize, LOGICAL_WIDTH, LOGICAL_HEIGHT - (groundY + carSize));
 
+    // Draw obstacles.
     ctx.fillStyle = "brown";
     obstacles.forEach((o) => {
       ctx.fillRect(o.x, o.y, o.w, o.h);
     });
 
+    // Draw the car (logo).
     ctx.save();
     const centerX = carX + carSize / 2;
     const centerY = carY + carSize / 2;
@@ -157,20 +153,42 @@ export const LogoRacerGame: React.FC = () => {
     }
     ctx.restore();
 
+    // Draw score.
     ctx.fillStyle = "white";
     ctx.font = "20px Arial";
     ctx.fillText(`Score: ${score}`, 10, 30);
 
+    // If game over, display text.
     if (gameOver) {
       ctx.fillText("GAME OVER!", LOGICAL_WIDTH / 2 - 50, LOGICAL_HEIGHT / 2);
+    }
+
+    // If game hasn't started (and game is not over), display "Click to Start" overlay.
+    if (!hasStarted && !gameOver) {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
+      ctx.fillRect(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT);
+      ctx.fillStyle = "white";
+      ctx.font = "24px Arial";
+      const message = "Click to Start";
+      const textWidth = ctx.measureText(message).width;
+      ctx.fillText(message, (LOGICAL_WIDTH - textWidth) / 2, LOGICAL_HEIGHT / 2);
     }
 
     ctx.restore();
   }
 
+  // Jump action: only if the car is on the ground.
   function jump() {
     if (carY >= groundY) {
       setCarVY(-12);
+    }
+  }
+
+  function handleStart() {
+    if (!hasStarted) {
+      setHasStarted(true);
+    } else if (!gameOver && !isPaused && carY >= groundY) {
+      jump();
     }
   }
 
@@ -184,6 +202,8 @@ export const LogoRacerGame: React.FC = () => {
     setObstacles([]);
     setPaused(false);
     spawnFrameRef.current = 0;
+    // Reset game start status so that the static scene shows until the user clicks again.
+    setHasStarted(false);
   }
 
   function togglePause() {
@@ -198,14 +218,20 @@ export const LogoRacerGame: React.FC = () => {
         width={canvasSize.width}
         height={canvasSize.height}
         style={{ background: "#555" }}
+        onClick={handleStart}
+        onTouchStart={handleStart}
       />
-
       <div className="flex gap-4 mt-4">
         <PauseButton isPaused={isPaused} onTogglePause={togglePause} />
         <RestartButton onRestart={restartGame} />
       </div>
-
-      <GameOverModal isOpen={gameOver} score={score} gameName="logoRacer" onClose={restartGame} onRestart={restartGame} />
+      <GameOverModal
+        isOpen={gameOver}
+        score={score}
+        gameName="logoRacer"
+        onClose={restartGame}
+        onRestart={restartGame}
+      />
     </div>
   );
 };

@@ -13,6 +13,9 @@ export const SnakeGame: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [canvasSize, setCanvasSize] = useState({ width: 300, height: 300 });
 
+  // New state to track whether the game has started
+  const [hasStarted, setHasStarted] = useState(false);
+
   // Resize canvas to keep square ratio
   useEffect(() => {
     function handleResize() {
@@ -47,16 +50,17 @@ export const SnakeGame: React.FC = () => {
     };
   }, []);
 
-  // Move snake at set interval
+  // Move snake at set interval.
+  // Only run the movement if the game has started, is not paused, and is not over.
   useEffect(() => {
-    if (isPaused || gameOver) return;
+    if (isPaused || gameOver || !hasStarted) return;
 
     const interval = setInterval(() => {
       moveSnake();
     }, speed);
 
     return () => clearInterval(interval);
-  }, [snake, direction, isPaused, gameOver, speed]);
+  }, [snake, direction, isPaused, gameOver, speed, hasStarted]);
 
   function moveSnake() {
     const head = { ...snake[0] };
@@ -79,7 +83,7 @@ export const SnakeGame: React.FC = () => {
         x: Math.floor(Math.random() * tileCount),
         y: Math.floor(Math.random() * tileCount),
       });
-      setScore((prev) => prev + 30); // 🏆 Increase score by 30
+      setScore((prev) => prev + 30); // Increase score by 30
     } else {
       newSnake.pop();
     }
@@ -104,7 +108,6 @@ export const SnakeGame: React.FC = () => {
       if (e.key === "ArrowRight" && direction !== "LEFT") setDirection("RIGHT");
     };
     window.addEventListener("keydown", handleKey);
-    
     return () => window.removeEventListener("keydown", handleKey);
   }, [direction]);
 
@@ -122,6 +125,8 @@ export const SnakeGame: React.FC = () => {
     setGameOver(false);
     setIsPaused(false);
     setDirection("RIGHT");
+    // Optionally, reset hasStarted so that the game waits for another click
+    setHasStarted(false);
   }
 
   function togglePause() {
@@ -135,11 +140,12 @@ export const SnakeGame: React.FC = () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     const scale = canvasSize.width / LOGICAL_SIZE;
 
-    // Food
+    // Draw food
     ctx.fillStyle = "red";
     ctx.fillRect(
       food.x * tileSize * scale,
@@ -148,7 +154,7 @@ export const SnakeGame: React.FC = () => {
       tileSize * scale
     );
 
-    // Snake
+    // Draw snake
     snake.forEach((seg, idx) => {
       const x = seg.x * tileSize * scale;
       const y = seg.y * tileSize * scale;
@@ -160,7 +166,25 @@ export const SnakeGame: React.FC = () => {
         ctx.fillRect(x, y, size, size);
       }
     });
+
+    // If the game hasn't started yet (and game over hasn't occurred), overlay a "Click to Start" message.
+    if (!hasStarted && !gameOver) {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "white";
+      ctx.font = `${20 * scale}px Arial`;
+      const message = "Click to Start";
+      const textWidth = ctx.measureText(message).width;
+      ctx.fillText(message, (canvas.width - textWidth) / 2, canvas.height / 2);
+    }
   });
+
+  // When the canvas is clicked/touched, start the game (if not already started).
+  function handleStart() {
+    if (!hasStarted) {
+      setHasStarted(true);
+    }
+  }
 
   return (
     <div style={{ marginBottom: "1rem", textAlign: "center", color: "white" }}>
@@ -172,6 +196,8 @@ export const SnakeGame: React.FC = () => {
         width={canvasSize.width}
         height={canvasSize.height}
         style={{ background: "#222", border: "1px solid #fff" }}
+        onClick={handleStart}
+        onTouchStart={handleStart}
       />
 
       {/* On-screen arrows with bigger buttons */}
@@ -201,7 +227,7 @@ export const SnakeGame: React.FC = () => {
               borderRadius: "8px",
               padding: "0.5rem 1rem",
               margin: "0.3rem",
-              marginRight: "1.5rem"
+              marginRight: "1.5rem",
             }}
           >
             ←
@@ -215,7 +241,7 @@ export const SnakeGame: React.FC = () => {
               borderRadius: "8px",
               padding: "0.5rem 1rem",
               margin: "0.3rem",
-              marginLeft: "1.5rem"
+              marginLeft: "1.5rem",
             }}
           >
             →
@@ -245,7 +271,13 @@ export const SnakeGame: React.FC = () => {
         <RestartButton onRestart={restartGame} />
       </div>
 
-      <GameOverModal isOpen={gameOver} score={score} gameName={"snake"} onClose={restartGame} onRestart={restartGame} />
+      <GameOverModal
+        isOpen={gameOver}
+        score={score}
+        gameName={"snake"}
+        onClose={restartGame}
+        onRestart={restartGame}
+      />
     </div>
   );
 };
