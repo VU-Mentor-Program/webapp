@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { GET_LEADERBOARD_API_URL } from "../utils/apiUtils";
+import { GET_SIGNUP_COUNT_API_URL } from "../utils/apiUtils";
 import { LoadingAnimation } from "./LoadingAnimation";
 import { useTranslations } from "../contexts/TranslationContext";
 
@@ -37,7 +37,7 @@ const LeaderBoard: React.FC = () => {
     setLoading(true);
     setError("");
     try {
-      const response = await fetch(`${GET_LEADERBOARD_API_URL}?type=NAME_LEADERBOARD`);
+      const response = await fetch(`${GET_SIGNUP_COUNT_API_URL}?type=NAME_LEADERBOARD`);
       if (!response.ok) {
         throw new Error(`HTTP error ${response.status}`);
       }
