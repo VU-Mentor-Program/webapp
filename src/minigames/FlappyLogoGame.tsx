@@ -11,6 +11,7 @@ export const FlappyLogoGame: React.FC = () => {
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [canvasSize, setCanvasSize] = useState({ width: 800, height: 600 });
+  const [hasStarted, setHasStarted] = useState(false); // New: tracks if the game has started
 
   useEffect(() => {
     function handleResize() {
@@ -58,41 +59,38 @@ export const FlappyLogoGame: React.FC = () => {
     };
   }, []);
 
-  // Handle key press for jump
-  useEffect(() => {
-    const handleJump = () => {
-      if (!gameOver) {
-        birdVYRef.current = -8; // Properly apply jump
-      }
-    };
-
-    // Attach event listener for click/touch
-    window.addEventListener("click", handleJump);
-    window.addEventListener("touchstart", handleJump);
-
-    return () => {
-      window.removeEventListener("click", handleJump);
-      window.removeEventListener("touchstart", handleJump);
-    };
-  }, [gameOver]);
-
+  // Remove the previous global click/touch listener and instead use canvas events.
+  // This function handles both starting the game and triggering a jump.
+  const handleCanvasClick = () => {
+    if (!hasStarted) {
+      setHasStarted(true);
+    } else if (!gameOver) {
+      birdVYRef.current = -8; // Apply jump if the game is in progress.
+    }
+  };
 
   // Main loop
   useEffect(() => {
     let animId: number;
     const loop = () => {
       if (!isPaused) {
-        updateGame();
+        // Only update game state if the game has started.
+        if (hasStarted) {
+          updateGame();
+        }
         drawGame();
       }
       animId = requestAnimationFrame(loop);
     };
     animId = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(animId);
-  }, [gameOver, canvasSize, isPaused]);
+  }, [gameOver, canvasSize, isPaused, hasStarted]);
 
   function updateGame() {
     if (gameOver) return;
+    // Do not update any movement if the game has not started.
+    if (!hasStarted) return;
+
     rotationRef.current += 2;
 
     birdYRef.current += birdVYRef.current;
@@ -201,6 +199,19 @@ export const FlappyLogoGame: React.FC = () => {
     ctx.fillStyle = "white";
     ctx.font = `${30 * Math.min(scaleX, scaleY)}px Arial`;
     ctx.fillText(`Score: ${scoreRef.current}`, 20 * scaleX, 40 * scaleY);
+
+    // If the game hasn't started (and is not over), display a "Click to Start" message.
+    if (!hasStarted && !gameOver) {
+      ctx.fillStyle = "white";
+      ctx.font = `${40 * Math.min(scaleX, scaleY)}px Arial`;
+      const message = "Click to Start";
+      const textWidth = ctx.measureText(message).width;
+      ctx.fillText(
+        message,
+        (canvas.width - textWidth) / 2,
+        canvas.height / 2
+      );
+    }
   }
 
   function drawBackground(ctx: CanvasRenderingContext2D, scaleX: number, scaleY: number) {
@@ -224,7 +235,7 @@ export const FlappyLogoGame: React.FC = () => {
       ctx.fillRect((bgXRef.current + i * 180) * scaleX, 320 * scaleY, 80 * scaleX, 100 * scaleY);
     }
 
-    // 🏙️ Buildings
+    // Buildings
     ctx.fillStyle = "#2E2E6A";
     for (let i = 0; i < 6; i++) {
       ctx.fillRect((bgXRef.current + i * 230) * scaleX, 350 * scaleY, 60 * scaleX, 130 * scaleY);
@@ -253,13 +264,26 @@ export const FlappyLogoGame: React.FC = () => {
     scoreRef.current = 0;
     setGameOver(false);
     setIsPaused(false);
+    setHasStarted(false);
   }
 
   return (
     <div style={{ textAlign: "center", color: "white", overflow: "hidden" }}>
       <h3>Flappy Logo</h3>
-      <canvas ref={canvasRef} width={canvasSize.width} height={canvasSize.height} />
-      <GameOverModal isOpen={gameOver} score={score} gameName={"flappy"} onClose={restart} onRestart={restart} />
+      <canvas
+        ref={canvasRef}
+        width={canvasSize.width}
+        height={canvasSize.height}
+        onClick={handleCanvasClick}
+        onTouchStart={handleCanvasClick}
+      />
+      <GameOverModal
+        isOpen={gameOver}
+        score={score}
+        gameName={"flappy"}
+        onClose={restart}
+        onRestart={restart}
+      />
       <PauseButton isPaused={isPaused} onTogglePause={togglePause} />
     </div>
   );
