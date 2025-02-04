@@ -12,6 +12,7 @@ interface TimeLeft {
 interface EventData {
   EVENTNAME: string;
   DATEOFTHEEVENT: string; // Format: "DD/MM/YYYY"
+  TIME: string;           // Format: "HH:MM" in 24h format
   SIGNUP_LINK?: string;
 }
 
@@ -29,34 +30,61 @@ const MonthlyEvents: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
 
+  // Helper function: Parse date in "DD/MM/YYYY" format.
   const parseEventDate = (dateString: string): Date => {
     const [day, month, year] = dateString.split("/").map(Number);
     return new Date(year, month - 1, day);
   };
 
+  // New helper: Parse date and time together.
+  const parseEventDateTime = (dateString: string, timeString: string): Date => {
+    const [day, month, year] = dateString.split("/").map(Number);
+    const [hour, minute] = timeString.split(":").map(Number);
+    return new Date(year, month - 1, day, hour, minute);
+  };
+
+  // Fetch events from the API and choose the current event.
   useEffect(() => {
     const url = `${GET_SIGNUP_COUNT_API_URL}?type=GET_CONSTANTS`;
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
-        const events: EventData[] = Object.values(data as Record<string, unknown>).filter((event): event is EventData => typeof event === 'object' && event !== null && 'DATEOFTHEEVENT' in event);
-        
+        console.log("API Response:", data);
+
+        // Convert the API object into an array of events.
+        const events: EventData[] = Object.values(data as Record<string, unknown>).filter(
+          (event): event is EventData =>
+            typeof event === "object" &&
+            event !== null &&
+            "DATEOFTHEEVENT" in event &&
+            "TIME" in event
+        );
+
+        // Parse each event's date and time.
         const parsedEvents = events.map((event) => ({
           ...event,
-          parsedDate: parseEventDate(event.DATEOFTHEEVENT),
+          parsedDate: parseEventDateTime(event.DATEOFTHEEVENT, event.TIME),
         }));
 
         const today = new Date();
 
-        const upcomingEvents = parsedEvents.filter((event) => event.parsedDate >= today);
-        const pastEvents = parsedEvents.filter((event) => event.parsedDate < today);
+        const upcomingEvents = parsedEvents.filter(
+          (event) => event.parsedDate >= today
+        );
+        const pastEvents = parsedEvents.filter(
+          (event) => event.parsedDate < today
+        );
 
         let selectedEvent: EventData | null = null;
         if (upcomingEvents.length > 0) {
-          upcomingEvents.sort((a, b) => a.parsedDate.getTime() - b.parsedDate.getTime());
+          upcomingEvents.sort(
+            (a, b) => a.parsedDate.getTime() - b.parsedDate.getTime()
+          );
           selectedEvent = upcomingEvents[0];
         } else if (pastEvents.length > 0) {
-          pastEvents.sort((a, b) => b.parsedDate.getTime() - a.parsedDate.getTime());
+          pastEvents.sort(
+            (a, b) => b.parsedDate.getTime() - a.parsedDate.getTime()
+          );
           selectedEvent = pastEvents[0];
         }
 
@@ -76,7 +104,7 @@ const MonthlyEvents: React.FC = () => {
 
   useEffect(() => {
     if (currentEvent) {
-      setTargetDate(parseEventDate(currentEvent.DATEOFTHEEVENT));
+      setTargetDate(parseEventDateTime(currentEvent.DATEOFTHEEVENT, currentEvent.TIME));
     }
   }, [currentEvent]);
 
