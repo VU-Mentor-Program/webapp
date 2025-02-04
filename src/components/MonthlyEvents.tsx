@@ -39,7 +39,7 @@ const MonthlyEvents: React.FC = () => {
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
-        const events: EventData[] = Object.values(data).filter((event): event is EventData => 'DATEOFTHEEVENT' in event);
+        const events: EventData[] = Object.values(data as Record<string, unknown>).filter((event): event is EventData => typeof event === 'object' && event !== null && 'DATEOFTHEEVENT' in event);
         
         const parsedEvents = events.map((event) => ({
           ...event,
