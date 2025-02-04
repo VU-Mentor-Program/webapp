@@ -30,12 +30,6 @@ const MonthlyEvents: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
 
-  // Helper function: Parse date in "DD/MM/YYYY" format.
-  const parseEventDate = (dateString: string): Date => {
-    const [day, month, year] = dateString.split("/").map(Number);
-    return new Date(year, month - 1, day);
-  };
-
   // New helper: Parse date and time together.
   const parseEventDateTime = (dateString: string, timeString: string): Date => {
     const [day, month, year] = dateString.split("/").map(Number);
