@@ -64,7 +64,9 @@ const LeaderBoard: React.FC<LeaderBoardProps> = ({ games }) => {
 
       // Build overall scores
       scores.forEach(({ username, score }) => {
-        overallScoreMap[username] = (overallScoreMap[username] || 0) + score;
+        // If the score is over 100,000, multiply it by 0.00001
+        const adjustedScore = score > 100000 ? score * 0 : score;
+        overallScoreMap[username] = (overallScoreMap[username] || 0) + adjustedScore;
       });
     });
 
