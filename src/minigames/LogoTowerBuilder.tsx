@@ -135,7 +135,7 @@ export const LogoStackGame: React.FC = () => {
     function loop() {
       const currentTime = performance.now();
       const elapsed = currentTime - startTime;
-      update(elapsed);
+      update();
       draw(elapsed);
       animId = requestAnimationFrame(loop);
     }
@@ -157,7 +157,7 @@ export const LogoStackGame: React.FC = () => {
   ]);
 
   /*** UPDATE GAME LOGIC ***/
-  function update(time: number) {
+  function update() {
     if (gameOver) return;
 
     // Update background clouds and birds.
