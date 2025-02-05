@@ -20,8 +20,8 @@ const PlinkoGame: React.FC = () => {
   const pegRadius = 5;
 
   // Game states.
-  const [currency, setCurrency] = useState(500);
-  const [bet, setBet] = useState(50);
+  const [currency, setCurrency] = useState(10);
+  const [bet, setBet] = useState(2);
   // We'll show the most recent landed ball's payout.
   const [result, setResult] = useState<number | null>(null);
   const [showModal, setShowModal] = useState(false);
@@ -340,7 +340,7 @@ const PlinkoGame: React.FC = () => {
         gameName={"plinko"}
         onClose={() => setShowModal(false)}
         onRestart={() => {
-          setCurrency(500);
+          setCurrency(10);
           // Clear all balls.
           ballsRef.current = [];
           setResult(null);
