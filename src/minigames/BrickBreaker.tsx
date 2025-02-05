@@ -3,18 +3,24 @@ import Confetti from "react-confetti";
 import mpLogo from "../assets/mp_logo-CIRCLE.png";
 import PauseButton from "../components/minigame page/PauseButton";
 import RestartButton from "../components/minigame page/RestartButton";
-import GameOverModal from "../components/minigame page/GameOverModal";  
+import GameOverModal from "../components/minigame page/GameOverModal";
 import { useTranslations } from "../contexts/TranslationContext";
 
 /**
- * Brick Breaker (One Person Pong) with dynamic brick layouts for smaller screens:
- * If canvas width < 500 => use smaller layout (8 cols, 2 rows).
- * Otherwise => normal layout (6 cols, 3 rows).
+ * Brick Breaker (One Person Pong) with dynamic brick layouts.
+ * 
+ * New features:
+ * - A fancy gradient background.
+ * - The game now “ends” (loss) when the ball falls out the bottom.
+ * - A score is calculated based on the number of bricks hit and the initial ball speed.
+ * - Controls allow adjusting the initial ball speed and the brick layout.
+ * - A visible gap between bricks via drawing a stroke around each brick.
+ * - Improved collision detection to avoid edge cases where the ball gets stuck or passes through objects.
  */
 export const OnePersonPong: React.FC = () => {
   const t = useTranslations("minigames");
 
-  // "Logical" size for all calculations
+  // "Logical" game area dimensions.
   const LOGICAL_WIDTH = 700;
   const LOGICAL_HEIGHT = 600;
 
@@ -22,7 +28,7 @@ export const OnePersonPong: React.FC = () => {
   const requestRef = useRef<number | null>(null);
   const [isPaused, setIsPaused] = useState(false);
 
-  // We'll resize the <canvas> to fit user screen while maintaining aspect ratio
+  // Resize the canvas to fit the screen while maintaining aspect ratio.
   const [canvasSize, setCanvasSize] = useState({ width: 300, height: 600 });
 
   useEffect(() => {
@@ -37,16 +43,28 @@ export const OnePersonPong: React.FC = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // New: Track whether the user has started the game.
+  // Game start/win/lose states.
   const [hasStarted, setHasStarted] = useState(false);
   const [hasWon, setHasWon] = useState(false);
+  const [hasLost, setHasLost] = useState(false);
 
   function togglePause() {
-    // When resuming, the animation loop will continue automatically.
     setIsPaused((prev) => !prev);
   }
 
-  // Determine columns/rows/brick sizes depending on final canvas width.
+  /******************
+   * Adjustable parameters
+   ******************/
+  // User-adjustable initial ball speed.
+  const [initialBallSpeed, setInitialBallSpeed] = useState(8);
+  // User-adjustable brick layout (number of rows and columns).
+  const [customBrickRows, setCustomBrickRows] = useState(4);
+  const [customBrickCols, setCustomBrickCols] = useState(8);
+
+  /******************
+   * Brick Setup
+   ******************/
+  // getBrickSetup returns brick configuration based on screen size and user settings.
   function getBrickSetup(): {
     brickCols: number;
     brickRows: number;
@@ -57,34 +75,59 @@ export const OnePersonPong: React.FC = () => {
     offsetTop: number;
   } {
     if (canvasSize.width < 500) {
-      // smaller layout
+      const brickWidth = 40;
+      const brickHeight = 15;
+      const padding = 20; // gap between bricks
+      const totalWidth = customBrickCols * brickWidth + (customBrickCols - 1) * padding;
       return {
-        brickCols: 8,
-        brickRows: 2,
-        brickWidth: 70,
-        brickHeight: 20,
-        padding: 10,
-        offsetLeft: 35,
-        offsetTop: 50,
+        brickCols: customBrickCols,
+        brickRows: customBrickRows,
+        brickWidth,
+        brickHeight,
+        padding,
+        offsetLeft: (LOGICAL_WIDTH - totalWidth) / 2,
+        offsetTop: 40,
       };
     } else {
-      // normal layout
+      const brickWidth = 60;
+      const brickHeight = 20;
+      const padding = 10; // gap between bricks
+      const totalWidth = customBrickCols * brickWidth + (customBrickCols - 1) * padding;
       return {
-        brickCols: 6,
-        brickRows: 3,
-        brickWidth: 80,
-        brickHeight: 20,
-        padding: 10,
-        offsetLeft: 80,
+        brickCols: customBrickCols,
+        brickRows: customBrickRows,
+        brickWidth,
+        brickHeight,
+        padding,
+        offsetLeft: (LOGICAL_WIDTH - totalWidth) / 2,
         offsetTop: 50,
       };
     }
   }
+  const newSetup = getBrickSetup();
+  const [brickSetup, setBrickSetup] = useState(newSetup);
 
-  // Store the dynamic brick setup in state; updated when we restart.
-  const [brickSetup, setBrickSetup] = useState(getBrickSetup);
+  // Update brickSetup if the adjustable settings or canvas size change.
+  useEffect(() => {
+    const newSetup = getBrickSetup();
+    setBrickSetup(newSetup);
 
-  // Re-generate bricks array based on current `brickSetup`
+    // Regenerate bricks based on the new setup.
+    const newBricks = [];
+    for (let r = 0; r < newSetup.brickRows; r++) {
+      for (let c = 0; c < newSetup.brickCols; c++) {
+        newBricks.push({
+          x: newSetup.offsetLeft + c * (newSetup.brickWidth + newSetup.padding),
+          y: newSetup.offsetTop + r * (newSetup.brickHeight + newSetup.padding),
+          destroyed: false,
+        });
+      }
+    }
+    setBricks(newBricks);
+  }, [customBrickRows, customBrickCols, canvasSize]);
+
+
+  // Generate a bricks array based on the current brickSetup.
   function generateBricks() {
     const {
       brickCols,
@@ -107,27 +150,25 @@ export const OnePersonPong: React.FC = () => {
     }
     return arr;
   }
-
   const [bricks, setBricks] = useState(generateBricks);
 
-  // Paddle state
+  /******************
+   * Paddle and Ball State
+   ******************/
   const [paddleX, setPaddleX] = useState(350);
   const paddleWidth = 100;
   const paddleHeight = 20;
-  const paddleY = 550; // near bottom in logical coords
+  const paddleY = 550; // near bottom (logical coordinates)
 
-  // Ball state
-  function rand(min: number, max: number) {
-    return Math.random() * (max - min) + min;
-  }
-  const [ballX, setBallX] = useState(() => rand(100, 600));
-  const [ballY, setBallY] = useState(() => rand(100, 400));
-  const [ballDX, setBallDX] = useState(5);
-  const [ballDY, setBallDY] = useState(5);
+  // Ball state.
+  const [ballX, setBallX] = useState(350);
+  const [ballY, setBallY] = useState(350);
+  const [ballDX, setBallDX] = useState(initialBallSpeed);
+  const [ballDY, setBallDY] = useState(-initialBallSpeed);
   const [ballRotation, setBallRotation] = useState(0);
   const ballRadius = 15;
 
-  // Load logo
+  // Load ball logo image.
   const logoRef = useRef<HTMLImageElement | null>(null);
   useEffect(() => {
     const img = new Image();
@@ -137,15 +178,27 @@ export const OnePersonPong: React.FC = () => {
     };
   }, []);
 
-  // Check if all bricks are destroyed => Win
+  // Score state – increases when bricks are hit.
+  const [score, setScore] = useState(0);
+
+  // Win: if all bricks are destroyed.
   useEffect(() => {
     if (bricks.every((b) => b.destroyed)) {
       setHasWon(true);
     }
   }, [bricks]);
 
+  /******************
+   * Helper: clamp
+   ******************/
+  function clamp(val: number, min: number, max: number) {
+    return Math.max(min, Math.min(max, val));
+  }
+
+  /******************
+   * Animation and Drawing
+   ******************/
   // Main animation loop.
-  // When the game hasn't started, only draw the scene (plus a "Click to Start" message).
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -154,16 +207,22 @@ export const OnePersonPong: React.FC = () => {
 
     const render = () => {
       if (isPaused) {
-        // If paused, simply schedule the next frame.
         requestRef.current = requestAnimationFrame(render);
         return;
       }
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // Draw a fancy gradient background.
+      const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      gradient.addColorStop(0, "#1a2a6c");
+      gradient.addColorStop(0.5, "#b21f1f");
+      gradient.addColorStop(1, "#fdbb2d");
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
       drawAll(ctx);
 
-      // Only update game state (ball movement, collisions, etc.) if the game has started.
-      if (hasStarted && !hasWon) {
+      // Only update the game state if the game is running.
+      if (hasStarted && !hasWon && !hasLost) {
         updateBall();
       }
 
@@ -174,28 +233,50 @@ export const OnePersonPong: React.FC = () => {
     return () => {
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
     };
-    // We include hasStarted, hasWon, and isPaused as dependencies so that the loop behaves correctly.
-  }, [hasStarted, hasWon, isPaused, canvasSize, brickSetup, paddleX, ballX, ballY, ballDX, ballDY, ballRotation, bricks]);
+  }, [
+    hasStarted,
+    hasWon,
+    hasLost,
+    isPaused,
+    canvasSize,
+    brickSetup,
+    paddleX,
+    ballX,
+    ballY,
+    ballDX,
+    ballDY,
+    ballRotation,
+    bricks,
+  ]);
 
-  function drawAll(ctx: CanvasRenderingContext2D) {
+  // Draw all game objects.
+  const drawAll = (ctx: CanvasRenderingContext2D) => {
     const scaleX = canvasSize.width / LOGICAL_WIDTH;
     const scaleY = canvasSize.height / LOGICAL_HEIGHT;
 
-    // Helper to draw rectangles in logical coordinates.
-    const drawRect = (lx: number, ly: number, lw: number, lh: number, color: string) => {
+    // Helper function to draw rectangles in logical coordinates.
+    const drawRect = (
+      lx: number,
+      ly: number,
+      lw: number,
+      lh: number,
+      color: string
+    ) => {
       ctx.fillStyle = color;
       ctx.fillRect(lx * scaleX, ly * scaleY, lw * scaleX, lh * scaleY);
     };
 
-    // Draw bricks.
+    // Draw bricks with a stroke to emphasize the gap.
     for (const b of bricks) {
       if (!b.destroyed) {
-        drawRect(
-          b.x,
-          b.y,
-          brickSetup.brickWidth,
-          brickSetup.brickHeight,
-          "lightblue"
+        drawRect(b.x, b.y, brickSetup.brickWidth, brickSetup.brickHeight, "lightblue");
+        ctx.strokeStyle = "#333";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(
+          b.x * scaleX,
+          b.y * scaleY,
+          brickSetup.brickWidth * scaleX,
+          brickSetup.brickHeight * scaleY
         );
       }
     }
@@ -229,14 +310,21 @@ export const OnePersonPong: React.FC = () => {
       ctx.closePath();
     }
 
+    // Display win or loss message.
+    ctx.fillStyle = "white";
+    ctx.font = `${24 * scaleX}px Arial`;
     if (hasWon) {
-      ctx.fillStyle = "white";
-      ctx.font = `${24 * scaleX}px Arial`;
-      ctx.fillText("YOU WIN!!!", 200 * scaleX, 250 * scaleY);
+      const winMsg = "YOU WIN!!!";
+      const textWidth = ctx.measureText(winMsg).width;
+      ctx.fillText(winMsg, (canvasSize.width - textWidth) / 2, canvasSize.height / 2);
+    } else if (hasLost) {
+      const loseMsg = "GAME OVER";
+      const textWidth = ctx.measureText(loseMsg).width;
+      ctx.fillText(loseMsg, (canvasSize.width - textWidth) / 2, canvasSize.height / 2);
     }
-
-    // When the game hasn't started, show an overlay message.
-    if (!hasStarted && !hasWon) {
+    
+    // Before the game starts, show a "Click to Start" overlay.
+    if (!hasStarted && !hasWon && !hasLost) {
       ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
       ctx.fillRect(0, 0, canvasSize.width, canvasSize.height);
       ctx.fillStyle = "white";
@@ -245,81 +333,113 @@ export const OnePersonPong: React.FC = () => {
       const textWidth = ctx.measureText(message).width;
       ctx.fillText(message, (canvasSize.width - textWidth) / 2, canvasSize.height / 2);
     }
-  }
+  };
 
+  // Update ball position and handle collisions.
   function updateBall() {
-    // Increment ball rotation.
-    setBallRotation((r) => r + 2);
+    // Use local variables for robust collision handling.
+    let x = ballX;
+    let y = ballY;
+    let dx = ballDX;
+    let dy = ballDY;
+    let rotation = ballRotation + 2;
 
-    // Bounce off side walls.
-    if (ballX + ballDX < ballRadius || ballX + ballDX > LOGICAL_WIDTH - ballRadius) {
-      setBallDX((d) => -d);
+    // --- Wall collisions ---
+    // Left/right walls.
+    if (x + dx < ballRadius) {
+      dx = Math.abs(dx);
+    } else if (x + dx > LOGICAL_WIDTH - ballRadius) {
+      dx = -Math.abs(dx);
     }
-    // Bounce off top.
-    if (ballY + ballDY < ballRadius) {
-      setBallDY((d) => -d);
-    }
-    // Bottom: reset ball.
-    else if (ballY + ballDY > LOGICAL_HEIGHT - ballRadius) {
-      resetBall();
-    }
-
-    // Paddle collision.
-    if (
-      ballY + ballDY >= paddleY - ballRadius &&
-      ballX >= paddleX - paddleWidth / 2 &&
-      ballX <= paddleX + paddleWidth / 2
-    ) {
-      setBallDY((d) => -d);
+    // Top wall.
+    if (y + dy < ballRadius) {
+      dy = Math.abs(dy);
     }
 
-    // Brick collisions.
-    const updated = bricks.map((br) => {
+    // --- Paddle collision ---
+    // Only check if the ball is moving downward.
+    if (dy > 0 && y + dy >= paddleY - ballRadius) {
+      if (x >= paddleX - paddleWidth / 2 && x <= paddleX + paddleWidth / 2) {
+        // Simple collision: reverse vertical direction.
+        dy = -Math.abs(dy);
+        // Add a horizontal offset based on where the ball hit the paddle.
+        const offset = (x - paddleX) / (paddleWidth / 2);
+        dx += offset * 1.5;
+        // Reposition the ball just above the paddle.
+        y = paddleY - ballRadius;
+      }
+    }
+
+    // --- Brick collisions ---
+    let bricksHitCount = 0;
+    const newBricks = bricks.map((br) => {
       if (!br.destroyed) {
-        if (
-          ballX >= br.x &&
-          ballX <= br.x + brickSetup.brickWidth &&
-          ballY - ballRadius <= br.y + brickSetup.brickHeight &&
-          ballY + ballRadius >= br.y
-        ) {
+        // Use circle-rectangle collision.
+        const rx = br.x;
+        const ry = br.y;
+        const rw = brickSetup.brickWidth;
+        const rh = brickSetup.brickHeight;
+        const closestX = clamp(x, rx, rx + rw);
+        const closestY = clamp(y, ry, ry + rh);
+        const distX = x - closestX;
+        const distY = y - closestY;
+        if (distX * distX + distY * distY < ballRadius * ballRadius) {
+          bricksHitCount++;
+          // Determine which side is the collision more dominant.
+          if (Math.abs(distX) > Math.abs(distY)) {
+            dx = -dx;
+          } else {
+            dy = -dy;
+          }
           return { ...br, destroyed: true };
         }
       }
       return br;
     });
-    let destroyedAny = false;
-    for (let i = 0; i < bricks.length; i++) {
-      if (!bricks[i].destroyed && updated[i].destroyed) {
-        destroyedAny = true;
-        break;
-      }
-    }
-    if (destroyedAny) {
-      setBallDY((d) => -d);
-      setBricks(updated);
+    if (bricksHitCount > 0) {
+      setScore((prev) => prev + bricksHitCount * Math.round(10 * initialBallSpeed));
+      setBricks(newBricks);
     }
 
-    setBallX((x) => x + ballDX);
-    setBallY((y) => y + ballDY);
+    // --- Update ball position ---
+    x = x + dx;
+    y = y + dy;
+
+    // If the ball falls below the bottom, the player loses.
+    if (y > LOGICAL_HEIGHT - ballRadius) {
+      setHasLost(true);
+      return;
+    }
+
+    // Update state.
+    setBallX(x);
+    setBallY(y);
+    setBallDX(dx);
+    setBallDY(dy);
+    setBallRotation(rotation);
   }
 
+  // Reset the ball (used when restarting the game).
   function resetBall() {
     setBallX(350);
     setBallY(300);
-    setBallDX(3);
-    setBallDY(-3);
+    setBallDX(initialBallSpeed);
+    setBallDY(-initialBallSpeed);
     setBallRotation(0);
   }
 
+  // Restart the game.
   function restartGame() {
     setHasWon(false);
+    setHasLost(false);
+    setScore(0);
     setBallRotation(0);
-    // Recalculate brick setup in case the canvas was resized.
-    setBrickSetup(getBrickSetup());
+    // Recalculate brick setup and bricks so that the starting positions match.
+    const newSetup = getBrickSetup();
+    setBrickSetup(newSetup);
     setBricks(generateBricks());
     setPaddleX(350);
     resetBall();
-    // Optionally, you may also want to set hasStarted to false so that the game waits for another click.
     setHasStarted(false);
   }
 
@@ -328,8 +448,8 @@ export const OnePersonPong: React.FC = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
-    let clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
-    const scaleX = LOGICAL_WIDTH / rect.width; // invert
+    const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
+    const scaleX = LOGICAL_WIDTH / rect.width;
     const xPosLogical = (clientX - rect.left) * scaleX;
     const half = paddleWidth / 2;
     const minX = half;
@@ -346,6 +466,41 @@ export const OnePersonPong: React.FC = () => {
   return (
     <div style={{ textAlign: "center", marginTop: "1rem", color: "white" }}>
       <h2>{t("brickBreaker_title")}</h2>
+
+      {/* Adjustable settings */}
+      <div style={{ marginBottom: "1rem" }}>
+        <label style={{ marginRight: "1rem" }}>
+          Initial Ball Speed:{" "}
+          <input
+            type="number"
+            value={initialBallSpeed}
+            onChange={(e) => setInitialBallSpeed(Number(e.target.value))}
+            style={{ width: "50px" }}
+          />
+        </label>
+        <label style={{ marginRight: "1rem" }}>
+          Brick Rows:{" "}
+          <input
+            type="number"
+            value={customBrickRows}
+            onChange={(e) => setCustomBrickRows(Number(e.target.value))}
+            style={{ width: "50px" }}
+          />
+        </label>
+        <label>
+          Brick Columns:{" "}
+          <input
+            type="number"
+            value={customBrickCols}
+            onChange={(e) => setCustomBrickCols(Number(e.target.value))}
+            style={{ width: "50px" }}
+          />
+        </label>
+      </div>
+
+      {/* Display score */}
+      <p style={{ fontSize: "1.2rem" }}>Score: {score}</p>
+
       {hasWon && (
         <Confetti
           width={window.innerWidth}
@@ -354,13 +509,15 @@ export const OnePersonPong: React.FC = () => {
           recycle={false}
         />
       )}
+
       <GameOverModal
-        isOpen={hasWon}
-        score={500}
+        isOpen={hasWon || hasLost}
+        score={score}
         gameName={"brickBreaker"}
         onClose={restartGame}
         onRestart={restartGame}
       />
+
       <canvas
         ref={canvasRef}
         width={canvasSize.width}
@@ -371,6 +528,7 @@ export const OnePersonPong: React.FC = () => {
         onClick={handleStart}
         onTouchStart={handleStart}
       />
+
       <p>{t("brickBreaker_instruction")}</p>
       <PauseButton isPaused={isPaused} onTogglePause={togglePause} />
       <RestartButton onRestart={restartGame} />
