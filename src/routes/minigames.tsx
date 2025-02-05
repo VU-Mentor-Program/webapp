@@ -28,7 +28,8 @@ export const MinigamesPage: React.FC = () => {
     "logoRacer",
     "spaceShooter",
     "plinko",
-    "minesweeper"
+    "minesweeper",
+    "tower"
   ];
 
   const t = useTranslations("minigames");
