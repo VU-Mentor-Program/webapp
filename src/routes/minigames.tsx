@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { OnePersonPong } from "../minigames/BrickBreaker";
 import { SnakeGame } from "../minigames/SnakeGame";
 import { FlappyLogoGame } from "../minigames/FlappyLogoGame";
@@ -8,7 +8,7 @@ import { LogoSpaceShooterGame } from "../minigames/LogoSpaceShooter";
 // import { LogoCatchGame } from "../minigames/LogoCatch";
 import { LogoDodgeGame } from "../minigames/LogoDodge";
 import { Logo } from "../components/logo";
-import LeaderBoard from "../components/minigame page/LeaderBoard"
+import LeaderBoard from "../components/minigame page/LeaderBoard";
 import { useTranslations } from "../contexts/TranslationContext";
 import PlinkoGame from "../minigames/Plinko";
 import MinesweeperGame from "../minigames/MineSweeper";
@@ -20,19 +20,37 @@ export const MinigamesPage: React.FC = () => {
     setSelectedGame(game);
   };
 
-  const minigames = [
-    "brickBreaker",
-    "snake",
-    "flappy",
-    "logoDodge",
-    "logoRacer",
-    "spaceShooter",
-    "plinko",
-    "minesweeper",
-    "tower"
-  ];
+  // Memoize the array so its reference remains the same on every render.
+  const minigames = useMemo(
+    () => [
+      "brickBreaker",
+      "snake",
+      "flappy",
+      "logoDodge",
+      "logoRacer",
+      "spaceShooter",
+      "plinko",
+      "minesweeper",
+      "tower"
+    ],
+    []
+  );
 
   const t = useTranslations("minigames");
+
+  // --- Time Counter State ---
+  const [timeSpent, setTimeSpent] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeSpent((prev) => prev + 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Convert timeSpent (in seconds) to hours, minutes, and seconds.
+  const hours = Math.floor(timeSpent / 3600);
+  const minutes = Math.floor((timeSpent % 3600) / 60);
+  const seconds = timeSpent % 60;
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-800 text-white text-center px-5">
@@ -113,12 +131,18 @@ export const MinigamesPage: React.FC = () => {
           {selectedGame === "spaceShooter" && <LogoSpaceShooterGame />}
           {/* {selectedGame === "logoCatch" && <LogoCatchGame />} */}
           {selectedGame === "logoDodge" && <LogoDodgeGame />}
-          { selectedGame === "plinko" && <PlinkoGame /> }
-          { selectedGame === "minesweeper" && <MinesweeperGame />}
+          {selectedGame === "plinko" && <PlinkoGame />}
+          {selectedGame === "minesweeper" && <MinesweeperGame />}
         </div>
       </div>
 
-      <LeaderBoard games={minigames} />
+      <div className="flex flex-col items-center">
+        <p className="text-base pt-2 pb-2">
+          Time spent on this page:{" "}
+          {hours}:{minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+        </p>
+        <LeaderBoard games={minigames} />
+      </div>
     </div>
   );
 };
