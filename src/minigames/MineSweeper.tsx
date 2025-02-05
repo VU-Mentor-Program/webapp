@@ -90,8 +90,10 @@ const computeScore = (board: Cell[][], timeElapsed: number): number => {
 
 const MinesweeperGame: React.FC = () => {
   // Customization states.
+  // Bound-check: minimum rows and columns are 5.
   const [rows, setRows] = useState<number>(9);
   const [cols, setCols] = useState<number>(9);
+  // Minimum bombs is 3; maximum bombs is (rows * cols - 1).
   const [bombCount, setBombCount] = useState<number>(10);
 
   // Board state.
@@ -112,9 +114,6 @@ const MinesweeperGame: React.FC = () => {
   // Load the bomb image.
   useEffect(() => {
     const img = new Image();
-    if (win) {
-      console.log("yay!");
-    }
     img.src = mpLogoCircle;
     img.onload = () => {
       bombImgRef.current = img;
@@ -124,7 +123,11 @@ const MinesweeperGame: React.FC = () => {
 
   // When board customization changes, start a new game.
   useEffect(() => {
-    setBoard(generateBoard(rows, cols, bombCount));
+    // Ensure bombCount does not exceed available cells - 1.
+    const maxBombs = rows * cols - 1;
+    const validBombCount = Math.min(bombCount, maxBombs);
+    setBombCount(validBombCount);
+    setBoard(generateBoard(rows, cols, validBombCount));
     setGameOver(false);
     setWin(false);
     setTimeElapsed(0);
@@ -252,7 +255,7 @@ const MinesweeperGame: React.FC = () => {
           <input
             type="number"
             value={rows}
-            onChange={(e) => setRows(Number(e.target.value))}
+            onChange={(e) => setRows(Math.max(5, Number(e.target.value)))}
             style={{ width: '50px', margin: '0 0.5rem' }}
           />
         </label>
@@ -261,7 +264,7 @@ const MinesweeperGame: React.FC = () => {
           <input
             type="number"
             value={cols}
-            onChange={(e) => setCols(Number(e.target.value))}
+            onChange={(e) => setCols(Math.max(5, Number(e.target.value)))}
             style={{ width: '50px', margin: '0 0.5rem' }}
           />
         </label>
@@ -270,7 +273,12 @@ const MinesweeperGame: React.FC = () => {
           <input
             type="number"
             value={bombCount}
-            onChange={(e) => setBombCount(Number(e.target.value))}
+            onChange={(e) => {
+              const newValue = Number(e.target.value);
+              // Maximum bombs allowed is (rows * cols - 1)
+              const maxBombs = rows * cols - 1;
+              setBombCount(Math.max(3, Math.min(newValue, maxBombs)));
+            }}
             style={{ width: '50px', margin: '0 0.5rem' }}
           />
         </label>
@@ -328,7 +336,13 @@ const MinesweeperGame: React.FC = () => {
           </div>
         ))}
       </div>
-      <GameOverModal isOpen={gameOver} score={score} gameName={"minesweeper"} onClose={resetGame} onRestart={resetGame}/>
+      <GameOverModal
+        isOpen={gameOver}
+        score={score}
+        gameName={"minesweeper"}
+        onClose={resetGame}
+        onRestart={resetGame}
+      />
     </div>
   );
 };
