@@ -10,6 +10,7 @@ import { LogoDodgeGame } from "../minigames/LogoDodge";
 import { Logo } from "../components/logo";
 import LeaderBoard from "../components/minigame page/LeaderBoard"
 import { useTranslations } from "../contexts/TranslationContext";
+import PlinkoGame from "../minigames/Plinko";
 
 export const MinigamesPage: React.FC = () => {
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
@@ -25,6 +26,7 @@ export const MinigamesPage: React.FC = () => {
     "logoDodge",
     "logoRacer",
     "spaceShooter",
+    "plinko"
   ];
 
   const t = useTranslations("minigames");
@@ -85,6 +87,12 @@ export const MinigamesPage: React.FC = () => {
           >
             🧺 Logo Catch
           </button> */}
+          <button
+            onClick={() => handleSelectGame("plinko")}
+            className="bg-indigo-600 px-4 py-2 rounded hover:bg-indigo-700"
+          >
+            🔴 Plinko
+          </button>
         </div>
 
         <div className="w-full max-w-4xl">
@@ -96,6 +104,7 @@ export const MinigamesPage: React.FC = () => {
           {selectedGame === "spaceShooter" && <LogoSpaceShooterGame />}
           {/* {selectedGame === "logoCatch" && <LogoCatchGame />} */}
           {selectedGame === "logoDodge" && <LogoDodgeGame />}
+          { selectedGame === "plinko" && <PlinkoGame /> }
         </div>
       </div>
 
