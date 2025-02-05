@@ -1,24 +1,25 @@
 import React, { useEffect, useRef, useState } from "react";
-import mpLogo from "../assets/mp_logo-CIRCLE.png";
+import mpLogo from "../assets/mp_logo.png";
+import GameOverModal from "../components/minigame page/GameOverModal";
 
 export const LogoStackGame: React.FC = () => {
-  // Canvas logical size
+  /*** CONSTANTS ***/
   const LOGICAL_WIDTH = 400;
   const LOGICAL_HEIGHT = 600;
+  const BLOCK_SIZE = 80; // square block dimensions
+  const GRAVITY = 0.5;
+  const EXPLOSION_SPEED = 5;
+  const LEFT_BOUND = BLOCK_SIZE / 2;
+  const RIGHT_BOUND = LOGICAL_WIDTH - BLOCK_SIZE / 2;
+  // Vertical gap (in world coordinates) between the swing block and the last placed block:
+  const SWING_DISTANCE = 300;
+  // Desired top margin (in world coordinates) before we start scrolling the camera:
+  const DESIRED_TOP_MARGIN = 10;
+  // Tower sway factor (applied only when game is over)
+  const TOWER_SWAY_SPEED = 0.005;
 
-  const BLOCK_WIDTH = 80;  // width of each logo block
-  const BLOCK_HEIGHT = 40; // height of each logo block
-  const SWING_MIN_ANGLE = -60; // degrees
-  const SWING_MAX_ANGLE = 60;  // degrees
-  const SWING_SPEED = 1.0;     // how fast the arm swings (deg per frame)
-
-  // For comedic explosion
-  const EXPLOSION_SPEED = 5;   // base horizontal velocity
-  const GRAVITY = 0.3;         // downward acceleration in explosion
-
+  /*** CANVAS SETUP ***/
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  // We’ll dynamically scale the canvas based on viewport size
   const [canvasSize, setCanvasSize] = useState({ width: LOGICAL_WIDTH, height: LOGICAL_HEIGHT });
   useEffect(() => {
     function handleResize() {
@@ -31,7 +32,7 @@ export const LogoStackGame: React.FC = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Load the logo image
+  /*** LOAD THE LOGO IMAGE (square mp_logo.png) ***/
   const logoRef = useRef<HTMLImageElement | null>(null);
   useEffect(() => {
     const img = new Image();
@@ -41,390 +42,418 @@ export const LogoStackGame: React.FC = () => {
     };
   }, []);
 
-  // Each block in the tower
+  /*** INTERFACES ***/
   interface TowerBlock {
-    x: number;  // center X
-    y: number;  // top Y
-    w: number;  // width
-    h: number;  // height
+    x: number;         // center x (world coordinate)
+    y: number;         // top y (world coordinate)
+    rotation: number;  // tilt (degrees) based on misalignment
   }
-
-  // The tower so far
-  const [tower, setTower] = useState<TowerBlock[]>([]);
-
-  // The "swing arm" block that is waiting to be dropped
-  const [swingAngle, setSwingAngle] = useState(SWING_MIN_ANGLE); // degrees
-  const [angleSpeed, setAngleSpeed] = useState(SWING_SPEED);
-  const [dropping, setDropping] = useState(false);
-
-  // The dropped block’s position (once you drop it, we use x,y for falling)
-  const [dropX, setDropX] = useState(0);
-  const [dropY, setDropY] = useState(0);
-  const [dropSpeed, setDropSpeed] = useState(0);
-
-  // Game states
-  const [gameOver, setGameOver] = useState(false);
-  const [score, setScore] = useState(0);
-
-  // For comedic explosion
   interface FlyingBlock {
-    // start with same dimension as tower block
     x: number;
     y: number;
-    w: number;
-    h: number;
     vx: number;
     vy: number;
     rotation: number;
-    vr: number; // rotation speed
+    vr: number; // rotation speed (degrees per frame)
   }
-  const [flyingBlocks, setFlyingBlocks] = useState<FlyingBlock[]>([]);
+  interface Building {
+    x: number;
+    width: number;
+    height: number;
+    color: string;
+  }
+  interface Cloud {
+    x: number;
+    y: number;
+    speed: number;
+  }
+  interface Bird {
+    x: number;
+    y: number;
+    speed: number;
+  }
+
+  /*** STATIC CITY BUILDINGS ***/
+  const [buildings] = useState<Building[]>(() => {
+    const blds: Building[] = [];
+    const colors = ["#FF6B6B", "#FFD93D", "#6BCB77", "#4D96FF", "#845EC2"];
+    let x = 0;
+    while (x < LOGICAL_WIDTH) {
+      const width = 30 + Math.random() * 40; // between 30 and 70
+      const height = 50 + Math.random() * 150; // between 50 and 200
+      blds.push({
+        x,
+        width,
+        height,
+        color: colors[Math.floor(Math.random() * colors.length)]
+      });
+      x += width + 10; // gap between buildings
+    }
+    return blds;
+  });
+
+  /*** MOVING CLOUDS & BIRDS (Background Elements) ***/
+  const [clouds, setClouds] = useState<Cloud[]>(() => {
+    const arr: Cloud[] = [];
+    for (let i = 0; i < 3; i++) {
+      arr.push({
+        x: Math.random() * LOGICAL_WIDTH,
+        y: 20 + Math.random() * 50,
+        speed: 0.2 + Math.random() * 0.3,
+      });
+    }
+    return arr;
+  });
+  const [birds, setBirds] = useState<Bird[]>(() => {
+    const arr: Bird[] = [];
+    for (let i = 0; i < 5; i++) {
+      arr.push({
+        x: Math.random() * LOGICAL_WIDTH,
+        y: 80 + Math.random() * 40,
+        speed: 0.5 + Math.random() * 0.5,
+      });
+    }
+    return arr;
+  });
+
+  /*** GAME STATE ***/
+  const [tower, setTower] = useState<TowerBlock[]>([]);
+  const [swingX, setSwingX] = useState(LEFT_BOUND); // world x for the swing block
+  const [swingArmSpeed, setSwingArmSpeed] = useState(10); // tweakable horizontal swing speed
+  const [dropping, setDropping] = useState(false);
+  const [dropY, setDropY] = useState(0); // world y of the falling block (set when drop starts)
+  const [dropSpeed, setDropSpeed] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
   const [exploding, setExploding] = useState(false);
+  const [flyingBlocks, setFlyingBlocks] = useState<FlyingBlock[]>([]);
+  const [score, setScore] = useState(0);
 
-  // Start / restart
-  function startGame() {
-    setTower([]);
-    setScore(0);
-    setGameOver(false);
-    setExploding(false);
-    setFlyingBlocks([]);
-    resetSwingArm();
-  }
-
+  /*** MAIN ANIMATION LOOP ***/
   useEffect(() => {
-    // On mount, start game
-    startGame();
-  }, []);
-
-  // A helper to reset the swing arm for the next block
-  function resetSwingArm() {
-    setSwingAngle(SWING_MIN_ANGLE);
-    setAngleSpeed(SWING_SPEED);
-    setDropping(false);
-    setDropX(0);
-    setDropY(0);
-    setDropSpeed(0);
-  }
-
-  // Main loop
-  useEffect(() => {
-    let animId = 0;
-    const loop = () => {
-      update();
-      draw();
+    let animId: number;
+    const startTime = performance.now();
+    function loop() {
+      const currentTime = performance.now();
+      const elapsed = currentTime - startTime;
+      update(elapsed);
+      draw(elapsed);
       animId = requestAnimationFrame(loop);
-    };
+    }
     animId = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(animId);
-    // eslint-disable-next-line
-  }, [tower, dropping, gameOver, exploding, flyingBlocks, swingAngle, angleSpeed]);
+  }, [
+    tower,
+    swingX,
+    swingArmSpeed,
+    dropping,
+    dropY,
+    dropSpeed,
+    gameOver,
+    exploding,
+    flyingBlocks,
+    clouds,
+    birds,
+    canvasSize,
+  ]);
 
-  function update() {
+  /*** UPDATE GAME LOGIC ***/
+  function update(time: number) {
     if (gameOver) return;
 
-    // If we're in comedic-explosion mode, just update flying blocks
-    if (exploding) {
-      setFlyingBlocks((old) =>
-        old.map((block) => {
-          // apply velocities
-          const newX = block.x + block.vx;
-          const newY = block.y + block.vy;
-          const newVy = block.vy + GRAVITY; // gravity
-          const newRotation = block.rotation + block.vr;
-          return {
-            ...block,
-            x: newX,
-            y: newY,
-            vy: newVy,
-            rotation: newRotation,
-          };
-        })
-      );
-      return;
-    }
+    // Update background clouds and birds.
+    setClouds((prev) =>
+      prev.map((cloud) => {
+        let newX = cloud.x + cloud.speed;
+        if (newX > LOGICAL_WIDTH + 50) newX = -50;
+        return { ...cloud, x: newX };
+      })
+    );
+    setBirds((prev) =>
+      prev.map((bird) => {
+        let newX = bird.x + bird.speed;
+        if (newX > LOGICAL_WIDTH + 20) newX = -20;
+        return { ...bird, x: newX };
+      })
+    );
 
-    // If not dropping, swing the arm
+    // When not dropping, update the swing block’s horizontal position.
     if (!dropping) {
-      let newAngle = swingAngle + angleSpeed;
-      // bounce between min & max
-      if (newAngle > SWING_MAX_ANGLE) {
-        newAngle = SWING_MAX_ANGLE;
-        setAngleSpeed(-Math.abs(angleSpeed));
-      } else if (newAngle < SWING_MIN_ANGLE) {
-        newAngle = SWING_MIN_ANGLE;
-        setAngleSpeed(Math.abs(angleSpeed));
+      let newSwingX = swingX + swingArmSpeed;
+      if (newSwingX > RIGHT_BOUND) {
+        newSwingX = RIGHT_BOUND;
+        setSwingArmSpeed(-Math.abs(swingArmSpeed));
+      } else if (newSwingX < LEFT_BOUND) {
+        newSwingX = LEFT_BOUND;
+        setSwingArmSpeed(Math.abs(swingArmSpeed));
       }
-      setSwingAngle(newAngle);
+      setSwingX(newSwingX);
     } else {
-      // The block is dropping
-      const newY = dropY + dropSpeed;
-      const newSpeed = dropSpeed + 0.5; // fall acceleration
-      setDropY(newY);
-      setDropSpeed(newSpeed);
+      // When dropping, update the falling block’s vertical position.
+      const newDropY = dropY + dropSpeed;
+      const newDropSpeed = dropSpeed + GRAVITY;
+      setDropY(newDropY);
+      setDropSpeed(newDropSpeed);
 
-      // check if it hit something
-      // The block’s bottom is newY + BLOCK_HEIGHT
-      // Tower block’s top is towerBlock.y
-      // We'll assume tower blocks are stacked from bottom up
-      const topBlock = tower[tower.length - 1];
-      const groundY = LOGICAL_HEIGHT - BLOCK_HEIGHT;
-
-      if (topBlock) {
-        // the top of topBlock is topBlock.y
-        // if newY + BLOCK_HEIGHT >= topBlock.y => we have a collision or pass
-        if (newY + BLOCK_HEIGHT >= topBlock.y) {
-          // Snap it so the bottom of dropping block = topBlock.y
-          const finalY = topBlock.y - BLOCK_HEIGHT;
-          placeBlock(finalY);
-        }
-      } else {
-        // no tower => first block. If it hits ground, place it on the ground
-        if (newY + BLOCK_HEIGHT >= LOGICAL_HEIGHT) {
-          const finalY = groundY;
-          placeBlock(finalY);
-        }
+      // Determine landing target: If there’s a tower, land on top of the last block; else, land on the ground.
+      let targetY = LOGICAL_HEIGHT - BLOCK_SIZE;
+      if (tower.length > 0) {
+        const topBlock = tower[tower.length - 1];
+        targetY = topBlock.y - BLOCK_SIZE;
       }
-
-      // If it goes below ground -> you missed entirely
-      if (newY > LOGICAL_HEIGHT) {
-        // That means it never collided with the tower top
-        // => game over
+      if (newDropY >= targetY) {
+        placeBlock(targetY);
+      }
+      if (newDropY > LOGICAL_HEIGHT) {
         setGameOver(true);
       }
     }
   }
 
+  /*** PLACE THE DROPPED BLOCK INTO THE TOWER ***/
   function placeBlock(finalY: number) {
-    // We have a top block. Check overlap with the block below
-    const topBlock = tower[tower.length - 1];
-    const newBlockCenterX = dropX;
-    const newBlockLeft = newBlockCenterX - BLOCK_WIDTH / 2;
-    const newBlockRight = newBlockCenterX + BLOCK_WIDTH / 2;
-
-    if (topBlock) {
-      // compute overlap
-      const topLeft = topBlock.x - topBlock.w / 2;
-      const topRight = topBlock.x + topBlock.w / 2;
-
-      const overlapLeft = Math.max(newBlockLeft, topLeft);
-      const overlapRight = Math.min(newBlockRight, topRight);
-      const overlapWidth = overlapRight - overlapLeft;
-
-      // If there's NO overlap, block actually falls off (game over).
-      if (overlapWidth <= 0) {
-        // Missed the block completely => block falls
+    const newBlockX = swingX;
+    if (tower.length > 0) {
+      const topBlock = tower[tower.length - 1];
+      const misalignment = Math.abs(newBlockX - topBlock.x);
+      const overlap = BLOCK_SIZE - misalignment;
+      if (overlap <= 0) {
         setGameOver(true);
         return;
       }
-
-      // If overlap is < 50% of the new block’s width => comedic explosion
-      if (overlapWidth < 0.5 * BLOCK_WIDTH) {
+      if (overlap < 0.5 * BLOCK_SIZE) {
         triggerExplosion();
         return;
       }
+      // Compute a tilt (up to 15°) based on misalignment.
+      const blockTilt = ((newBlockX - topBlock.x) / (BLOCK_SIZE / 2)) * 15;
+      const newBlock: TowerBlock = { x: newBlockX, y: finalY, rotation: blockTilt };
+      setTower((prev) => [...prev, newBlock]);
+    } else {
+      // First block lands on the ground.
+      const newBlock: TowerBlock = { x: newBlockX, y: finalY, rotation: 0 };
+      setTower([newBlock]);
     }
-    // Otherwise we place the new block
-    const newBlock: TowerBlock = {
-      x: dropX,
-      y: finalY,
-      w: BLOCK_WIDTH,
-      h: BLOCK_HEIGHT,
-    };
-    setTower((prev) => [...prev, newBlock]);
+    setScore((s) => s + 100);
     setDropping(false);
-    setScore((s) => s + 1);
-    resetSwingArm();
+    setDropSpeed(0);
   }
 
+  /*** TRIGGER EXPLOSION (if overlap is insufficient) ***/
   function triggerExplosion() {
     setExploding(true);
-    // Convert entire tower + dropping block into flying blocks
-    let blocksToFly: FlyingBlock[] = [];
-    // Tower
+    const blocksToFly: FlyingBlock[] = [];
     tower.forEach((tb) => {
       blocksToFly.push({
-        x: tb.x - tb.w / 2,
+        x: tb.x - BLOCK_SIZE / 2,
         y: tb.y,
-        w: tb.w,
-        h: tb.h,
         vx: (Math.random() - 0.5) * EXPLOSION_SPEED * 2,
         vy: -Math.random() * EXPLOSION_SPEED,
         rotation: 0,
         vr: (Math.random() - 0.5) * 10,
       });
     });
-    // The current dropping block (if any)
+    // Also include the current (dropping) block.
     blocksToFly.push({
-      x: dropX - BLOCK_WIDTH / 2,
+      x: swingX - BLOCK_SIZE / 2,
       y: dropY,
-      w: BLOCK_WIDTH,
-      h: BLOCK_HEIGHT,
       vx: (Math.random() - 0.5) * EXPLOSION_SPEED * 2,
       vy: -Math.random() * EXPLOSION_SPEED,
       rotation: 0,
       vr: (Math.random() - 0.5) * 10,
     });
     setFlyingBlocks(blocksToFly);
-    // game over
     setGameOver(true);
   }
 
-  // Draw
-  function draw() {
+  /*** DRAWING FUNCTION ***/
+  function draw(time: number) {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // scale to match LOGICAL dim
     const scaleX = canvasSize.width / LOGICAL_WIDTH;
     const scaleY = canvasSize.height / LOGICAL_HEIGHT;
+
+    // --- Draw Background (Sky, Buildings, Clouds, Birds) in Fixed Screen Coordinates ---
     ctx.save();
     ctx.scale(scaleX, scaleY);
+    const skyGradient = ctx.createLinearGradient(0, 0, 0, LOGICAL_HEIGHT);
+    skyGradient.addColorStop(0, "#0f2027");
+    skyGradient.addColorStop(1, "#203a43");
+    ctx.fillStyle = skyGradient;
+    ctx.fillRect(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT);
+    buildings.forEach((bld) => {
+      ctx.fillStyle = bld.color;
+      const bldY = LOGICAL_HEIGHT - 10 - bld.height;
+      ctx.fillRect(bld.x, bldY, bld.width, bld.height);
+    });
+    clouds.forEach((cloud) => {
+      ctx.fillStyle = "rgba(255,255,255,0.8)";
+      ctx.beginPath();
+      ctx.arc(cloud.x, cloud.y, 20, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(cloud.x + 25, cloud.y + 5, 15, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 2;
+    birds.forEach((bird) => {
+      ctx.beginPath();
+      ctx.moveTo(bird.x, bird.y);
+      ctx.lineTo(bird.x + 10, bird.y - 5);
+      ctx.moveTo(bird.x + 10, bird.y - 5);
+      ctx.lineTo(bird.x + 20, bird.y);
+      ctx.stroke();
+    });
+    ctx.restore();
 
-    // Draw ground
+    // --- Compute World Coordinates for the Swing Block ---
+    const swingWorldY =
+      tower.length > 0
+        ? tower[tower.length - 1].y - SWING_DISTANCE
+        : (LOGICAL_HEIGHT - BLOCK_SIZE) - SWING_DISTANCE;
+    // Effective top is the swing block’s world y when not dropping,
+    // or the falling block’s y when dropping.
+    const effectiveTopY = dropping ? dropY : swingWorldY;
+    const cameraOffsetY = effectiveTopY < DESIRED_TOP_MARGIN ? DESIRED_TOP_MARGIN - effectiveTopY : 0;
+
+    // --- Draw the World (Tower, Falling Block, Ground) with Camera Translation ---
+    ctx.save();
+    ctx.scale(scaleX, scaleY);
+    ctx.translate(0, cameraOffsetY);
+    // If game over, apply extra tower sway to simulate instability.
+    let towerSwayOffset = 0;
+    if (gameOver) {
+      const towerHeight =
+        tower.length > 0 ? (LOGICAL_HEIGHT - BLOCK_SIZE) - tower[tower.length - 1].y : 0;
+      const dynamicSwayAmplitude = Math.min(20, 5 + towerHeight / 50);
+      towerSwayOffset = dynamicSwayAmplitude * Math.sin(time * TOWER_SWAY_SPEED);
+    }
+    ctx.save();
+    ctx.translate(towerSwayOffset, 0);
+    // Draw tower blocks.
+    tower.forEach((block) => {
+      ctx.save();
+      ctx.translate(block.x, block.y + BLOCK_SIZE / 2);
+      ctx.rotate((block.rotation * Math.PI) / 180);
+      drawLogoBlock(ctx, -BLOCK_SIZE / 2, -BLOCK_SIZE / 2, BLOCK_SIZE, BLOCK_SIZE);
+      ctx.restore();
+    });
+    // Draw the current block: if dropping, use dropY; if not, use swingWorldY.
+    if (dropping) {
+      ctx.save();
+      ctx.translate(swingX, dropY + BLOCK_SIZE / 2);
+      drawLogoBlock(ctx, -BLOCK_SIZE / 2, -BLOCK_SIZE / 2, BLOCK_SIZE, BLOCK_SIZE);
+      ctx.restore();
+    } else {
+      ctx.save();
+      ctx.translate(swingX, swingWorldY + BLOCK_SIZE / 2);
+      drawLogoBlock(ctx, -BLOCK_SIZE / 2, -BLOCK_SIZE / 2, BLOCK_SIZE, BLOCK_SIZE);
+      ctx.restore();
+    }
+    // Draw ground line.
     ctx.fillStyle = "#333";
     ctx.fillRect(0, LOGICAL_HEIGHT - 10, LOGICAL_WIDTH, 10);
+    ctx.restore();
+    ctx.restore();
 
-    // Draw tower blocks
-    ctx.fillStyle = "skyblue";
-    tower.forEach((block) => {
-      drawLogoBlock(ctx, block.x, block.y, block.w, block.h);
-    });
-
-    // If exploding, draw flying blocks
+    // --- If in Explosion Mode, Draw Flying Blocks (in world coordinates) ---
     if (exploding) {
-      ctx.fillStyle = "orange";
+      ctx.save();
+      ctx.scale(scaleX, scaleY);
       flyingBlocks.forEach((fb) => {
-        drawFlyingBlock(ctx, fb);
-      });
-    } else {
-      // Draw the current swinging block if not dropped yet
-      if (!dropping) {
-        // The pivot is at the top center (x=LOGICAL_WIDTH/2, y=0) 
-        // or we can keep it simpler and just assume pivot at (BLOCK_WIDTH,0). 
-        // But let's do a real pivot:
-        const pivotX = LOGICAL_WIDTH / 2;
-        const pivotY = 0;
-        const radius = 150; // distance from pivot to block center
-        const rad = (swingAngle * Math.PI) / 180;
-
-        const centerX = pivotX + radius * Math.cos(rad);
-        const centerY = pivotY + radius * Math.sin(rad);
-
-        // store them so we know where to drop from
-        if (!gameOver) {
-          setDropX(centerX);
-          setDropY(centerY);
+        ctx.save();
+        ctx.translate(fb.x + BLOCK_SIZE / 2, fb.y + BLOCK_SIZE / 2);
+        ctx.rotate((fb.rotation * Math.PI) / 180);
+        if (logoRef.current) {
+          ctx.drawImage(logoRef.current, -BLOCK_SIZE / 2, -BLOCK_SIZE / 2, BLOCK_SIZE, BLOCK_SIZE);
+        } else {
+          ctx.fillStyle = "orange";
+          ctx.fillRect(-BLOCK_SIZE / 2, -BLOCK_SIZE / 2, BLOCK_SIZE, BLOCK_SIZE);
         }
-
-        // Let’s draw a line for the “arm”
-        ctx.strokeStyle = "white";
-        ctx.beginPath();
-        ctx.moveTo(pivotX, pivotY);
-        ctx.lineTo(centerX, centerY);
-        ctx.stroke();
-
-        // Now draw the block centered at (centerX, centerY)
-        drawLogoBlock(ctx, centerX, centerY, BLOCK_WIDTH, BLOCK_HEIGHT);
-      } else {
-        // The block is falling
-        drawLogoBlock(ctx, dropX, dropY, BLOCK_WIDTH, BLOCK_HEIGHT);
-      }
+        ctx.restore();
+      });
+      ctx.restore();
     }
 
-    // Draw score
+    // --- Draw UI (Score and Game Over Message) Fixed to the Screen ---
+    ctx.save();
+    ctx.scale(scaleX, scaleY);
     ctx.fillStyle = "white";
     ctx.font = "20px Arial";
     ctx.fillText(`Score: ${score}`, 10, 30);
-
-    // If game over, message
     if (gameOver) {
       ctx.fillStyle = "red";
       ctx.fillText("GAME OVER!", 120, 200);
     }
-
     ctx.restore();
   }
 
   function drawLogoBlock(
     ctx: CanvasRenderingContext2D,
-    centerX: number,
-    topY: number,
-    width: number,
-    height: number
+    x: number,
+    y: number,
+    w: number,
+    h: number
   ) {
-    // If you have a logo, we can tile or just stretch the logo
-    // Here, let's stretch the logo across the block for simplicity
     if (logoRef.current) {
-      ctx.drawImage(
-        logoRef.current,
-        centerX - width / 2,
-        topY,
-        width,
-        height
-      );
+      ctx.drawImage(logoRef.current, x, y, w, h);
     } else {
-      // fallback
       ctx.fillStyle = "skyblue";
-      ctx.fillRect(centerX - width / 2, topY, width, height);
+      ctx.fillRect(x, y, w, h);
     }
   }
 
-  function drawFlyingBlock(ctx: CanvasRenderingContext2D, fb: FlyingBlock) {
-    // rotate around block's center
-    const cx = fb.x + fb.w / 2;
-    const cy = fb.y + fb.h / 2;
-    ctx.save();
-    ctx.translate(cx, cy);
-    ctx.rotate((fb.rotation * Math.PI) / 180);
-    if (logoRef.current) {
-      ctx.drawImage(logoRef.current, -fb.w / 2, -fb.h / 2, fb.w, fb.h);
-    } else {
-      ctx.fillStyle = "orange";
-      ctx.fillRect(-fb.w / 2, -fb.h / 2, fb.w, fb.h);
-    }
-    ctx.restore();
+  const restart = () => {
+    setTower([]);
+    setScore(0);
+    setGameOver(false);
+    setExploding(false);
+    setFlyingBlocks([]);
+    setSwingX(LEFT_BOUND);
+    setSwingArmSpeed(10);
+    setDropping(false);
+    setDropY(0);
+    setDropSpeed(0);
+    return;
   }
 
-  // Handle user input to drop the block
-  function handleClickOrKey() {
+  /*** CLICK HANDLER: DROP THE BLOCK ***/
+  function handleClick() {
     if (gameOver) {
-      startGame();
-      return;
+      // Restart the game.
+      restart();
     }
-    if (!exploding && !dropping) {
+    if (!dropping && !exploding) {
+      // Begin dropping. Compute the swing block's world y coordinate.
+      const swingWorldY =
+        tower.length > 0
+          ? tower[tower.length - 1].y - SWING_DISTANCE
+          : (LOGICAL_HEIGHT - BLOCK_SIZE) - SWING_DISTANCE;
+      setDropY(swingWorldY);
+      setDropSpeed(2);
       setDropping(true);
     }
   }
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === " " || e.key === "Spacebar") {
-        handleClickOrKey();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-    // eslint-disable-next-line
-  }, [gameOver, exploding, dropping]);
-
   return (
     <div style={{ textAlign: "center" }}>
-      <h2 style={{ color: "white" }}>Swing-Arm Logo Stack</h2>
+      <h2 style={{ color: "white" }}>Logo Tower Builder</h2>
       <canvas
         ref={canvasRef}
         width={canvasSize.width}
         height={canvasSize.height}
         style={{ background: "#222" }}
-        onClick={handleClickOrKey}
+        onClick={handleClick}
       />
       <p style={{ color: "#ccc" }}>
-        Click or press SPACE to drop the swinging logo block.<br/>
-        Overlap ≥ 50% to stack. Miss or overlap less - meltdown!
+        Click to drop the logo block from above (always {SWING_DISTANCE}px above the last piece).
+        <br />
+        Stack blocks with at least 50% overlap to build your tower!
       </p>
+      <GameOverModal isOpen={gameOver} score={score} gameName={"tower"} onClose={restart} onRestart={restart}/>
     </div>
   );
 };

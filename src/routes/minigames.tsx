@@ -3,7 +3,7 @@ import { OnePersonPong } from "../minigames/BrickBreaker";
 import { SnakeGame } from "../minigames/SnakeGame";
 import { FlappyLogoGame } from "../minigames/FlappyLogoGame";
 import { LogoRacerGame } from "../minigames/LogoRacer";
-// import { TowerBuilderGame } from "../minigames/LogoTowerBuilder";
+import { LogoStackGame } from "../minigames/LogoTowerBuilder";
 import { LogoSpaceShooterGame } from "../minigames/LogoSpaceShooter";
 // import { LogoCatchGame } from "../minigames/LogoCatch";
 import { LogoDodgeGame } from "../minigames/LogoDodge";
@@ -71,12 +71,12 @@ export const MinigamesPage: React.FC = () => {
           >
             🏎️ Logo Racer
           </button>
-          {/* <button
+          <button
             onClick={() => handleSelectGame("towerBuilder")}
             className="bg-red-600 px-4 py-2 rounded hover:bg-red-700"
           >
             🏗️ Tower Builder
-          </button> */}
+          </button>
           <button
             onClick={() => handleSelectGame("spaceShooter")}
             className="bg-indigo-600 px-4 py-2 rounded hover:bg-indigo-700"
@@ -108,7 +108,7 @@ export const MinigamesPage: React.FC = () => {
           {selectedGame === "snake" && <SnakeGame />}
           {selectedGame === "flappy" && <FlappyLogoGame />}
           {selectedGame === "logoRacer" && <LogoRacerGame />}
-          {/* {selectedGame === "towerBuilder" && <TowerBuilderGame />} */}
+          {selectedGame === "towerBuilder" && <LogoStackGame />}
           {selectedGame === "spaceShooter" && <LogoSpaceShooterGame />}
           {/* {selectedGame === "logoCatch" && <LogoCatchGame />} */}
           {selectedGame === "logoDodge" && <LogoDodgeGame />}
