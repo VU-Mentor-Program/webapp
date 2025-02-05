@@ -91,15 +91,15 @@ export const MinigamesPage: React.FC = () => {
           </button> */}
           <button
             onClick={() => handleSelectGame("plinko")}
-            className="bg-indigo-600 px-4 py-2 rounded hover:bg-indigo-700"
+            className="bg-orange-500 px-4 py-2 rounded hover:bg-orange-600"
           >
             🔴 Plinko
           </button>
           <button
             onClick={() => handleSelectGame("minesweeper")}
-            className="bg-indigo-600 px-4 py-2 rounded hover:bg-indigo-700"
+            className="bg-teal-500 px-4 py-2 rounded hover:bg-teal-600"
           >
-            MineSweeper
+            💣 MineSweeper
           </button>
         </div>
 

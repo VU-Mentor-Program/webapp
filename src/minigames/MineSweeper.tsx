@@ -112,6 +112,9 @@ const MinesweeperGame: React.FC = () => {
   // Load the bomb image.
   useEffect(() => {
     const img = new Image();
+    if (win) {
+      console.log("yay!");
+    }
     img.src = mpLogoCircle;
     img.onload = () => {
       bombImgRef.current = img;
