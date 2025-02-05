@@ -1,48 +1,46 @@
 // PlinkoGame.tsx
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import mpLogoCircle from "../assets/mp_logo-CIRCLE.png";
 import GameOverModal from "../components/minigame page/GameOverModal";
 
+// A dropped ball carries its physics state plus the bet it was dropped with.
 interface BallState {
   x: number;
   y: number;
   vx: number;
   vy: number;
+  bet: number;
 }
 
 const PlinkoGame: React.FC = () => {
-  // Canvas dimensions
+  // Canvas dimensions and radii.
   const CANVAS_WIDTH = 400;
   const CANVAS_HEIGHT = 600;
-  const ballRadius = 10; // the ball is drawn as a 20x20 image (or circle diameter 20)
+  const ballRadius = 10; // The ball is drawn as a 20x20 image/circle.
   const pegRadius = 5;
 
-  // Game states
+  // Game states.
   const [currency, setCurrency] = useState(500);
   const [bet, setBet] = useState(50);
-  const [ball, setBall] = useState<BallState>({
-    x: CANVAS_WIDTH / 2,
-    y: 0,
-    vx: 0,
-    vy: 0,
-  });
-  const ballRef = useRef<BallState>(ball);
-  const [isDropping, setIsDropping] = useState(false);
-  const [result, setResult] = useState<number | null>(null); // outcome (payout) of this drop
+  // We'll show the most recent landed ball's payout.
+  const [result, setResult] = useState<number | null>(null);
   const [showModal, setShowModal] = useState(false);
 
-  // Animation frame ID and timing ref
+  // Instead of a single ball, we maintain an array of dropped balls.
+  // Each ball holds its own physics state and the bet associated with it.
+  const ballsRef = useRef<BallState[]>([]);
+
+  // Animation frame and time tracking.
   const animationFrameId = useRef<number | null>(null);
   const lastTimeRef = useRef<number | null>(null);
 
-  // Peg configuration – 10 rows with alternating peg counts
+  // Peg configuration – 10 rows with alternating peg counts.
   const rows = 10;
   const pegs = useRef(
     (() => {
       const arr: { x: number; y: number }[] = [];
       for (let i = 1; i <= rows; i++) {
         const y = i * (CANVAS_HEIGHT / (rows + 1));
-        // Even rows get 8 pegs; odd rows get 7 pegs
         const pegCount = i % 2 === 0 ? 8 : 7;
         for (let j = 0; j < pegCount; j++) {
           const x = ((j + 1) * CANVAS_WIDTH) / (pegCount + 1);
@@ -53,12 +51,11 @@ const PlinkoGame: React.FC = () => {
     })()
   );
 
-  // Landing slots configuration – 8 slots with multipliers increasing toward the sides.
-  // The center slots are very low (x0.2), then gradually increasing to x4 at the extreme sides.
+  // Landing slots configuration – 8 slots with multipliers.
   const slotCount = 8;
   const slotMultipliers = [4, 2, 1, 0.2, 0.2, 1, 2, 4];
 
-  // Load the ball image (mp_logo-CIRCLE.png)
+  // Load the ball image.
   const [ballImgLoaded, setBallImgLoaded] = useState(false);
   const ballImgRef = useRef<HTMLImageElement | null>(null);
   useEffect(() => {
@@ -70,144 +67,29 @@ const PlinkoGame: React.FC = () => {
     };
   }, []);
 
-  // Physics constants
-  const gravity = 1200; // pixels per second^2
-  const restitution = 0.5; // bounce factor (energy preserved)
-  // Reduce jitter to 1° (instead of 5°) for smoother collisions.
-  const jitterRange = Math.PI / 180;
-  const damping = 0.995; // damping per frame
+  // Physics constants.
+  const gravity = 1200; // pixels per second².
+  const restitution = 0.5; // bounce factor.
+  const jitterRange = Math.PI / 180; // small random angle for collision.
+  const damping = 0.995; // damping per frame.
+  // Using a smaller fixed timestep (e.g. 1/120 sec) increases the physics update frequency.
+  const fixedDelta = 1 / 120; // ~0.00833 sec per physics step.
 
-  // We'll use a fixed timestep for physics updates.
-  const fixedDelta = 0.016; // 16ms per step (~60 FPS)
-
-  // Animation loop with fixed timestep
-  useEffect(() => {
-    if (!isDropping) return;
-    lastTimeRef.current = null;
-
-    const animate = (time: number) => {
-      if (lastTimeRef.current === null) {
-        lastTimeRef.current = time;
-        animationFrameId.current = requestAnimationFrame(animate);
-        return;
-      }
-      
-      // Calculate the elapsed time in seconds.
-      let dt = (time - lastTimeRef.current) / 1000;
-      lastTimeRef.current = time;
-      // Clamp dt if it’s too high (in case of tab switching, etc.)
-      dt = Math.min(dt, 0.05);
-
-      // Use a fixed timestep integration to update physics smoothly.
-      while (dt > fixedDelta) {
-        updatePhysics(fixedDelta);
-        dt -= fixedDelta;
-      }
-      updatePhysics(dt);
-
-      // After updating, check if the ball has reached the bottom.
-      const b = ballRef.current;
-      if (b.y >= CANVAS_HEIGHT - ballRadius) {
-        if (animationFrameId.current) cancelAnimationFrame(animationFrameId.current);
-        // Determine which slot the ball landed in.
-        const slotWidth = CANVAS_WIDTH / slotCount;
-        const slotIndex = Math.min(Math.floor(b.x / slotWidth), slotCount - 1);
-        const multiplier = slotMultipliers[slotIndex];
-        // Compute payout as bet * multiplier.
-        const payout = bet * multiplier;
-        setResult(payout);
-        setCurrency((prev) => prev + payout);
-        setIsDropping(false);
-        return;
-      }
-
-      animationFrameId.current = requestAnimationFrame(animate);
-    };
-
-    const updatePhysics = (delta: number) => {
-      // Copy the current ball state.
-      const b = { ...ballRef.current };
-
-      // Apply gravity.
-      b.vy += gravity * delta;
-      // Update position.
-      b.x += b.vx * delta;
-      b.y += b.vy * delta;
-
-      // Bounce off left/right walls.
-      if (b.x < ballRadius) {
-        b.x = ballRadius;
-        b.vx = Math.abs(b.vx);
-      } else if (b.x > CANVAS_WIDTH - ballRadius) {
-        b.x = CANVAS_WIDTH - ballRadius;
-        b.vx = -Math.abs(b.vx);
-      }
-
-      // Process collisions with each peg.
-      pegs.current.forEach((peg) => {
-        const dx = b.x - peg.x;
-        const dy = b.y - peg.y;
-        const dist = Math.hypot(dx, dy);
-        const minDist = ballRadius + pegRadius;
-        if (dist < minDist) {
-          const nx = dx / dist;
-          const ny = dy / dist;
-          // Push the ball out of the peg.
-          b.x = peg.x + nx * minDist;
-          b.y = peg.y + ny * minDist;
-          // Reflect velocity.
-          const dot = b.vx * nx + b.vy * ny;
-          let rvx = b.vx - (1 + restitution) * dot * nx;
-          let rvy = b.vy - (1 + restitution) * dot * ny;
-          // Add a small random perturbation.
-          const currentAngle = Math.atan2(rvy, rvx);
-          const jitter = (Math.random() - 0.5) * jitterRange;
-          const newAngle = currentAngle + jitter;
-          const speed = Math.hypot(rvx, rvy);
-          rvx = speed * Math.cos(newAngle);
-          rvy = speed * Math.sin(newAngle);
-          b.vx = rvx;
-          b.vy = rvy;
-        }
-      });
-
-      // Apply damping.
-      b.vx *= damping;
-      b.vy *= damping;
-
-      // Save and update state.
-      ballRef.current = b;
-      setBall({ ...b });
-    };
-
-    animationFrameId.current = requestAnimationFrame(animate);
-    return () => {
-      if (animationFrameId.current) cancelAnimationFrame(animationFrameId.current);
-    };
-  }, [
-    isDropping,
-    bet,
-    CANVAS_WIDTH,
-    CANVAS_HEIGHT,
-    ballRadius,
-    gravity,
-    restitution,
-    jitterRange,
-    damping,
-    slotCount,
-    slotMultipliers,
-  ]);
-
-  // Draw the board, pegs, landing slots, and ball.
+  // Reference to the canvas element.
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  useEffect(() => {
+
+  // Draw the scene: background, pegs, landing slots, and every dropped ball.
+  const drawCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+
+    // Clear canvas and draw background.
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "#222";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+
     // Draw pegs.
     ctx.fillStyle = "#888";
     pegs.current.forEach((peg) => {
@@ -215,6 +97,7 @@ const PlinkoGame: React.FC = () => {
       ctx.arc(peg.x, peg.y, pegRadius, 0, Math.PI * 2);
       ctx.fill();
     });
+
     // Draw landing slots.
     const slotWidth = canvas.width / slotCount;
     for (let i = 0; i < slotCount; i++) {
@@ -226,44 +109,152 @@ const PlinkoGame: React.FC = () => {
       ctx.textBaseline = "middle";
       ctx.fillText("x" + slotMultipliers[i], i * slotWidth + slotWidth / 2, canvas.height - 10);
     }
-    // Draw the ball.
-    if (ballImgLoaded && ballImgRef.current) {
-      ctx.drawImage(
-        ballImgRef.current,
-        ball.x - ballRadius,
-        ball.y - ballRadius,
-        ballRadius * 2,
-        ballRadius * 2
-      );
-    } else {
-      ctx.fillStyle = "white";
-      ctx.beginPath();
-      ctx.arc(ball.x, ball.y, ballRadius, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }, [ball, ballImgLoaded, pegRadius, slotCount, slotMultipliers]);
 
-  // Handle the "Drop Ball" button click.
+    // Draw each dropped ball.
+    ballsRef.current.forEach((ball) => {
+      if (ballImgLoaded && ballImgRef.current) {
+        ctx.drawImage(
+          ballImgRef.current,
+          ball.x - ballRadius,
+          ball.y - ballRadius,
+          ballRadius * 2,
+          ballRadius * 2
+        );
+      } else {
+        ctx.fillStyle = "white";
+        ctx.beginPath();
+        ctx.arc(ball.x, ball.y, ballRadius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    });
+  }, [ballImgLoaded, ballRadius, slotCount, slotMultipliers, pegRadius]);
+
+  // Physics update for one ball.
+  const updatePhysicsForBall = useCallback(
+    (ball: BallState, delta: number) => {
+      // Apply gravity.
+      ball.vy += gravity * delta;
+      // Update position.
+      ball.x += ball.vx * delta;
+      ball.y += ball.vy * delta;
+      // Bounce off left/right walls.
+      if (ball.x < ballRadius) {
+        ball.x = ballRadius;
+        ball.vx = Math.abs(ball.vx);
+      } else if (ball.x > CANVAS_WIDTH - ballRadius) {
+        ball.x = CANVAS_WIDTH - ballRadius;
+        ball.vx = -Math.abs(ball.vx);
+      }
+      // Process collisions with each peg.
+      pegs.current.forEach((peg) => {
+        const dx = ball.x - peg.x;
+        const dy = ball.y - peg.y;
+        const dist = Math.hypot(dx, dy);
+        const minDist = ballRadius + pegRadius;
+        if (dist < minDist) {
+          const nx = dx / dist;
+          const ny = dy / dist;
+          // Push the ball out of the peg.
+          ball.x = peg.x + nx * minDist;
+          ball.y = peg.y + ny * minDist;
+          // Reflect velocity.
+          const dot = ball.vx * nx + ball.vy * ny;
+          let rvx = ball.vx - (1 + restitution) * dot * nx;
+          let rvy = ball.vy - (1 + restitution) * dot * ny;
+          // Add a small random perturbation.
+          const currentAngle = Math.atan2(rvy, rvx);
+          const jitter = (Math.random() - 0.5) * jitterRange;
+          const newAngle = currentAngle + jitter;
+          const speed = Math.hypot(rvx, rvy);
+          ball.vx = speed * Math.cos(newAngle);
+          ball.vy = speed * Math.sin(newAngle);
+        }
+      });
+      // Apply damping.
+      ball.vx *= damping;
+      ball.vy *= damping;
+    },
+    [gravity, ballRadius, CANVAS_WIDTH, pegRadius, restitution, jitterRange, damping]
+  );
+
+  // The main animation loop.
+  // It updates physics for every dropped ball, draws the scene,
+  // removes landed balls (and computes their payout), and continues as long as any ball is in flight.
+  const animate = useCallback(
+    (time: number) => {
+      if (lastTimeRef.current === null) {
+        lastTimeRef.current = time;
+        animationFrameId.current = requestAnimationFrame(animate);
+        return;
+      }
+      let dt = (time - lastTimeRef.current) / 1000;
+      lastTimeRef.current = time;
+      // Clamp dt in case of tab switching.
+      dt = Math.min(dt, 0.05);
+
+      // Update physics for each ball using fixed timestep integration.
+      for (let i = 0; i < ballsRef.current.length; i++) {
+        let ball = ballsRef.current[i];
+        let t = dt;
+        while (t > fixedDelta) {
+          updatePhysicsForBall(ball, fixedDelta);
+          t -= fixedDelta;
+        }
+        updatePhysicsForBall(ball, t);
+      }
+
+      // Process landed balls.
+      const remainingBalls: BallState[] = [];
+      for (let i = 0; i < ballsRef.current.length; i++) {
+        const ball = ballsRef.current[i];
+        if (ball.y >= CANVAS_HEIGHT - ballRadius) {
+          // The ball has landed. Determine its landing slot.
+          const slotWidth = CANVAS_WIDTH / slotCount;
+          const slotIndex = Math.min(Math.floor(ball.x / slotWidth), slotCount - 1);
+          const multiplier = slotMultipliers[slotIndex];
+          const payout = ball.bet * multiplier;
+          setResult(payout);
+          setCurrency((prev) => prev + payout);
+        } else {
+          remainingBalls.push(ball);
+        }
+      }
+      ballsRef.current = remainingBalls;
+
+      // Redraw the scene.
+      drawCanvas();
+
+      // Continue animating if there are still balls in flight.
+      if (ballsRef.current.length > 0) {
+        animationFrameId.current = requestAnimationFrame(animate);
+      } else {
+        animationFrameId.current = null;
+      }
+    },
+    [CANVAS_HEIGHT, ballRadius, CANVAS_WIDTH, updatePhysicsForBall, drawCanvas, fixedDelta, slotCount, slotMultipliers]
+  );
+
+  // When the user clicks "Drop Ball":
+  //  - Deduct the current bet from currency,
+  //  - Push a new ball (with its own bet value) into the balls array,
+  //  - And start the animation loop if not already running.
   const handleDrop = () => {
-    if (isDropping) return;
     if (bet > currency) {
       alert("Bet exceeds available currency!");
       return;
     }
-    const initialBall: BallState = {
-      x: CANVAS_WIDTH / 2,
-      y: 0,
-      vx: 0,
-      vy: 0,
-    };
-    ballRef.current = initialBall;
-    setBall(initialBall);
-    setResult(null);
-    lastTimeRef.current = null;
-    setIsDropping(true);
+    // Deduct the bet immediately.
+    setCurrency((prev) => prev - bet);
+    // Add a new ball drop (its bet is locked in here).
+    ballsRef.current.push({ x: CANVAS_WIDTH / 2, y: 0, vx: 0, vy: 0, bet });
+    // Start animation if not already running.
+    if (!animationFrameId.current) {
+      lastTimeRef.current = null;
+      animationFrameId.current = requestAnimationFrame(animate);
+    }
   };
 
-  // Common button styling.
+  // Button styling.
   const buttonStyle: React.CSSProperties = {
     padding: "0.5rem 1rem",
     fontSize: "1rem",
@@ -320,14 +311,14 @@ const PlinkoGame: React.FC = () => {
         }}
       />
       <div style={{ marginTop: "1rem" }}>
+        {/* The drop button is always enabled so the user can drop multiple balls concurrently. */}
         <button
           onClick={handleDrop}
-          disabled={isDropping}
           style={buttonStyle}
           onMouseOver={handleMouseOver}
           onMouseOut={handleMouseOut}
         >
-          {isDropping ? "Dropping..." : "Drop Ball"}
+          Drop Ball
         </button>
         <button
           onClick={() => setShowModal(true)}
@@ -350,10 +341,15 @@ const PlinkoGame: React.FC = () => {
         onClose={() => setShowModal(false)}
         onRestart={() => {
           setCurrency(500);
-          ballRef.current = { x: CANVAS_WIDTH / 2, y: 0, vx: 0, vy: 0 };
-          setBall({ ...ballRef.current });
+          // Clear all balls.
+          ballsRef.current = [];
           setResult(null);
           setShowModal(false);
+          // Clear any pending animation.
+          if (animationFrameId.current) {
+            cancelAnimationFrame(animationFrameId.current);
+            animationFrameId.current = null;
+          }
         }}
       />
     </div>
