@@ -162,6 +162,7 @@ const LeaderBoard: React.FC<LeaderBoardProps> = ({ games }) => {
             <h3 className="text-2xl font-semibold text-yellow-400 mb-3">
               🏅 {t("overall_leaderboard")}
             </h3>
+            <p className="pb-2">Scores over 100 000 are removed from here</p>
             <div className="bg-gray-800 p-4 rounded-lg">
               {overallScores.length > 0 ? (
                 overallScores.map((player, index) => (
