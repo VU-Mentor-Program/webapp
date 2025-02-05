@@ -136,6 +136,9 @@ const MinesweeperGame: React.FC = () => {
 
   // Timer: increment every second if game is not over.
   useEffect(() => {
+    if (win) {
+      console.log("yay!");
+    }
     if (gameOver) return;
     const interval = setInterval(() => {
       setTimeElapsed(prev => prev + 1);
