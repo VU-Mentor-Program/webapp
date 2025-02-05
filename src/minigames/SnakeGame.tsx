@@ -102,6 +102,10 @@ export const SnakeGame: React.FC = () => {
   // Keyboard controls
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
+      // Prevent default scrolling when arrow keys are pressed.
+      if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
+        e.preventDefault();
+      }
       if (e.key === "ArrowUp" && direction !== "DOWN") setDirection("UP");
       if (e.key === "ArrowDown" && direction !== "UP") setDirection("DOWN");
       if (e.key === "ArrowLeft" && direction !== "RIGHT") setDirection("LEFT");
