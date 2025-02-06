@@ -317,18 +317,6 @@ const TypingGame: React.FC = () => {
           className="w-full p-3 rounded bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
         />
 
-        {/* Restart button (visible when the game has ended) */}
-        {gameEnded && (
-          <div className="mt-6 text-center">
-            <button
-              onClick={resetGame}
-              className="px-4 py-2 bg-green-500 hover:bg-green-600 rounded text-white"
-            >
-              Restart Game
-            </button>
-          </div>
-        )}
-
         {/* GameOverModal for submitting the score */}
         <GameOverModal
           isOpen={gameEnded}
