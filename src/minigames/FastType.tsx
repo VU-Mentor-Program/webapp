@@ -15,6 +15,9 @@ const TypingGame: React.FC = () => {
   const [userInput, setUserInput] = useState<string>('');
   const [gameStarted, setGameStarted] = useState<boolean>(false);
   const [gameEnded, setGameEnded] = useState<boolean>(false);
+  
+  // Countdown state (null means no countdown in progress)
+  const [countdown, setCountdown] = useState<number | null>(null);
 
   // -------------------------------
   // Timer and scoring state
@@ -50,17 +53,42 @@ const TypingGame: React.FC = () => {
   }, [currentSentence]);
 
   // -------------------------------
+  // Auto-focus effect when game starts
+  // -------------------------------
+  useEffect(() => {
+    if (gameStarted && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [gameStarted]);
+
+  // -------------------------------
+  // Pre-game Countdown Effect
+  // When countdown is active, decrease it every second.
+  // When countdown reaches 0, start the game and auto-focus the input.
+  // -------------------------------
+  useEffect(() => {
+    if (countdown !== null) {
+      if (countdown > 0) {
+        const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+        return () => clearTimeout(timer);
+      } else {
+        // Countdown finished: start game.
+        setGameStarted(true);
+        setTimeLeft(duration);
+        setCountdown(null);
+        if (inputRef.current) {
+          inputRef.current.focus();
+        }
+      }
+    }
+  }, [countdown, duration]);
+
+  // -------------------------------
   // Function: fetchCombinedSentence
-  //
-  // This function concurrently fetches from the Advice Slip API
-  // (which returns JSON like { "slip": { "id": ..., "advice": "…" } })
-  // and the ZenQuotes API (which returns JSON like
-  // [ { "q": "…", "a": "…", "h": "…" } ]).
-  // If both responses are valid, it returns the combined string.
-  // If there is any error, it returns the fallback sentence.
+  // Uses a CORS proxy for both APIs.
   // -------------------------------
   const zenUrl = 'https://CorsProxy.io/https://zenquotes.io/api/random';
-  const adviceUrl = 'https://CorsProxy.io/https://api.adviceslip.com/advice'
+  const adviceUrl = 'https://CorsProxy.io/https://api.adviceslip.com/advice';
 
   const fetchCombinedSentence = async (): Promise<string> => {
     try {
@@ -90,7 +118,6 @@ const TypingGame: React.FC = () => {
 
   // -------------------------------
   // On component mount, load the initial sentences.
-  // We fetch one sentence for the currentSentence and one for the queue.
   // -------------------------------
   useEffect(() => {
     const loadInitialSentences = async () => {
@@ -104,8 +131,6 @@ const TypingGame: React.FC = () => {
 
   // -------------------------------
   // Timer: count down every second once the game starts.
-  // When time runs out, count any partial input for the current sentence
-  // and then call endGame.
   // -------------------------------
   useEffect(() => {
     if (gameStarted && !gameEnded) {
@@ -135,9 +160,7 @@ const TypingGame: React.FC = () => {
 
   // -------------------------------
   // Function: endGame
-  //
-  // Called when time runs out. Computes the standard WPM (totalCorrectChars / 5 per minute)
-  // and multiplies it by 100 for the final score. The score is then passed to GameOverModal.
+  // Computes WPM and multiplies by 100.
   // -------------------------------
   const endGame = (finalTotal: number) => {
     setGameEnded(true);
@@ -148,55 +171,40 @@ const TypingGame: React.FC = () => {
 
   // -------------------------------
   // Function: handleChange
-  //
-  // Called each time the user types. If the game has not yet started, it starts the game.
-  // It updates the input and, when the user completes the current sentence, it adds the sentence’s
-  // character count to the total, clears the input, and loads the next sentence from the queue.
-  // Immediately when the user starts typing (i.e. when the first character is entered)
-  // and if there isn’t already a next sentence in the queue, it pre-fetches one.
+  // Called as the user types.
   // -------------------------------
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (!gameStarted) {
-      setGameStarted(true);
-      setTimeLeft(duration);
-      if (inputRef.current) {
-        inputRef.current.focus();
-      }
+    if (!gameStarted || gameEnded) return;
+    
+    setUserInput(value);
+    // Pre-fetch next sentence if needed.
+    if (value.length === 1 && sentenceQueue.length === 0 && !isFetchingNext) {
+      setIsFetchingNext(true);
+      fetchCombinedSentence().then(sentence => {
+        setSentenceQueue(prev => [...prev, sentence]);
+        setIsFetchingNext(false);
+      });
     }
-    if (!gameEnded) {
-      setUserInput(value);
-      // On the first character typed, if no next sentence is queued, pre-fetch one.
-      if (value.length === 1 && sentenceQueue.length === 0 && !isFetchingNext) {
+    // When the user completes the current sentence:
+    if (value === currentSentence) {
+      setTotalCorrectChars(prev => prev + currentSentence.length);
+      setUserInput('');
+      if (sentenceQueue.length > 0) {
+        const nextSentence = sentenceQueue[0];
+        setCurrentSentence(nextSentence);
+        setSentenceQueue(prev => prev.slice(1));
+      } else {
+        fetchCombinedSentence().then(sentence => {
+          setCurrentSentence(sentence);
+        });
+      }
+      if (!isFetchingNext) {
         setIsFetchingNext(true);
         fetchCombinedSentence().then(sentence => {
           setSentenceQueue(prev => [...prev, sentence]);
           setIsFetchingNext(false);
         });
-      }
-      // If the user completes the current sentence exactly…
-      if (value === currentSentence) {
-        setTotalCorrectChars(prev => prev + currentSentence.length);
-        setUserInput('');
-        // Shift the next sentence from the queue into currentSentence.
-        if (sentenceQueue.length > 0) {
-          const nextSentence = sentenceQueue[0];
-          setCurrentSentence(nextSentence);
-          setSentenceQueue(prev => prev.slice(1));
-        } else {
-          // If the queue is empty, fetch a sentence immediately.
-          fetchCombinedSentence().then(sentence => {
-            setCurrentSentence(sentence);
-          });
-        }
-        // Pre-fetch another sentence to keep the queue non‑empty.
-        if (!isFetchingNext) {
-          setIsFetchingNext(true);
-          fetchCombinedSentence().then(sentence => {
-            setSentenceQueue(prev => [...prev, sentence]);
-            setIsFetchingNext(false);
-          });
-        }
       }
     }
   };
@@ -222,7 +230,7 @@ const TypingGame: React.FC = () => {
     setUserInput('');
     setTotalCorrectChars(0);
     setScore(0);
-    // Reinitialize the sentence queue.
+    setCountdown(null);
     const loadInitialSentences = async () => {
       const sentence1 = await fetchCombinedSentence();
       const sentence2 = await fetchCombinedSentence();
@@ -234,9 +242,7 @@ const TypingGame: React.FC = () => {
 
   // -------------------------------
   // Function: renderSentence
-  //
-  // Renders the current sentence character by character. Correct characters are green,
-  // mistakes are red, and the next character to be typed is underlined.
+  // Renders the current sentence character by character.
   // -------------------------------
   const renderSentence = () => {
     return currentSentence.split('').map((char, index) => {
@@ -264,14 +270,14 @@ const TypingGame: React.FC = () => {
           Typing Game
         </h1>
 
-        {/* Duration selection and countdown */}
+        {/* Duration selection and countdown display */}
         <div className="flex justify-between items-center mb-4">
           <div>
             <label className="text-gray-300 mr-2">Select Time:</label>
             <select
               value={duration}
               onChange={handleDurationChange}
-              disabled={gameStarted}
+              disabled={gameStarted || countdown !== null}
               className="p-2 bg-gray-800 text-white border border-gray-700 rounded"
             >
               <option value={15}>15 seconds</option>
@@ -283,28 +289,29 @@ const TypingGame: React.FC = () => {
           <div className="text-gray-300">Time Left: {timeLeft} sec</div>
         </div>
 
-        {/* Start button (visible before the game starts) */}
-        {!gameStarted && (
+        {/* Start button or countdown display */}
+        {!gameStarted && countdown === null && (
           <div className="text-center mb-4">
             <button
-              onClick={() => {
-                setGameStarted(true);
-                setTimeLeft(duration);
-                if (inputRef.current) {
-                  inputRef.current.focus();
-                }
-              }}
+              onClick={() => setCountdown(3)}
               className="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded text-white"
             >
               Start Game
             </button>
           </div>
         )}
+        {countdown !== null && !gameStarted && (
+          <div className="text-center mb-4 text-4xl text-white">
+            {countdown > 0 ? countdown : 'Go!'}
+          </div>
+        )}
 
-        {/* Display the current sentence */}
-        <div className="text-lg text-white mb-4 border border-gray-700 p-4 rounded">
-          {renderSentence()}
-        </div>
+        {/* Display the current sentence during countdown and after game start */}
+        {(gameStarted || countdown !== null) && (
+          <div className="text-lg text-white mb-4 border border-gray-700 p-4 rounded">
+            {renderSentence()}
+          </div>
+        )}
 
         {/* Typing input field */}
         <input
