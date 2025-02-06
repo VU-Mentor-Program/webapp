@@ -274,6 +274,7 @@ const TypingGame: React.FC = () => {
               disabled={gameStarted}
               className="p-2 bg-gray-800 text-white border border-gray-700 rounded"
             >
+              <option value={15}>15 seconds</option>
               <option value={30}>30 seconds</option>
               <option value={60}>60 seconds</option>
               <option value={90}>90 seconds</option>
