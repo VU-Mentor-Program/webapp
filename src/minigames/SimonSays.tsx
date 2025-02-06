@@ -188,7 +188,7 @@ const SimonSaysGame: React.FC = () => {
       <GameOverModal
         isOpen={gameOver}
         score={score}
-        gameName="SimonSays"
+        gameName="simonsays"
         onClose={() => setGameOver(false)}
         onRestart={restartGame}
       />
