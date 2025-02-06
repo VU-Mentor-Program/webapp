@@ -16,5 +16,5 @@
 // # also dont tell my mom
 
 export const GET_API_URL = "https://script.google.com/macros/s/AKfycbzv0awFVkoABOfvu0mygTliki47lhpFpj9zgAZuP0qhqEgbv8iykYMcp2wX0WYhQNJu/exec";
-export const POST_API_URL = "https://script.google.com/macros/s/AKfycbyP9m4C9YUBudoYs0bjvLc14MFY6-T-DNAwcWjcNViLnFrd4zXwPwBAWcwon-VPrrV1/exec";
+export const POST_API_URL = "https://script.google.com/macros/s/AKfycbw6aILbdOSkkmgYv2Dqz_rzs5Zb-WPP-Q2i9n1ouDnsvhs3vXMqlwLBiWtaAv3eTTan/exec";
 export const GET_SIGNUP_COUNT_API_URL = "https://script.google.com/macros/s/AKfycbz9iqJnvFi1InvIHxWC4T-yPJVixQq4oy4-AOt9_PBZQH7iyPbdFs-O3NiKtZHx6jUIhg/exec";

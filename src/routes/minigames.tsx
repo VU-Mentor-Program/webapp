@@ -12,6 +12,7 @@ import LeaderBoard from "../components/minigame page/LeaderBoard";
 import { useTranslations } from "../contexts/TranslationContext";
 import PlinkoGame from "../minigames/Plinko";
 import MinesweeperGame from "../minigames/MineSweeper";
+import TypingGame from "../minigames/FastType";
 
 export const MinigamesPage: React.FC = () => {
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
@@ -31,7 +32,8 @@ export const MinigamesPage: React.FC = () => {
       "spaceShooter",
       "plinko",
       "minesweeper",
-      "tower"
+      "tower",
+      "fasttype"
     ],
     []
   );
@@ -120,6 +122,12 @@ export const MinigamesPage: React.FC = () => {
           >
             💣 MineSweeper
           </button>
+          <button
+            onClick={() => handleSelectGame("fasttype")}
+            className="bg-green-800 px-4 py-2 rounded hover:bg-green-900"
+          >
+            FastType
+          </button>
         </div>
 
         <div className="w-full max-w-4xl">
@@ -133,6 +141,7 @@ export const MinigamesPage: React.FC = () => {
           {selectedGame === "logoDodge" && <LogoDodgeGame />}
           {selectedGame === "plinko" && <PlinkoGame />}
           {selectedGame === "minesweeper" && <MinesweeperGame />}
+          {selectedGame === "fasttype" && <TypingGame />}
         </div>
       </div>
 
