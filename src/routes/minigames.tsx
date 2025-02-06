@@ -126,7 +126,7 @@ export const MinigamesPage: React.FC = () => {
             onClick={() => handleSelectGame("fasttype")}
             className="bg-green-800 px-4 py-2 rounded hover:bg-green-900"
           >
-            FastType
+            🤓 FastType
           </button>
         </div>
 
