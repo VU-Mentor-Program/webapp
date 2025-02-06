@@ -37,7 +37,6 @@ export const MinigamesPage: React.FC = () => {
       "minesweeper",
       "tower",
       "fasttype",
-      // "pacman",
       "simonsays",
       "2048"
     ],

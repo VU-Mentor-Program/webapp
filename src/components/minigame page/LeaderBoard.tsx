@@ -19,7 +19,7 @@ interface LeaderBoardProps {
 
 declare global {
   interface Window {
-    leaderBoardCallback?: (data: LeaderboardData) => void;
+    minigamesLeaderboard?: (data: LeaderboardData) => void;
   }
 }
 
@@ -32,49 +32,54 @@ const LeaderBoard: React.FC<LeaderBoardProps> = ({ games }) => {
   const [error, setError] = useState("");
 
   /**
-   * Removes old <script> tag (to avoid duplicates)
+   * Removes an old <script> tag (to avoid duplicates).
    */
   const removeScript = () => {
     const oldScript = document.getElementById("leaderboardScript");
     if (oldScript) {
-      console.debug("🔄 Removing old <script> tag for Leaderboard...");
       oldScript.remove();
     }
   };
 
   /**
-   * JSONP callback function Apps Script calls
+   * JSONP callback function that the Apps Script calls.
+   * The returned data is logged so you can inspect it.
    */
-  window.leaderBoardCallback = (data: LeaderboardData) => {
+  window.minigamesLeaderboard = (data: LeaderboardData) => {
     if (!data || Object.keys(data).length === 0) {
       setError("No leaderboard data received.");
       setLoading(false);
       return;
     }
+    if ('error' in data && typeof data.error === 'string') {
+      setError(data.error);
+      setLoading(false);
+      return;
+    }
 
-    // Process game-specific leaderboards
+    // Process game-specific leaderboards.
     const sortedLeaderboard: LeaderboardData = {};
     const overallScoreMap: { [username: string]: number } = {};
 
     games.forEach((game) => {
       const scores = data[game] || [];
-      // Sort by highest score and limit to top 3
+      // Sort by highest score and limit to top 3.
       const topThree = scores.sort((a, b) => b.score - a.score).slice(0, 3);
       sortedLeaderboard[game] = topThree;
 
-      // Build overall scores
+      // Build overall scores.
       scores.forEach(({ username, score }) => {
-        // If the score is over 100,000, multiply it by 0.00001
-        const adjustedScore = score > 100000 ? score * 0 : score;
+        // If the score is over 100,000, ignore it.
+        const adjustedScore = score > 100000 ? 0 : score;
         overallScoreMap[username] = (overallScoreMap[username] || 0) + adjustedScore;
       });
     });
 
-    // Convert overall scores to an array and sort
+    // Convert overall scores to an array and sort (top 5).
     const sortedOverall = Object.entries(overallScoreMap)
       .map(([username, score]) => ({ username, score }))
       .sort((a, b) => b.score - a.score)
-      .slice(0, 5); // Show only top 5 overall
+      .slice(0, 5);
 
     setLeaderboard(sortedLeaderboard);
     setOverallScores(sortedOverall);
@@ -83,14 +88,18 @@ const LeaderBoard: React.FC<LeaderBoardProps> = ({ games }) => {
   };
 
   /**
-   * Creates a <script> for JSONP, pointing to our Web App
+   * Creates a <script> tag for JSONP, pointing to our Apps Script Web App.
+   * (Make sure that GET_API_URL does NOT already include a callback parameter.)
    */
   const fetchLeaderboard = () => {
     setLoading(true);
     setError("");
     removeScript();
 
-    const url = `${GET_API_URL}?callback=leaderBoardCallback`;
+    // Append the callback parameter if needed.
+    const url = GET_API_URL.includes('?')
+      ? `${GET_API_URL}&callback=minigamesLeaderboard`
+      : `${GET_API_URL}?callback=minigamesLeaderboard`;
 
     const script = document.createElement("script");
     script.id = "leaderboardScript";
@@ -106,11 +115,11 @@ const LeaderBoard: React.FC<LeaderBoardProps> = ({ games }) => {
   };
 
   /**
-   * On mount, fetch leaderboard data
+   * On mount, fetch leaderboard data.
    */
   useEffect(() => {
     fetchLeaderboard();
-    return removeScript; // Cleanup when unmounting
+    return removeScript; // Cleanup on unmount.
   }, [games]);
 
   return (
