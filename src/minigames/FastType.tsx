@@ -263,6 +263,11 @@ const TypingGame: React.FC = () => {
     });
   };
 
+  const restartGame = () => {
+    resetGame();
+    setCountdown(3);
+  }
+
   return (
     <div className="bg-gray-800 min-h-screen flex items-center justify-center p-4">
       <div className="max-w-2xl w-full bg-gray-900 p-8 rounded-lg shadow-lg">
@@ -300,6 +305,18 @@ const TypingGame: React.FC = () => {
             </button>
           </div>
         )}
+
+        {gameStarted && (
+          <div className="text-center mb-4">
+            <button
+              onClick={restartGame}
+              className="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded text-white"
+            >
+              Restart
+            </button>
+          </div>
+        )}
+
         {countdown !== null && !gameStarted && (
           <div className="text-center mb-4 text-4xl text-white">
             {countdown > 0 ? countdown : 'Go!'}
