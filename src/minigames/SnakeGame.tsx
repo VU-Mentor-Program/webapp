@@ -13,20 +13,10 @@ export const SnakeGame: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [canvasSize, setCanvasSize] = useState({ width: 300, height: 300 });
 
-  // New state to track whether the game has started
+  // Track whether the game has started (canvas click/touch)
   const [hasStarted, setHasStarted] = useState(false);
 
-  // Resize canvas to keep square ratio
-  useEffect(() => {
-    function handleResize() {
-      const maxWidth = Math.min(window.innerWidth * 0.9, LOGICAL_SIZE);
-      setCanvasSize({ width: maxWidth, height: maxWidth });
-    }
-    window.addEventListener("resize", handleResize);
-    handleResize();
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
+  // Snake state
   const [direction, setDirection] = useState<"UP" | "DOWN" | "LEFT" | "RIGHT">("RIGHT");
   const [snake, setSnake] = useState<{ x: number; y: number }[]>([
     { x: 5, y: 10 },
@@ -38,6 +28,7 @@ export const SnakeGame: React.FC = () => {
   const [gameOver, setGameOver] = useState(false);
   const [speed, setSpeed] = useState(200); // Speed in ms
 
+  // For rendering the head with a logo
   const [logoLoaded, setLogoLoaded] = useState(false);
   const logoImg = useRef<HTMLImageElement | null>(null);
 
@@ -50,19 +41,47 @@ export const SnakeGame: React.FC = () => {
     };
   }, []);
 
-  // Move snake at set interval.
-  // Only run the movement if the game has started, is not paused, and is not over.
+  // Resize canvas to keep a square ratio
+  useEffect(() => {
+    function handleResize() {
+      const maxWidth = Math.min(window.innerWidth * 0.9, LOGICAL_SIZE);
+      setCanvasSize({ width: maxWidth, height: maxWidth });
+    }
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Ref to prevent multiple direction changes per move tick.
+  const directionChangedRef = useRef<boolean>(false);
+
+  // Helper: Generate a random food position not colliding with the snake.
+  function getRandomFoodPosition(snake: { x: number; y: number }[]): { x: number; y: number } {
+    let newFood: { x: number; y: number } = { x: 0, y: 0 };
+    let collision = true;
+    while (collision) {
+      newFood = {
+        x: Math.floor(Math.random() * tileCount),
+        y: Math.floor(Math.random() * tileCount),
+      };
+      collision = snake.some((seg) => seg.x === newFood.x && seg.y === newFood.y);
+    }
+    return newFood;
+  }
+
+  // Move snake at set intervals. Only run if game is started, not paused, and not over.
   useEffect(() => {
     if (isPaused || gameOver || !hasStarted) return;
-
     const interval = setInterval(() => {
       moveSnake();
     }, speed);
-
     return () => clearInterval(interval);
   }, [snake, direction, isPaused, gameOver, speed, hasStarted]);
 
   function moveSnake() {
+    // Reset the flag so that a new direction can be accepted for this move.
+    directionChangedRef.current = false;
+
     const head = { ...snake[0] };
     if (direction === "UP") head.y -= 1;
     if (direction === "DOWN") head.y += 1;
@@ -79,12 +98,12 @@ export const SnakeGame: React.FC = () => {
 
     // Check collision with food
     if (head.x === food.x && head.y === food.y) {
-      setFood({
-        x: Math.floor(Math.random() * tileCount),
-        y: Math.floor(Math.random() * tileCount),
-      });
+      // Get a new food position that is not on the snake.
+      const newFood = getRandomFoodPosition(newSnake);
+      setFood(newFood);
       setScore((prev) => prev + 30); // Increase score by 30
     } else {
+      // Remove tail if no food eaten.
       newSnake.pop();
     }
 
@@ -99,24 +118,41 @@ export const SnakeGame: React.FC = () => {
     setSnake(newSnake);
   }
 
-  // Keyboard controls
+  // Keyboard controls with one direction change per tick.
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
-      // Prevent default scrolling when arrow keys are pressed.
       if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
         e.preventDefault();
       }
-      if (e.key === "ArrowUp" && direction !== "DOWN") setDirection("UP");
-      if (e.key === "ArrowDown" && direction !== "UP") setDirection("DOWN");
-      if (e.key === "ArrowLeft" && direction !== "RIGHT") setDirection("LEFT");
-      if (e.key === "ArrowRight" && direction !== "LEFT") setDirection("RIGHT");
+      if (!directionChangedRef.current) {
+        if (e.key === "ArrowUp" && direction !== "DOWN") {
+          setDirection("UP");
+          directionChangedRef.current = true;
+        }
+        if (e.key === "ArrowDown" && direction !== "UP") {
+          setDirection("DOWN");
+          directionChangedRef.current = true;
+        }
+        if (e.key === "ArrowLeft" && direction !== "RIGHT") {
+          setDirection("LEFT");
+          directionChangedRef.current = true;
+        }
+        if (e.key === "ArrowRight" && direction !== "LEFT") {
+          setDirection("RIGHT");
+          directionChangedRef.current = true;
+        }
+      }
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, [direction]);
 
+  // Touch controls (only accept one move per tick)
   function handleTouch(dir: "UP" | "DOWN" | "LEFT" | "RIGHT") {
-    setDirection(dir);
+    if (!directionChangedRef.current) {
+      setDirection(dir);
+      directionChangedRef.current = true;
+    }
   }
 
   function restartGame() {
@@ -129,7 +165,7 @@ export const SnakeGame: React.FC = () => {
     setGameOver(false);
     setIsPaused(false);
     setDirection("RIGHT");
-    // Optionally, reset hasStarted so that the game waits for another click
+    // Optionally, wait for a new click/touch to start
     setHasStarted(false);
   }
 
@@ -137,7 +173,7 @@ export const SnakeGame: React.FC = () => {
     setIsPaused((prev) => !prev);
   }
 
-  // Draw canvas
+  // Draw the game canvas.
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -158,7 +194,7 @@ export const SnakeGame: React.FC = () => {
       tileSize * scale
     );
 
-    // Draw snake
+    // Draw snake segments
     snake.forEach((seg, idx) => {
       const x = seg.x * tileSize * scale;
       const y = seg.y * tileSize * scale;
@@ -171,7 +207,7 @@ export const SnakeGame: React.FC = () => {
       }
     });
 
-    // If the game hasn't started yet (and game over hasn't occurred), overlay a "Click to Start" message.
+    // If the game hasn't started yet (and it's not over), overlay a "Click to Start" message.
     if (!hasStarted && !gameOver) {
       ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -204,7 +240,7 @@ export const SnakeGame: React.FC = () => {
         onTouchStart={handleStart}
       />
 
-      {/* On-screen arrows with bigger buttons */}
+      {/* On-screen arrow buttons for touch control */}
       <div style={{ marginTop: "1rem", display: "inline-block" }}>
         <div>
           <button
