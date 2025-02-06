@@ -13,6 +13,9 @@ import { useTranslations } from "../contexts/TranslationContext";
 import PlinkoGame from "../minigames/Plinko";
 import MinesweeperGame from "../minigames/MineSweeper";
 import TypingGame from "../minigames/FastType";
+// import PacManGame from "../minigames/PacMan";
+import SimonSaysGame from "../minigames/SimonSays";
+import Game2048 from "../minigames/2048";
 
 export const MinigamesPage: React.FC = () => {
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
@@ -33,7 +36,10 @@ export const MinigamesPage: React.FC = () => {
       "plinko",
       "minesweeper",
       "tower",
-      "fasttype"
+      "fasttype",
+      // "pacman",
+      "simonsays",
+      "2048"
     ],
     []
   );
@@ -128,6 +134,24 @@ export const MinigamesPage: React.FC = () => {
           >
             🤓 FastType
           </button>
+          {/* <button
+            onClick={() => handleSelectGame("pacman")}
+            className="bg-green-800 px-4 py-2 rounded hover:bg-green-900"
+          >
+            PacMan
+          </button> */}
+          <button
+            onClick={() => handleSelectGame("simonsays")}
+            className="bg-purple-600 px-4 py-2 rounded hover:bg-purple-700"
+          >
+            🎵 SimonSays
+          </button>
+          <button
+            onClick={() => handleSelectGame("2048")}
+            className="bg-orange-600 px-4 py-2 rounded hover:bg-orange-700"
+          >
+            🔢 2048
+          </button>
         </div>
 
         <div className="w-full max-w-4xl">
@@ -142,6 +166,9 @@ export const MinigamesPage: React.FC = () => {
           {selectedGame === "plinko" && <PlinkoGame />}
           {selectedGame === "minesweeper" && <MinesweeperGame />}
           {selectedGame === "fasttype" && <TypingGame />}
+          {/* {selectedGame === "pacman" && <PacManGame />} */}
+          {selectedGame === "simonsays" && <SimonSaysGame />}
+          {selectedGame === "2048" && <Game2048 />}
         </div>
       </div>
 
