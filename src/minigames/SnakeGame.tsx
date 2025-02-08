@@ -147,8 +147,17 @@ export const SnakeGame: React.FC = () => {
     return () => window.removeEventListener("keydown", handleKey);
   }, [direction]);
 
-  // Touch controls (only accept one move per tick)
+  // Touch controls (only accept one move per tick) with a check to prevent reverse direction.
   function handleTouch(dir: "UP" | "DOWN" | "LEFT" | "RIGHT") {
+    // Do not allow reversing the snake directly.
+    if (
+      (dir === "UP" && direction === "DOWN") ||
+      (dir === "DOWN" && direction === "UP") ||
+      (dir === "LEFT" && direction === "RIGHT") ||
+      (dir === "RIGHT" && direction === "LEFT")
+    ) {
+      return;
+    }
     if (!directionChangedRef.current) {
       setDirection(dir);
       directionChangedRef.current = true;
