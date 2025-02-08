@@ -423,16 +423,20 @@ const Game2048: React.FC = () => {
       </div>
 
       {/* Grid Size Control */}
-      <div className="mb-4 flex items-center">
-        <label className="text-white mr-2">Grid Size:</label>
-        <input
-          type="number"
-          min="4"
-          max="8"
-          value={gridSize}
-          onChange={handleGridSizeChange}
-          className="w-16 p-1 rounded bg-gray-800 border border-gray-700 text-white text-center"
-        />
+      <div style={{ marginBottom: "1rem" }}>
+        <div style={{ marginBottom: "0.5rem" }}>
+          <label style={{ marginRight: "1rem" }}>
+            Grid Size: {gridSize}
+          </label>
+          <input
+            type="range"
+            step="1"
+            min="4"
+            max="8"
+            value={gridSize}
+            onChange={handleGridSizeChange}
+          />
+        </div>
       </div>
 
       {/* Board Container with Touch Handlers */}

@@ -10,7 +10,8 @@ import { useTranslations } from "../contexts/TranslationContext";
  * Brick Breaker (One Person Pong) with dynamic brick layouts.
  *
  * New features/fixes:
- * - Limited inputs for initial ball speed (1–20), brick rows (1–15), and brick columns (1–10).
+ * - Now using slider controls for initial ball speed (1–20), brick rows (1–15), and brick columns (1–10)
+ *   which works nicely on touch screens.
  * - The ball always starts below the last brick row.
  * - Bricks are only (re)generated before the game starts.
  * - Scrolling is prevented while moving the paddle (via touch-action and preventDefault on touch).
@@ -310,7 +311,7 @@ export const OnePersonPong: React.FC = () => {
       const textWidth = ctx.measureText(loseMsg).width;
       ctx.fillText(loseMsg, (canvasSize.width - textWidth) / 2, canvasSize.height / 2);
     }
-
+    
     // Before the game starts, show a "Click to Start" overlay.
     if (!hasStarted && !hasWon && !hasLost) {
       ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
@@ -451,56 +452,46 @@ export const OnePersonPong: React.FC = () => {
     <div style={{ textAlign: "center", marginTop: "1rem", color: "white" }}>
       <h2>{t("brickBreaker_title")}</h2>
 
-      {/* Adjustable settings */}
       <div style={{ marginBottom: "1rem" }}>
-        <label style={{ marginRight: "1rem" }}>
-          Initial Ball Speed:{" "}
+        <div style={{ marginBottom: "0.5rem" }}>
+          <label style={{ marginRight: "1rem" }}>
+            Initial Ball Speed: {initialBallSpeed}
+          </label>
           <input
-            type="number"
-            value={initialBallSpeed}
+            type="range"
             min="1"
             max="20"
             step="1"
-            onChange={(e) =>
-              setInitialBallSpeed(
-                Math.max(1, Math.min(20, Number(e.target.value)))
-              )
-            }
-            style={{ width: "50px" }}
+            value={initialBallSpeed}
+            onChange={(e) => setInitialBallSpeed(Number(e.target.value))}
           />
-        </label>
-        <label style={{ marginRight: "1rem" }}>
-          Brick Rows:{" "}
+        </div>
+        <div style={{ marginBottom: "0.5rem" }}>
+          <label style={{ marginRight: "1rem" }}>
+            Brick Rows: {customBrickRows}
+          </label>
           <input
-            type="number"
-            value={customBrickRows}
+            type="range"
             min="1"
             max="15"
             step="1"
-            onChange={(e) =>
-              setCustomBrickRows(
-                Math.max(1, Math.min(15, Number(e.target.value)))
-              )
-            }
-            style={{ width: "50px" }}
+            value={customBrickRows}
+            onChange={(e) => setCustomBrickRows(Number(e.target.value))}
           />
-        </label>
-        <label>
-          Brick Columns:{" "}
+        </div>
+        <div>
+          <label style={{ marginRight: "1rem" }}>
+            Brick Columns: {customBrickCols}
+          </label>
           <input
-            type="number"
-            value={customBrickCols}
+            type="range"
             min="1"
             max="10"
             step="1"
-            onChange={(e) =>
-              setCustomBrickCols(
-                Math.max(1, Math.min(10, Number(e.target.value)))
-              )
-            }
-            style={{ width: "50px" }}
+            value={customBrickCols}
+            onChange={(e) => setCustomBrickCols(Number(e.target.value))}
           />
-        </label>
+        </div>
       </div>
 
       {/* Display score */}

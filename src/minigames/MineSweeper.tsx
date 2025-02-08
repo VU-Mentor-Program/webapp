@@ -252,29 +252,43 @@ const MinesweeperGame: React.FC = () => {
         <span style={{ marginRight: '1rem' }}>Time: {timeElapsed} sec</span>
         <span>Score: {score}</span>
       </div>
-      <div style={{ marginBottom: '1rem' }}>
-        <label>
-          Rows:
+
+      <div style={{ marginBottom: "1rem" }}>
+        <div style={{ marginBottom: "0.5rem" }}>
+          <label style={{ marginRight: "1rem" }}>
+            Rows: {rows}
+          </label>
           <input
-            type="number"
+            type="range"
+            min="5"
+            max="50"
+            step="1"
             value={rows}
             onChange={(e) => setRows(Math.max(5, Number(e.target.value)))}
-            style={{ width: '50px', margin: '0 0.5rem' }}
           />
-        </label>
-        <label>
-          Columns:
+        </div>
+        <div style={{ marginBottom: "0.5rem" }}>
+          <label style={{ marginRight: "1rem" }}>
+            Columns: {cols}
+          </label>
           <input
-            type="number"
+            type="range"
+            min="5"
+            max="35"
+            step="1"
             value={cols}
             onChange={(e) => setCols(Math.max(5, Number(e.target.value)))}
-            style={{ width: '50px', margin: '0 0.5rem' }}
           />
-        </label>
-        <label>
-          Bombs:
+        </div>
+        <div>
+          <label style={{ marginRight: "1rem" }}>
+            Bombs: {bombCount}
+          </label>
           <input
-            type="number"
+            type="range"
+            min="1"
+            max={(rows * cols - 1)}
+            step="1"
             value={bombCount}
             onChange={(e) => {
               const newValue = Number(e.target.value);
@@ -282,9 +296,11 @@ const MinesweeperGame: React.FC = () => {
               const maxBombs = rows * cols - 1;
               setBombCount(Math.max(3, Math.min(newValue, maxBombs)));
             }}
-            style={{ width: '50px', margin: '0 0.5rem' }}
           />
-        </label>
+        </div>
+      </div>
+
+      <div style={{ marginBottom: '1rem' }}>
         <button
           onClick={resetGame}
           style={buttonStyle}

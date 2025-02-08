@@ -122,26 +122,33 @@ const SimonSaysGame: React.FC = () => {
     <div className="flex flex-col items-center p-4">
       <h1 className="text-2xl font-bold mb-4">Simon Says</h1>
 
-      {/* Grid settings controls */}
-      <div className="mb-4 flex items-center">
-        <label className="text-white mr-2">Rows:</label>
-        <input
-          type="number"
-          value={gridRows}
-          onChange={handleGridRowsChange}
-          min={2}
-          max={4}
-          className="w-16 p-1 rounded bg-gray-800 border border-gray-700 text-white text-center"
-        />
-        <label className="text-white ml-4 mr-2">Columns:</label>
-        <input
-          type="number"
-          value={gridCols}
-          onChange={handleGridColsChange}
-          min={2}
-          max={4}
-          className="w-16 p-1 rounded bg-gray-800 border border-gray-700 text-white text-center"
-        />
+      <div style={{ marginBottom: "1rem" }}>
+        <div style={{ marginBottom: "0.5rem" }}>
+          <label style={{ marginRight: "1rem" }}>
+            Rows: {gridRows}
+          </label>
+          <input
+            type="range"
+            step="1"
+            value={gridRows}
+            onChange={handleGridRowsChange}
+            min={2}
+            max={4}
+          />
+        </div>
+        <div>
+          <label style={{ marginRight: "1rem" }}>
+            Columns: {gridCols}
+          </label>
+          <input
+            type="range"
+            step="1"
+            value={gridCols}
+            onChange={handleGridColsChange}
+            min={2}
+            max={4}
+          />
+        </div>
       </div>
 
       <div className="mb-2">
@@ -170,7 +177,6 @@ const SimonSaysGame: React.FC = () => {
       <div className="mt-4 text-white">
         <p>Round: {round}</p>
         <p>Score: {score}</p>
-        <p>Multiplier: {gridRows * gridCols}x</p>
       </div>
 
       {/* Only show start button if no sequence is in play */}
