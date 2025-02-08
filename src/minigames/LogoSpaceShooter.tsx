@@ -406,7 +406,10 @@ export const LogoSpaceShooterGame: React.FC = () => {
         ref={canvasRef}
         width={canvasSize.width}
         height={canvasSize.height}
-        style={{ background: "#000" }}
+        style={{ 
+          background: "#000",
+          touchAction: "none", 
+         }}
         onMouseMove={handlePointerMove}
         onTouchMove={handlePointerMove}
         onClick={handleCanvasClick}

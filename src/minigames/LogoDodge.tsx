@@ -247,6 +247,9 @@ export const LogoDodgeGame: React.FC = () => {
         onTouchMove={handlePointerMove}
         onClick={handleStart}
         onTouchStart={handleStart}
+        style={{
+          touchAction: "none", 
+        }}
       />
 
       <p>{t("dodge_instruction")}</p>

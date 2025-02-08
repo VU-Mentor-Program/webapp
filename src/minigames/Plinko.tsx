@@ -14,9 +14,9 @@ interface BallState {
 
 const PlinkoGame: React.FC = () => {
   // Canvas dimensions and radii.
-  const CANVAS_WIDTH = 400;
+  const CANVAS_WIDTH = 350;
   const CANVAS_HEIGHT = 600;
-  const ballRadius = 10; // The ball is drawn as a 20x20 image/circle.
+  const ballRadius = 10; 
   const pegRadius = 5;
 
   // Game states.
@@ -290,7 +290,7 @@ const PlinkoGame: React.FC = () => {
             style={{
               marginLeft: "0.5rem",
               width: "80px",
-              padding: "0.3rem",
+              padding: "0.2rem",
               borderRadius: "4px",
               border: "1px solid #ccc",
             }}

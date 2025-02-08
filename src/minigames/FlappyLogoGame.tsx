@@ -276,6 +276,9 @@ export const FlappyLogoGame: React.FC = () => {
         height={canvasSize.height}
         onClick={handleCanvasClick}
         onTouchStart={handleCanvasClick}
+        style={{
+          touchAction: "none", 
+        }}
       />
       <GameOverModal
         isOpen={gameOver}
