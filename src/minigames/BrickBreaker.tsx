@@ -8,14 +8,12 @@ import { useTranslations } from "../contexts/TranslationContext";
 
 /**
  * Brick Breaker (One Person Pong) with dynamic brick layouts.
- * 
- * New features:
- * - A fancy gradient background.
- * - The game now “ends” (loss) when the ball falls out the bottom.
- * - A score is calculated based on the number of bricks hit and the initial ball speed.
- * - Controls allow adjusting the initial ball speed and the brick layout.
- * - A visible gap between bricks via drawing a stroke around each brick.
- * - Improved collision detection to avoid edge cases where the ball gets stuck or passes through objects.
+ *
+ * New features/fixes:
+ * - Limited inputs for initial ball speed (1–20), brick rows (1–15), and brick columns (1–10).
+ * - The ball always starts below the last brick row.
+ * - Bricks are only (re)generated before the game starts.
+ * - Scrolling is prevented while moving the paddle (via touch-action and preventDefault on touch).
  */
 export const OnePersonPong: React.FC = () => {
   const t = useTranslations("minigames");
@@ -24,13 +22,13 @@ export const OnePersonPong: React.FC = () => {
   const LOGICAL_WIDTH = 700;
   const LOGICAL_HEIGHT = 600;
 
+  // References and state for animation.
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const requestRef = useRef<number | null>(null);
   const [isPaused, setIsPaused] = useState(false);
 
   // Resize the canvas to fit the screen while maintaining aspect ratio.
   const [canvasSize, setCanvasSize] = useState({ width: 300, height: 600 });
-
   useEffect(() => {
     function handleResize() {
       const maxWidth = Math.min(window.innerWidth * 0.9, LOGICAL_WIDTH);
@@ -43,7 +41,7 @@ export const OnePersonPong: React.FC = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Game start/win/lose states.
+  // Game state: start/win/lose.
   const [hasStarted, setHasStarted] = useState(false);
   const [hasWon, setHasWon] = useState(false);
   const [hasLost, setHasLost] = useState(false);
@@ -53,27 +51,22 @@ export const OnePersonPong: React.FC = () => {
   }
 
   /******************
-   * Adjustable parameters
+   * Adjustable Parameters
    ******************/
-  // User-adjustable initial ball speed.
+  // Initial ball speed (allowed range: 1–20).
   const [initialBallSpeed, setInitialBallSpeed] = useState(8);
-  // User-adjustable brick layout (number of rows and columns).
+  // Brick layout rows (allowed range: 1–15) and columns (allowed range: 1–10).
   const [customBrickRows, setCustomBrickRows] = useState(4);
   const [customBrickCols, setCustomBrickCols] = useState(8);
 
   /******************
    * Brick Setup
    ******************/
-  // getBrickSetup returns brick configuration based on screen size and user settings.
-  function getBrickSetup(): {
-    brickCols: number;
-    brickRows: number;
-    brickWidth: number;
-    brickHeight: number;
-    padding: number;
-    offsetLeft: number;
-    offsetTop: number;
-  } {
+  // Ball radius (used in collision and drawing).
+  const ballRadius = 15;
+
+  // getBrickSetup returns brick configuration based on canvas size and user settings.
+  function getBrickSetup() {
     if (canvasSize.width < 500) {
       const brickWidth = 40;
       const brickHeight = 15;
@@ -104,40 +97,23 @@ export const OnePersonPong: React.FC = () => {
       };
     }
   }
-  const newSetup = getBrickSetup();
-  const [brickSetup, setBrickSetup] = useState(newSetup);
+  // Compute initial brick setup.
+  const initialBrickSetup = getBrickSetup();
+  const [brickSetup, setBrickSetup] = useState(initialBrickSetup);
 
-  // Update brickSetup if the adjustable settings or canvas size change.
-  useEffect(() => {
-    const newSetup = getBrickSetup();
-    setBrickSetup(newSetup);
+  // Compute initial ball position so that it starts below the brick layout.
+  const initialBallX = LOGICAL_WIDTH / 2;
+  const initialBallY =
+    initialBrickSetup.offsetTop +
+    initialBrickSetup.brickRows * (initialBrickSetup.brickHeight + initialBrickSetup.padding) +
+    ballRadius +
+    10;
+  const [ballX, setBallX] = useState(initialBallX);
+  const [ballY, setBallY] = useState(initialBallY);
 
-    // Regenerate bricks based on the new setup.
-    const newBricks = [];
-    for (let r = 0; r < newSetup.brickRows; r++) {
-      for (let c = 0; c < newSetup.brickCols; c++) {
-        newBricks.push({
-          x: newSetup.offsetLeft + c * (newSetup.brickWidth + newSetup.padding),
-          y: newSetup.offsetTop + r * (newSetup.brickHeight + newSetup.padding),
-          destroyed: false,
-        });
-      }
-    }
-    setBricks(newBricks);
-  }, [customBrickRows, customBrickCols, canvasSize]);
-
-
-  // Generate a bricks array based on the current brickSetup.
-  function generateBricks() {
-    const {
-      brickCols,
-      brickRows,
-      brickWidth,
-      brickHeight,
-      padding,
-      offsetLeft,
-      offsetTop,
-    } = brickSetup;
+  // Generate bricks based on a given setup (defaults to current brickSetup).
+  function generateBricks(setup = brickSetup) {
+    const { brickCols, brickRows, brickWidth, brickHeight, padding, offsetLeft, offsetTop } = setup;
     const arr = [];
     for (let r = 0; r < brickRows; r++) {
       for (let c = 0; c < brickCols; c++) {
@@ -152,6 +128,22 @@ export const OnePersonPong: React.FC = () => {
   }
   const [bricks, setBricks] = useState(generateBricks);
 
+  // Update brickSetup and bricks if adjustable settings or canvas size change (only if game not started).
+  useEffect(() => {
+    if (hasStarted) return; // Prevent resetting bricks during gameplay.
+    const newSetup = getBrickSetup();
+    setBrickSetup(newSetup);
+    setBricks(generateBricks(newSetup));
+    // Also reposition the ball to always start below the bricks.
+    setBallX(LOGICAL_WIDTH / 2);
+    setBallY(
+      newSetup.offsetTop +
+        newSetup.brickRows * (newSetup.brickHeight + newSetup.padding) +
+        ballRadius +
+        10
+    );
+  }, [customBrickRows, customBrickCols, canvasSize, hasStarted]);
+
   /******************
    * Paddle and Ball State
    ******************/
@@ -160,13 +152,10 @@ export const OnePersonPong: React.FC = () => {
   const paddleHeight = 20;
   const paddleY = 550; // near bottom (logical coordinates)
 
-  // Ball state.
-  const [ballX, setBallX] = useState(350);
-  const [ballY, setBallY] = useState(350);
+  // Ball velocity and rotation.
   const [ballDX, setBallDX] = useState(initialBallSpeed);
   const [ballDY, setBallDY] = useState(-initialBallSpeed);
   const [ballRotation, setBallRotation] = useState(0);
-  const ballRadius = 15;
 
   // Load ball logo image.
   const logoRef = useRef<HTMLImageElement | null>(null);
@@ -178,10 +167,10 @@ export const OnePersonPong: React.FC = () => {
     };
   }, []);
 
-  // Score state – increases when bricks are hit.
+  // Score increases when bricks are hit.
   const [score, setScore] = useState(0);
 
-  // Win: if all bricks are destroyed.
+  // Check for win (all bricks destroyed).
   useEffect(() => {
     if (bricks.every((b) => b.destroyed)) {
       setHasWon(true);
@@ -198,7 +187,6 @@ export const OnePersonPong: React.FC = () => {
   /******************
    * Animation and Drawing
    ******************/
-  // Main animation loop.
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -322,7 +310,7 @@ export const OnePersonPong: React.FC = () => {
       const textWidth = ctx.measureText(loseMsg).width;
       ctx.fillText(loseMsg, (canvasSize.width - textWidth) / 2, canvasSize.height / 2);
     }
-    
+
     // Before the game starts, show a "Click to Start" overlay.
     if (!hasStarted && !hasWon && !hasLost) {
       ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
@@ -337,7 +325,6 @@ export const OnePersonPong: React.FC = () => {
 
   // Update ball position and handle collisions.
   function updateBall() {
-    // Use local variables for robust collision handling.
     let x = ballX;
     let y = ballY;
     let dx = ballDX;
@@ -345,27 +332,21 @@ export const OnePersonPong: React.FC = () => {
     let rotation = ballRotation + 2;
 
     // --- Wall collisions ---
-    // Left/right walls.
     if (x + dx < ballRadius) {
       dx = Math.abs(dx);
     } else if (x + dx > LOGICAL_WIDTH - ballRadius) {
       dx = -Math.abs(dx);
     }
-    // Top wall.
     if (y + dy < ballRadius) {
       dy = Math.abs(dy);
     }
 
     // --- Paddle collision ---
-    // Only check if the ball is moving downward.
     if (dy > 0 && y + dy >= paddleY - ballRadius) {
       if (x >= paddleX - paddleWidth / 2 && x <= paddleX + paddleWidth / 2) {
-        // Simple collision: reverse vertical direction.
         dy = -Math.abs(dy);
-        // Add a horizontal offset based on where the ball hit the paddle.
         const offset = (x - paddleX) / (paddleWidth / 2);
         dx += offset * 1.5;
-        // Reposition the ball just above the paddle.
         y = paddleY - ballRadius;
       }
     }
@@ -374,7 +355,6 @@ export const OnePersonPong: React.FC = () => {
     let bricksHitCount = 0;
     const newBricks = bricks.map((br) => {
       if (!br.destroyed) {
-        // Use circle-rectangle collision.
         const rx = br.x;
         const ry = br.y;
         const rw = brickSetup.brickWidth;
@@ -385,7 +365,6 @@ export const OnePersonPong: React.FC = () => {
         const distY = y - closestY;
         if (distX * distX + distY * distY < ballRadius * ballRadius) {
           bricksHitCount++;
-          // Determine which side is the collision more dominant.
           if (Math.abs(distX) > Math.abs(distY)) {
             dx = -dx;
           } else {
@@ -411,7 +390,6 @@ export const OnePersonPong: React.FC = () => {
       return;
     }
 
-    // Update state.
     setBallX(x);
     setBallY(y);
     setBallDX(dx);
@@ -419,10 +397,15 @@ export const OnePersonPong: React.FC = () => {
     setBallRotation(rotation);
   }
 
-  // Reset the ball (used when restarting the game).
-  function resetBall() {
-    setBallX(350);
-    setBallY(300);
+  // Reset the ball using the provided setup (defaults to current brickSetup).
+  function resetBall(setup = brickSetup) {
+    setBallX(LOGICAL_WIDTH / 2);
+    setBallY(
+      setup.offsetTop +
+        setup.brickRows * (setup.brickHeight + setup.padding) +
+        ballRadius +
+        10
+    );
     setBallDX(initialBallSpeed);
     setBallDY(-initialBallSpeed);
     setBallRotation(0);
@@ -433,18 +416,19 @@ export const OnePersonPong: React.FC = () => {
     setHasWon(false);
     setHasLost(false);
     setScore(0);
-    setBallRotation(0);
     // Recalculate brick setup and bricks so that the starting positions match.
     const newSetup = getBrickSetup();
     setBrickSetup(newSetup);
-    setBricks(generateBricks());
+    setBricks(generateBricks(newSetup));
     setPaddleX(350);
-    resetBall();
+    resetBall(newSetup);
     setHasStarted(false);
   }
 
   // Convert pointer coordinates to logical coordinates.
   function handlePointerMove(e: React.MouseEvent | React.TouchEvent) {
+    // Prevent scrolling on touch devices.
+    if ("touches" in e) e.preventDefault();
     const canvas = canvasRef.current;
     if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
@@ -474,7 +458,14 @@ export const OnePersonPong: React.FC = () => {
           <input
             type="number"
             value={initialBallSpeed}
-            onChange={(e) => setInitialBallSpeed(Number(e.target.value))}
+            min="1"
+            max="20"
+            step="1"
+            onChange={(e) =>
+              setInitialBallSpeed(
+                Math.max(1, Math.min(20, Number(e.target.value)))
+              )
+            }
             style={{ width: "50px" }}
           />
         </label>
@@ -483,7 +474,14 @@ export const OnePersonPong: React.FC = () => {
           <input
             type="number"
             value={customBrickRows}
-            onChange={(e) => setCustomBrickRows(Number(e.target.value))}
+            min="1"
+            max="15"
+            step="1"
+            onChange={(e) =>
+              setCustomBrickRows(
+                Math.max(1, Math.min(15, Number(e.target.value)))
+              )
+            }
             style={{ width: "50px" }}
           />
         </label>
@@ -492,7 +490,14 @@ export const OnePersonPong: React.FC = () => {
           <input
             type="number"
             value={customBrickCols}
-            onChange={(e) => setCustomBrickCols(Number(e.target.value))}
+            min="1"
+            max="10"
+            step="1"
+            onChange={(e) =>
+              setCustomBrickCols(
+                Math.max(1, Math.min(10, Number(e.target.value)))
+              )
+            }
             style={{ width: "50px" }}
           />
         </label>
@@ -522,7 +527,11 @@ export const OnePersonPong: React.FC = () => {
         ref={canvasRef}
         width={canvasSize.width}
         height={canvasSize.height}
-        style={{ background: "#333", border: "2px solid #fff" }}
+        style={{
+          background: "#333",
+          border: "2px solid #fff",
+          touchAction: "none", 
+        }}
         onMouseMove={handlePointerMove}
         onTouchMove={handlePointerMove}
         onClick={handleStart}
