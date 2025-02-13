@@ -17,4 +17,4 @@
 
 export const GET_API_URL = "https://script.google.com/macros/s/AKfycbxNf69_qryacUpU05sRDubbbh5TX7TDWKq2mp7bwfPueEDgQm1MNnhodlI0PJEA4Y69/exec";
 export const POST_API_URL = "https://script.google.com/macros/s/AKfycbyCmZBj0QxkDhtvM5sAc1dGZZkwIzqIkxI7MdOKMMTEHDtt3TfNptpI3PMLNEbEF2c/exec";
-export const GET_SIGNUP_COUNT_API_URL = "https://script.google.com/macros/s/AKfycbz9iqJnvFi1InvIHxWC4T-yPJVixQq4oy4-AOt9_PBZQH7iyPbdFs-O3NiKtZHx6jUIhg/exec";
+export const GET_SIGNUP_COUNT_API_URL = "https://script.google.com/macros/s/AKfycbza9DppM_Xt0BWkc1J2U-FKKJXBqfx81r32DyvJA2c22cYmHrnNWEOMv07gxbALRclu3g/exec";
