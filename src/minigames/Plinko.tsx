@@ -240,7 +240,6 @@ const PlinkoGame: React.FC = () => {
   //  - And start the animation loop if not already running.
   const handleDrop = () => {
     if (bet > currency) {
-      alert("Bet exceeds available currency!");
       return;
     }
     // Deduct the bet immediately.
