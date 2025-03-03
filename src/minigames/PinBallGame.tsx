@@ -33,7 +33,7 @@ interface Particle {
 
 // ------------------ Helper: Generate Geometric Elements ------------------
 function generateElements(LOGICAL_WIDTH: number, LOGICAL_HEIGHT: number): PinballElement[] {
-  const types = ["bumper", "wall", "spinner", "absorber", "target"];
+  const types: ("bumper" | "wall" | "spinner" | "absorber" | "target")[] = ["bumper", "wall", "spinner", "absorber", "target"];
   const elements: PinballElement[] = [];
   const count = 15;
   const centerX = LOGICAL_WIDTH / 2; // e.g. 200
