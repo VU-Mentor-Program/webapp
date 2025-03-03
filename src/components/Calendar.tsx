@@ -3,7 +3,7 @@ import FadeIn from "./Fadein-Wrapper";
 
 export const Calendar: React.FC = () => {
   return (
-    <FadeIn duration={100} className="mt-6 mb-6">
+    <FadeIn duration={100} className="flex justify-center items-center w-full mt-5 mb-6">
       <div id="calendar" className="flex justify-center items-center w-full mt-5">
         <iframe
           title="Mentor Program Agenda"
