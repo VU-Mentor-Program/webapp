@@ -184,7 +184,6 @@ export const FlappyLogoGame: React.FC = () => {
 
   function updateGame(timestamp: number, factor: number) {
     if (!lastTimeRef.current) lastTimeRef.current = timestamp;
-    const dt = ((timestamp - lastTimeRef.current) / 1000) * factor;
     lastTimeRef.current = timestamp;
 
     // Bird
@@ -274,7 +273,7 @@ export const FlappyLogoGame: React.FC = () => {
     const scaleY = canvasSize.height / LOGICAL_HEIGHT;
 
     // 1) Sky
-    drawSky(ctx, scaleX, scaleY);
+    drawSky(ctx);
 
     // 2) Flickering stars
     drawStars(ctx, scaleX, scaleY);
@@ -286,7 +285,7 @@ export const FlappyLogoGame: React.FC = () => {
     drawClouds(ctx, scaleX, scaleY);
 
     // 5) Ground
-    drawGround(ctx, scaleX, scaleY);
+    drawGround(ctx, scaleX);
 
     // 6) Pipes
     drawPipes(ctx, scaleX, scaleY);
@@ -298,7 +297,7 @@ export const FlappyLogoGame: React.FC = () => {
     drawScoreAndOverlay(ctx, scaleX, scaleY);
   }
 
-  function drawSky(ctx: CanvasRenderingContext2D, scaleX: number, scaleY: number) {
+  function drawSky(ctx: CanvasRenderingContext2D) {
     // Sky color
     ctx.fillStyle = "#0A0A32";
     ctx.fillRect(0, 0, canvasSize.width, canvasSize.height);
@@ -344,7 +343,7 @@ export const FlappyLogoGame: React.FC = () => {
     });
   }
 
-  function drawGround(ctx: CanvasRenderingContext2D, scaleX: number, scaleY: number) {
+  function drawGround(ctx: CanvasRenderingContext2D, scaleY: number) {
     ctx.fillStyle = "#008000";
     ctx.fillRect(0, FLOOR_Y * scaleY, canvasSize.width, FLOOR_HEIGHT * scaleY);
   }
