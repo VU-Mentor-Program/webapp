@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import FadeIn from "../components/Fadein-Wrapper";
-import { OnePersonPong } from "../minigames/BrickBreaker";
+import OnePersonPong from "../minigames/BrickBreaker";
 import { SnakeGame } from "../minigames/SnakeGame";
 import { FlappyLogoGame } from "../minigames/FlappyLogoGame";
 import { LogoRacerGame } from "../minigames/LogoRacer";
