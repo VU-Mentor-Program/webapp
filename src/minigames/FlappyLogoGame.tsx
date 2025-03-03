@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import mpLogo from "../assets/mp_logo-CIRCLE.png";
 import GameOverModal from "../components/minigame page/GameOverModal";
 import PauseButton from "../components/minigame page/PauseButton";
+// import { sfx_die.mp3, sfx_hit.mp3, sfx_point.mp3, sfx_swooshing.mp3, sfx_wing.mp3 } from "../assets/flappy_sounds";
 
 export const FlappyLogoGame: React.FC = () => {
   const LOGICAL_WIDTH = 800;

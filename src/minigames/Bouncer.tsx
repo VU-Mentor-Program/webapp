@@ -463,7 +463,7 @@ export const BallBouncingGame: React.FC = () => {
       <GameOverModal
         isOpen={gameOver}
         score={score}
-        gameName={"bouncing ball"}
+        gameName={"bouncer"}
         onClose={restartGame}
         onRestart={restartGame}
       />
