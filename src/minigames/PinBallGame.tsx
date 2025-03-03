@@ -66,22 +66,6 @@ function generateElements(LOGICAL_WIDTH: number, LOGICAL_HEIGHT: number): Pinbal
   return elements;
 }
 
-// ------------------ Helper: Spawn Explosion Particles ------------------
-function spawnParticles(el: PinballElement, particles: Particle[]) {
-  const count = 30; // number of particles per exploded element
-  for (let i = 0; i < count; i++) {
-    const angle = Math.random() * Math.PI * 2;
-    const speed = Math.random() * 50 + 50;
-    particles.push({
-      x: el.x,
-      y: el.y,
-      vx: Math.cos(angle) * speed,
-      vy: Math.sin(angle) * speed,
-      life: 1.5,
-      maxLife: 1.5,
-    });
-  }
-}
 
 // ------------------ Component ------------------
 export const PinballGame: React.FC = () => {
