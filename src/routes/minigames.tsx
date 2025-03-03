@@ -16,6 +16,8 @@ import TypingGame from "../minigames/FastType";
 // import PacManGame from "../minigames/PacMan";
 import SimonSaysGame from "../minigames/SimonSays";
 import Game2048 from "../minigames/2048";
+// import { PinballGame } from "../minigames/PinBallGame";
+import { BallBouncingGame } from "../minigames/Bouncer";
 
 export const MinigamesPage: React.FC = () => {
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
@@ -38,7 +40,8 @@ export const MinigamesPage: React.FC = () => {
       "tower",
       "fasttype",
       "simonsays",
-      "2048"
+      "2048",
+      "bouncer"
     ],
     []
   );
@@ -151,6 +154,17 @@ export const MinigamesPage: React.FC = () => {
           >
             🔢 2048
           </button>
+          {/* <button
+            onClick={() => handleSelectGame("pinball")}
+            className="bg-orange-600 px-4 py-2 rounded hover:bg-orange-700"
+          >
+            pinball
+          </button> */}
+          <button
+            onClick={() => handleSelectGame("bouncer")}
+            className="bg-yellow-400 px-4 py-2 rounded hover:bg-orange-700"
+          > 🪩Bouncer
+          </button>
         </div>
 
         <div className="w-full max-w-4xl">
@@ -168,6 +182,8 @@ export const MinigamesPage: React.FC = () => {
           {/* {selectedGame === "pacman" && <PacManGame />} */}
           {selectedGame === "simonsays" && <SimonSaysGame />}
           {selectedGame === "2048" && <Game2048 />}
+          {/* {selectedGame === "pinball" && <PinballGame />} */}
+          {selectedGame === "bouncer" && <BallBouncingGame />}
         </div>
       </div>
 

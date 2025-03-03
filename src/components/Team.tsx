@@ -3,6 +3,7 @@ import clsx from "clsx";
 import Avatar from "./Avatar";
 import { mentorTeam } from "../data/mentorTeam";
 import { useIntl } from "react-intl";
+import FadeIn from "./Fadein-Wrapper";
 
 interface TeamProps {
   title: string;
@@ -39,17 +40,19 @@ const Team: React.FC<TeamProps> = ({ title, description, background }) => {
   ));
 
   return (
-    <section id="team" className={clsx(background || "")}>
-      <div className={clsx("text-center", description && "mb-4")}>
-        <h2 className="text-3xl sm:text-4xl py-4 lg:py-8">{title}</h2>
-        {description && <p>{description}</p>}
-      </div>
-      <div className="max-w-4xl mx-auto">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 p-0 justify-items-center">
-          {teamMembers}
+    <FadeIn duration={100} className="mt-6">
+      <section id="team" className={clsx(background || "")}>
+        <div className={clsx("text-center", description && "mb-4")}>
+          <h2 className="text-3xl sm:text-4xl py-4 lg:py-8">{title}</h2>
+          {description && <p>{description}</p>}
         </div>
-      </div>
-    </section>
+        <div className="max-w-4xl mx-auto">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 p-0 justify-items-center">
+            {teamMembers}
+          </div>
+        </div>
+      </section>
+    </FadeIn>
   );
 };
 

@@ -8,6 +8,7 @@ import { useTranslations } from "../contexts/TranslationContext";
 import Carousel from "../components/Carousel"
 import MonthlyEvents from "../components/MonthlyEvents";
 import AttendanceLeaderBoard from "../components/attendanceLeaderboard";
+import FadeIn from "../components/Fadein-Wrapper";
 
 const locale = "nl";
 
@@ -34,12 +35,15 @@ export default function Home() {
           <Team title={t("title")} description={t("subtitle")} />
           <AttendanceLeaderBoard />
           <Calendar />
-          <Link
-            to="/minigames"
-            className="mt-6 bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 transition-colors"
-          >
-            {t("minigames")}
-          </Link>
+
+          <FadeIn duration={100} className="mt-6">
+            <Link
+              to="/minigames"
+              className="mt-6 bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 transition-colors"
+            >
+              {t("minigames")}
+            </Link>
+          </FadeIn>
         </IntlProvider>
       </div>
     </div>

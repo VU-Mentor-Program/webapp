@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import FadeIn from "./Fadein-Wrapper";
 
 const rawImages = [
   "/webapp/IMG_2333.JPG",
@@ -114,42 +115,44 @@ const Carousel: React.FC = () => {
   };
 
   return (
-    <div className="relative w-full max-w-4xl mx-auto pb-10">
-      {/* Carousel Container with touch handlers */}
-      <div
-        className="overflow-hidden rounded"
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
-        {/* Slider */}
+    <FadeIn duration={100}>
+      <div className="relative w-full max-w-4xl mx-auto pb-10">
+        {/* Carousel Container with touch handlers */}
         <div
-          ref={sliderRef}
-          className="flex transition-transform duration-500 ease-in-out"
-          onTransitionEnd={handleTransitionEnd}
+          className="overflow-hidden rounded"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
         >
-          {images.map((src, index) => (
-            <div key={index} className="flex-shrink-0 w-[80%] h-96 mx-2 overflow-hidden">
-              <img src={src} alt={`Slide ${index}`} className="w-full h-full object-cover rounded" />
-            </div>
-          ))}
+          {/* Slider */}
+          <div
+            ref={sliderRef}
+            className="flex transition-transform duration-500 ease-in-out"
+            onTransitionEnd={handleTransitionEnd}
+          >
+            {images.map((src, index) => (
+              <div key={index} className="flex-shrink-0 w-[80%] h-96 mx-2 overflow-hidden">
+                <img src={src} alt={`Slide ${index}`} className="w-full h-full object-cover rounded" />
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Navigation Buttons */}
-      <button
-        onClick={prevSlide}
-        className="absolute top-1/2 left-0 transform -translate-y-1/2 text-white p-2 hover:text-gray-300 transition"
-      >
-        &#10094;
-      </button>
-      <button
-        onClick={nextSlide}
-        className="absolute top-1/2 right-0 transform -translate-y-1/2 text-white p-2 hover:text-gray-300 transition"
-      >
-        &#10095;
-      </button>
-    </div>
+        {/* Navigation Buttons */}
+        <button
+          onClick={prevSlide}
+          className="absolute top-1/2 left-0 transform -translate-y-1/2 text-white p-2 hover:text-gray-300 transition"
+        >
+          &#10094;
+        </button>
+        <button
+          onClick={nextSlide}
+          className="absolute top-1/2 right-0 transform -translate-y-1/2 text-white p-2 hover:text-gray-300 transition"
+        >
+          &#10095;
+        </button>
+      </div>
+    </FadeIn>
   );
 };
 
