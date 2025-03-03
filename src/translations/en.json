@@ -68,6 +68,7 @@
     "brickBreaker_title": "One-Person Pong / Brick Breaker!",
     "brickBreaker_instruction": "Move the paddle with mouse or finger; break all the tiles!",
     "dodge_instruction": "Move left/right. Survive as long as possible!",
-    "shooter_instructions": "Move with mouse/finger. Click or press Space to shoot."
+    "shooter_instructions": "Move with mouse/finger. Click or press Space to shoot.",
+    "time_spent": "Time spent on this page:"
   }
 }

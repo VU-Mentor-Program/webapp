@@ -67,6 +67,7 @@
     "brickBreaker_title": "Eén-Persoons Pong / Brick Breaker!",
     "brickBreaker_instruction": "Beweeg het batje met de muis of vinger; breek alle tegels!",
     "dodge_instruction": "Beweeg naar links/rechts. Overleef zo lang mogelijk!",
-    "shooter_instructions": "Beweeg met muis/vinger. Klik of druk op Spatie om te schieten."
+    "shooter_instructions": "Beweeg met muis/vinger. Klik of druk op Spatie om te schieten.",
+    "time_spent": "Tijd doorgebracht op deze pagina: "
   }
 }

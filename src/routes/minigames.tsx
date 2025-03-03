@@ -200,7 +200,7 @@ export const MinigamesPage: React.FC = () => {
       <FadeIn duration={100}>
         <div className="flex flex-col items-center">
           <p className="text-base pt-2 pb-2">
-            Time spent on this page:{" "}
+            {t("time_spent")}{" "}
             {hours}:{minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds}
           </p>
           <LeaderBoard games={minigames} />
