@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import GameOverModal from "../components/minigame page/GameOverModal";
 import PauseButton from "../components/minigame page/PauseButton";
-import RestartButton from "../components/minigame page/RestartButton";
 import { useTranslations } from "../contexts/TranslationContext";
 
 // A larger palette for up to a 4x4 grid (16 colors)
