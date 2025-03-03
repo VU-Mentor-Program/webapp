@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import mpLogoCircle from '../assets/mp_logo-CIRCLE.png'; // Bomb image
 import GameOverModal from '../components/minigame page/GameOverModal';
+import { useTranslations } from '../contexts/TranslationContext';
 
 // Define a cell in the board.
 interface Cell {
@@ -245,18 +246,20 @@ const MinesweeperGame: React.FC = () => {
     (e.target as HTMLButtonElement).style.background = '#444';
   };
 
+  const t = useTranslations('minigames');
+
   return (
     <div style={{ textAlign: 'center', color: 'white', padding: '1rem' }}>
       <h3>Minesweeper</h3>
       <div style={{ marginBottom: '1rem', fontSize: '1.1rem' }}>
         <span style={{ marginRight: '1rem' }}>Time: {timeElapsed} sec</span>
-        <span>Score: {score}</span>
+        <span>{t("score")} {score}</span>
       </div>
 
       <div style={{ marginBottom: "1rem" }}>
         <div style={{ marginBottom: "0.5rem" }}>
           <label style={{ marginRight: "1rem" }}>
-            Rows: {rows}
+            {t("rows")} {rows}
           </label>
           <input
             type="range"
@@ -269,7 +272,7 @@ const MinesweeperGame: React.FC = () => {
         </div>
         <div style={{ marginBottom: "0.5rem" }}>
           <label style={{ marginRight: "1rem" }}>
-            Columns: {cols}
+            {t("columns")} {cols}
           </label>
           <input
             type="range"
@@ -282,7 +285,7 @@ const MinesweeperGame: React.FC = () => {
         </div>
         <div>
           <label style={{ marginRight: "1rem" }}>
-            Bombs: {bombCount}
+            {t("bombs")} {bombCount}
           </label>
           <input
             type="range"
@@ -307,7 +310,7 @@ const MinesweeperGame: React.FC = () => {
           onMouseOver={handleMouseOver}
           onMouseOut={handleMouseOut}
         >
-          New Game
+          {t("start_game")}
         </button>
       </div>
       <div style={{ display: 'inline-block', border: '2px solid #888' }}>

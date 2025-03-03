@@ -69,6 +69,14 @@
     "brickBreaker_instruction": "Move the paddle with mouse or finger; break all the tiles!",
     "dodge_instruction": "Move left/right. Survive as long as possible!",
     "shooter_instructions": "Move with mouse/finger. Click or press Space to shoot.",
-    "time_spent": "Time spent on this page:"
+    "time_spent": "Time spent on this page:",
+    "start_game": "Start the Game!",
+    "rows": "Rows: ",
+    "columns": "Columns: ",
+    "bombs": "Bombs: ",
+    "time": "Time: ",
+    "score": "Score: ",
+    "round": "Round: ",
+    "grid_size": "Grid Size: "
   }
 }

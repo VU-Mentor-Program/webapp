@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import GameOverModal from "../components/minigame page/GameOverModal";
 import PauseButton from "../components/minigame page/PauseButton";
+import { useTranslations } from "../contexts/TranslationContext";
 
 // A larger palette for up to a 4x4 grid (16 colors)
 const ALL_COLORS = [
@@ -26,11 +27,9 @@ const SimonSaysGame: React.FC = () => {
   const [paused, setPaused] = useState(false);
   const [score, setScore] = useState(0);
   const [round, setRound] = useState(0);
-  const [message, setMessage] = useState("Click 'Start' to play!");
 
   // Start a new round by adding a random color from the available palette.
   const startRound = () => {
-    setMessage("");
     const nextColor = colors[Math.floor(Math.random() * colors.length)];
     const newSequence = [...sequence, nextColor];
     setSequence(newSequence);
@@ -94,7 +93,6 @@ const SimonSaysGame: React.FC = () => {
     setGameOver(false);
     setScore(0);
     setRound(0);
-    setMessage("Click 'Start' to play!");
   };
 
   // Handle grid row changes.
@@ -118,6 +116,8 @@ const SimonSaysGame: React.FC = () => {
     restartGame();
   };
 
+  const t = useTranslations('minigames');
+
   return (
     <div className="flex flex-col items-center p-4">
       <h1 className="text-2xl font-bold mb-4">Simon Says</h1>
@@ -125,7 +125,7 @@ const SimonSaysGame: React.FC = () => {
       <div style={{ marginBottom: "1rem" }}>
         <div style={{ marginBottom: "0.5rem" }}>
           <label style={{ marginRight: "1rem" }}>
-            Rows: {gridRows}
+            {t("rows")} {gridRows}
           </label>
           <input
             type="range"
@@ -138,7 +138,7 @@ const SimonSaysGame: React.FC = () => {
         </div>
         <div>
           <label style={{ marginRight: "1rem" }}>
-            Columns: {gridCols}
+            {t("columns")} {gridCols}
           </label>
           <input
             type="range"
@@ -175,8 +175,8 @@ const SimonSaysGame: React.FC = () => {
       </div>
 
       <div className="mt-4 text-white">
-        <p>Round: {round}</p>
-        <p>Score: {score}</p>
+        <p>{t("round")} {round}</p>
+        <p>{t("score")} {score}</p>
       </div>
 
       {/* Only show start button if no sequence is in play */}
@@ -185,11 +185,9 @@ const SimonSaysGame: React.FC = () => {
           onClick={startRound}
           className="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
-          Start
+          {t("start_game")}
         </button>
       )}
-
-      <div className="mt-2 text-yellow-300">{message}</div>
 
       <GameOverModal
         isOpen={gameOver}

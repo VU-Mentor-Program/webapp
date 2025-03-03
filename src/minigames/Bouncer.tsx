@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import PauseButton from "../components/minigame page/PauseButton";
 import RestartButton from "../components/minigame page/RestartButton";
 import GameOverModal from "../components/minigame page/GameOverModal";
+import { useTranslations } from "../contexts/TranslationContext";
 
 // ------------------ Types ------------------
 interface Ring {
@@ -69,6 +70,8 @@ export const BallBouncingGame: React.FC = () => {
   const [isPaused, setIsPaused] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
+
+  const t = useTranslations('minigames');
 
   // Gravity (pixels per second²)
   const GRAVITY = 200;
@@ -365,12 +368,11 @@ export const BallBouncingGame: React.FC = () => {
     handleMouseDown({ clientX: touch.clientX, clientY: touch.clientY } as any);
   }
 
-
   // Return the component.
   return (
     <div style={{ marginBottom: "1rem", textAlign: "center", color: "white" }}>
       <h3>🏀 Bouncing Ball Game</h3>
-      <p className="text-lg font-bold">Score: {score}</p>
+      <p className="text-lg font-bold">{t("score")} {score}</p>
       <canvas
         ref={canvasRef}
         width={canvasSize.width}

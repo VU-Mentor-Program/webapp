@@ -68,6 +68,14 @@
     "brickBreaker_instruction": "Beweeg het batje met de muis of vinger; breek alle tegels!",
     "dodge_instruction": "Beweeg naar links/rechts. Overleef zo lang mogelijk!",
     "shooter_instructions": "Beweeg met muis/vinger. Klik of druk op Spatie om te schieten.",
-    "time_spent": "Tijd doorgebracht op deze pagina: "
+    "time_spent": "Tijd doorgebracht op deze pagina: ",
+    "start_game": "Start het spel!",
+    "rows": "Rijen: ",
+    "columns": "Kolommen: ",
+    "bombs": "Bommen: ",
+    "time": "Tijd: ",
+    "score": "Partituur: ",
+    "round": "Ronde: ",
+    "grid_size": "Rastergrootte: "
   }
 }

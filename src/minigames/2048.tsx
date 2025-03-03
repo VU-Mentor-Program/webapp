@@ -10,6 +10,7 @@ import React, {
 import { motion, AnimatePresence } from "framer-motion";
 import GameOverModal from "../components/minigame page/GameOverModal";
 import PauseButton from "../components/minigame page/PauseButton";
+import { useTranslations } from "../contexts/TranslationContext";
 
 // Constants for cell dimensions
 const CELL_SIZE = 80; // pixels
@@ -414,6 +415,8 @@ const Game2048: React.FC = () => {
   // Compute the board container’s size in pixels.
   const boardSizeInPx = gridSize * CELL_SIZE + (gridSize + 1) * GAP;
 
+  const t = useTranslations('minigames');
+
   // **************** Render ****************
   return (
     <div className="flex flex-col items-center">
@@ -426,7 +429,7 @@ const Game2048: React.FC = () => {
       <div style={{ marginBottom: "1rem" }}>
         <div style={{ marginBottom: "0.5rem" }}>
           <label style={{ marginRight: "1rem" }}>
-            Grid Size: {gridSize}
+            {t("grid_size")} {gridSize}
           </label>
           <input
             type="range"
@@ -532,7 +535,7 @@ const Game2048: React.FC = () => {
         </AnimatePresence>
       </div>
 
-      <div className="mt-4 text-white">Score: {score}</div>
+      <div className="mt-4 text-white">{t("score")} {score}</div>
       <GameOverModal
         isOpen={gameOver}
         score={score}
