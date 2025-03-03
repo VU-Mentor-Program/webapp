@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useTranslations } from "../contexts/TranslationContext";
+import FadeIn from "./Fadein-Wrapper";
 
 interface FAQItemProps {
   question: string;
@@ -73,14 +74,16 @@ const FAQ: React.FC = () => {
   ];
 
   return (
-    <section className="container py-4 lg:py-10 mx-auto" id="faq">
-      <h3 className="text-center text-3xl sm:text-4xl text-white">{t("title")}</h3>
-      <div className="mt-8 max-w-4xl mx-auto">
-        {faqs.map((faq, index) => (
-          <FAQItem key={index} question={faq.question} answer={faq.answer} />
-        ))}
-      </div>
-    </section>
+    <FadeIn duration={100} className="mt-6">
+      <section className="container py-4 lg:py-10 mx-auto" id="faq">
+        <h3 className="text-center text-3xl sm:text-4xl text-white">{t("title")}</h3>
+        <div className="mt-8 max-w-4xl mx-auto">
+          {faqs.map((faq, index) => (
+            <FAQItem key={index} question={faq.question} answer={faq.answer} />
+          ))}
+        </div>
+      </section>
+  </FadeIn>
   );
 };
 

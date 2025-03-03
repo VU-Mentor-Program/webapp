@@ -1,4 +1,4 @@
-import { FaGithub, FaInstagram, FaWhatsapp } from "react-icons/fa";
+import { FaGithub, FaInstagram, FaWhatsapp, FaGoogleDrive } from "react-icons/fa";
 
 const SocialIcon = ({ children, ...rest }: React.LinkHTMLAttributes<HTMLAnchorElement>) => {
   return (
@@ -19,6 +19,9 @@ export const SocialLinks = () => {
       </SocialIcon>
       <SocialIcon href="https://chat.whatsapp.com/I6CQX1yyYM830oTZks5lX7">
         <FaWhatsapp />
+      </SocialIcon>
+      <SocialIcon href="https://drive.google.com/drive/folders/1F-RjBrZq7mie_sZjr_oJwLzC6VyjvHO8?usp=sharing">
+        <FaGoogleDrive />
       </SocialIcon>
     </div>
   );

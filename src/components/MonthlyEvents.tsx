@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useTranslations } from "../contexts/TranslationContext";
 import { GET_SIGNUP_COUNT_API_URL } from "../utils/apiUtils";
+import FadeIn from "./Fadein-Wrapper";
 
 interface TimeLeft {
   days: number;
@@ -111,56 +112,61 @@ const MonthlyEvents: React.FC = () => {
       });
   }, []);
 
-  if (loading) {
-    return (
-      <section className="py-10 bg-gray-700 text-white">
-        <div className="container mx-auto px-4 md:px-24 text-center">
-          <p>{t("loading")}</p>
-        </div>
-      </section>
-    );
-  }
 
-  if (error || events.length === 0) {
-    return (
-      <section className="py-10 bg-gray-700 text-white">
-        <div className="container mx-auto px-4 md:px-24 text-center">
-          <p className="text-red-400">{error || "No event data available."}</p>
-        </div>
-      </section>
-    );
-  }
-
-  return (
-    <section className="py-10 rounded bg-gray-700 text-white">
+  const loadingScreen = (
+    <section className="py-10 bg-gray-700 text-white">
       <div className="container mx-auto px-4 md:px-24 text-center">
-        <h2 className="text-3xl font-bold mb-4">{t("title")}</h2>
-        <p className="text-base mb-6 max-w-2xl mx-auto">{t("description")}</p>
-
-        {events.map((event, index) => {
-          const timeLeft = getTimeLeftForDate(event.parsedDate, now);
-          return (
-            <div key={index} className="bg-gray-600 rounded py-5 mb-6">
-              <h1 className="text-3xl pb-4">{event.EVENTNAME}</h1>
-              <div className="mb-6">
-                <h3 className="text-xl font-semibold mb-2">{t("counterLabel")}</h3>
-                <div className="text-2xl">
-                  {timeLeft.days}d {timeLeft.hours}h {timeLeft.minutes}m {timeLeft.seconds}s
-                </div>
-              </div>
-              <a
-                href={event.SIGNUP_LINK || "https://chat.whatsapp.com/I6CQX1yyYM830oTZks5lX7"}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300"
-              >
-                {t("signupLinkLabel")}
-              </a>
-            </div>
-          );
-        })}
+        <p>{t("loading")}</p>
       </div>
     </section>
+  );
+
+  const errorScreen = (
+    <section className="py-10 bg-gray-700 text-white">
+      <div className="container mx-auto px-4 md:px-24 text-center">
+        <p className="text-red-400">{error || "No event data available."}</p>
+      </div>
+    </section>  
+  );
+
+  const eventScreen = (
+    <section className="py-10 rounded bg-gray-700 text-white">
+        <div className="container mx-auto px-4 md:px-24 text-center">
+          <h2 className="text-3xl font-bold mb-4">{t("title")}</h2>
+          <p className="text-base mb-6 max-w-2xl mx-auto">{t("description")}</p>
+
+          {events.map((event, index) => {
+            const timeLeft = getTimeLeftForDate(event.parsedDate, now);
+            return (
+              <div key={index} className="bg-gray-600 rounded py-5 mb-6">
+                <h1 className="text-3xl pb-4">{event.EVENTNAME}</h1>
+                <div className="mb-6">
+                  <h3 className="text-xl font-semibold mb-2">{t("counterLabel")}</h3>
+                  <div className="text-2xl">
+                    {timeLeft.days}d {timeLeft.hours}h {timeLeft.minutes}m {timeLeft.seconds}s
+                  </div>
+                </div>
+                <a
+                  href={event.SIGNUP_LINK || "https://chat.whatsapp.com/I6CQX1yyYM830oTZks5lX7"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300"
+                >
+                  {t("signupLinkLabel")}
+                </a>
+              </div>
+            );
+          })}
+        </div>
+    </section>
+  );
+
+  return (
+    <FadeIn duration={100} className="mt-6">
+      { loading && loadingScreen }
+      { error || events.length === 0 && errorScreen }
+      { !loading && events.length > 0 && eventScreen }
+    </FadeIn>
   );
 };
 
