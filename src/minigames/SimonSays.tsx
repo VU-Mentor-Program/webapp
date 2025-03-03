@@ -1,7 +1,7 @@
-// SimonSaysGame.tsx
 import React, { useState } from "react";
 import GameOverModal from "../components/minigame page/GameOverModal";
 import PauseButton from "../components/minigame page/PauseButton";
+import RestartButton from "../components/minigame page/RestartButton";
 import { useTranslations } from "../contexts/TranslationContext";
 
 // A larger palette for up to a 4x4 grid (16 colors)
@@ -11,6 +11,49 @@ const ALL_COLORS = [
   "lime", "cyan", "magenta", "brown",
   "gray", "gold", "silver", "maroon"
 ];
+
+// Mapping each tile color to a unique frequency (in Hz)
+const tileSoundMapping: Record<string, number> = {
+  red: 261.63,      // C4
+  green: 293.66,    // D4
+  blue: 329.63,     // E4
+  yellow: 349.23,   // F4
+  purple: 392.00,   // G4
+  orange: 440.00,   // A4
+  teal: 493.88,     // B4
+  pink: 523.25,     // C5
+  lime: 587.33,     // D5
+  cyan: 659.26,     // E5
+  magenta: 698.46,  // F5
+  brown: 783.99,    // G5
+  gray: 880.00,     // A5
+  gold: 987.77,     // B5
+  silver: 1046.50,  // C6
+  maroon: 1174.66   // D6
+};
+
+// Helper function to play a sound for a given frequency using a smooth gain envelope.
+function playSound(frequency: number, audioCtx: AudioContext) {
+  const oscillator = audioCtx.createOscillator();
+  oscillator.frequency.value = frequency;
+  oscillator.type = "sine";
+  const gainNode = audioCtx.createGain();
+  const now = audioCtx.currentTime;
+  gainNode.gain.setValueAtTime(0, now);
+  gainNode.gain.linearRampToValueAtTime(0.1, now + 0.02);
+  gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+  oscillator.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+  oscillator.start(now);
+  oscillator.stop(now + 0.2);
+}
+
+// Plays the unique sound for a given tile color.
+function playTileSound(color: string, audioCtx: AudioContext) {
+  const freq = tileSoundMapping[color];
+  if (!freq) return;
+  playSound(freq, audioCtx);
+}
 
 const SimonSaysGame: React.FC = () => {
   // Grid configuration: allow user to choose between 2 and 4 rows/columns.
@@ -27,6 +70,13 @@ const SimonSaysGame: React.FC = () => {
   const [paused, setPaused] = useState(false);
   const [score, setScore] = useState(0);
   const [round, setRound] = useState(0);
+  // New: difficulty slider controls the display speed (in ms) for each sequence step.
+  const [displaySpeed, setDisplaySpeed] = useState(1000);
+
+  const t = useTranslations("minigames");
+
+  // Audio: create a persistent AudioContext.
+  const [audioCtx] = useState(() => new (window.AudioContext || (window as any).webkitAudioContext)());
 
   // Start a new round by adding a random color from the available palette.
   const startRound = () => {
@@ -39,28 +89,32 @@ const SimonSaysGame: React.FC = () => {
     displaySequence(newSequence);
   };
 
-  // Display the sequence by highlighting each button in order.
+  // Display the sequence by highlighting each button in order and playing its sound.
   const displaySequence = (seq: string[]) => {
     let index = 0;
     const interval = setInterval(() => {
       setHighlightedColor(seq[index]);
+      // Play the sound for this color.
+      playTileSound(seq[index], audioCtx);
       setTimeout(() => {
         setHighlightedColor(null);
-      }, 500);
+      }, displaySpeed / 2);
       index++;
       if (index >= seq.length) {
         clearInterval(interval);
         setTimeout(() => {
           setIsDisplaying(false);
-        }, 600);
+        }, displaySpeed / 2 + 100);
       }
-    }, 1000);
+    }, displaySpeed);
   };
 
   // Handle a user's button click.
   const handleUserClick = (color: string) => {
     if (paused || isDisplaying || gameOver) return;
-    // Highlight the button when clicked.
+    // Play the tile's sound immediately.
+    playTileSound(color, audioCtx);
+    // Temporarily highlight the button.
     setHighlightedColor(color);
     setTimeout(() => {
       setHighlightedColor(null);
@@ -116,7 +170,10 @@ const SimonSaysGame: React.FC = () => {
     restartGame();
   };
 
-  const t = useTranslations('minigames');
+  // Handle difficulty (display speed) changes.
+  const handleDifficultyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDisplaySpeed(parseInt(e.target.value));
+  };
 
   return (
     <div className="flex flex-col items-center p-4">
@@ -136,7 +193,7 @@ const SimonSaysGame: React.FC = () => {
             max={4}
           />
         </div>
-        <div>
+        <div style={{ marginBottom: "0.5rem" }}>
           <label style={{ marginRight: "1rem" }}>
             {t("columns")} {gridCols}
           </label>
@@ -147,6 +204,19 @@ const SimonSaysGame: React.FC = () => {
             onChange={handleGridColsChange}
             min={2}
             max={4}
+          />
+        </div>
+        <div>
+          <label style={{ marginRight: "1rem" }}>
+            {t("sequence_speed")} {displaySpeed} ms
+          </label>
+          <input
+            type="range"
+            step="50"
+            value={displaySpeed}
+            onChange={handleDifficultyChange}
+            min={300}
+            max={2000}
           />
         </div>
       </div>
@@ -175,8 +245,12 @@ const SimonSaysGame: React.FC = () => {
       </div>
 
       <div className="mt-4 text-white">
-        <p>{t("round")} {round}</p>
-        <p>{t("score")} {score}</p>
+        <p>
+          {t("round")} {round}
+        </p>
+        <p>
+          {t("score")} {score}
+        </p>
       </div>
 
       {/* Only show start button if no sequence is in play */}

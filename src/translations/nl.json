@@ -76,6 +76,7 @@
     "time": "Tijd: ",
     "score": "Partituur: ",
     "round": "Ronde: ",
-    "grid_size": "Rastergrootte: "
+    "grid_size": "Rastergrootte: ",
+    "sequence_speed": "Sequentiesnelheid: "
   }
 }
