@@ -16,8 +16,8 @@
 // # also dont tell my mom
 
 // These are for games
-export const GET_API_URL = "https://script.google.com/macros/s/AKfycbxNf69_qryacUpU05sRDubbbh5TX7TDWKq2mp7bwfPueEDgQm1MNnhodlI0PJEA4Y69/exec";
-export const POST_API_URL = "https://script.google.com/macros/s/AKfycbzihb64x7frd-Qcybb71QkRXr0kFexcGguTgiTCCI2bIa-TMXy5Gi_EA0BUqjYG0ow0/exec";
+export const GET_API_URL = "https://script.google.com/macros/s/AKfycbyKGqBwkqIVRofAXq0BIEIrwLNXUE0gn7Ku41IxViQ5LjF6Nc7LjOilVSSn43Pi_7lr/exec";
+export const POST_API_URL = "https://script.google.com/macros/s/AKfycbw700UoFYDToXkmxuv9MpXI5LsJJomq73QJlWMTic9ZNUR0abk75I4Hx43mX1ZCZCqo/exec";
 
 // This is for events (and the showup leaderboard)
 // npm run deploy
