@@ -50,7 +50,7 @@ export const FlappyLogoGame: React.FC = () => {
   const gravity = 0.15; // gentle gravity
   const pipeWidth = 50;
   const pipeSpeed = 2;
-  const gapHeight = 140;
+  const gapHeight = 150;
 
   // Bird, pipe, score
   const birdYRef = useRef(300);
@@ -410,22 +410,6 @@ export const FlappyLogoGame: React.FC = () => {
     lastTimeRef.current = 0; // reset timing
   }
 
-  // Possibly a second "start area" logic
-  function handleMouseDown(e: React.MouseEvent<HTMLCanvasElement>) {
-    const canvas = canvasRef.current;
-    if (!canvas || hasStarted) return;
-    const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const scaleX = canvasSize.width / LOGICAL_WIDTH;
-    const scaleY = canvasSize.height / LOGICAL_HEIGHT;
-    if (x >= 360 * scaleX && x <= 400 * scaleX && y >= 500 * scaleY && y <= 600 * scaleY) {
-      setHasStarted(true);
-      setIsPaused(false);
-      setGameOver(false);
-    }
-  }
-
   return (
     <div style={{ textAlign: "center", color: "white", overflow: "hidden" }}>
       <h3>Flappy Logo</h3>
@@ -437,9 +421,7 @@ export const FlappyLogoGame: React.FC = () => {
         ref={canvasRef}
         width={canvasSize.width}
         height={canvasSize.height}
-        onClick={handleCanvasClick}
-        onTouchStart={handleCanvasClick}
-        onMouseDown={handleMouseDown}
+        onPointerDown={handleCanvasClick}
         style={{ touchAction: "none" }}
       />
       <GameOverModal
