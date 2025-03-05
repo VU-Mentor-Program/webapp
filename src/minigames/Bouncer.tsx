@@ -405,8 +405,8 @@ export const BallBouncingGame: React.FC = () => {
       x: LOGICAL_SIZE / 2,
       y: LOGICAL_SIZE / 2,
       radius: 6,
-      vx: 120,
-      vy: 150,
+      vx: 70,
+      vy: 90,
     };
     updateRings();
     particlesRef.current = [];
