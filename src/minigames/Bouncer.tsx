@@ -178,14 +178,18 @@ export const BallBouncingGame: React.FC = () => {
     updateRings();
   }, [canvasSize]);
 
-  // Responsive canvas resizing.
   useEffect(() => {
     function handleResize() {
       const minWidth = 300;
       const maxWidth = LOGICAL_SIZE * 1.2;
       const newWidth = Math.max(minWidth, Math.min(window.innerWidth * 0.9, maxWidth));
-      setCanvasSize({ width: newWidth, height: newWidth });
+
+      setCanvasSize((prevSize) => {
+        if (prevSize.width === newWidth && prevSize.height === newWidth) return prevSize;
+        return { width: newWidth, height: newWidth };
+      });
     }
+    
     window.addEventListener("resize", handleResize);
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
