@@ -16,82 +16,102 @@ const rawImages = [
   "/webapp/IMG_4097.JPG",
 ];
 
-// For a seamless loop, create a new array with the last image at the beginning and the first image at the end.
 const images = [
   rawImages[rawImages.length - 1],
   ...rawImages,
   rawImages[0],
 ];
 
+interface LazyImageProps {
+  src: string;
+  alt: string;
+  className?: string;
+}
+
+const LazyImage = ({ src, alt, className = "" }: LazyImageProps) => {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <div className="relative w-full h-full overflow-hidden rounded">
+      <img
+        src={src}
+        alt={alt}
+        onLoad={() => setLoaded(true)}
+        className={`w-full h-full object-cover transition-opacity duration-500 ${
+          loaded ? "opacity-100" : "opacity-0"
+        } ${className}`}
+      />
+      <div
+        className={`absolute inset-0 bg-gray-300 filter blur-lg transition-opacity duration-500 rounded ${
+          loaded ? "opacity-0" : "opacity-100"
+        }`}
+      ></div>
+    </div>
+  );
+};
+
 const Carousel: React.FC = () => {
-  // Start at index 1, which is the first "real" image.
   const [currentIndex, setCurrentIndex] = useState(1);
   const sliderRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<number>();
+  const isAnimatingRef = useRef(false); // Prevent rapid clicks
 
-  // For swiping:
   const touchStartXRef = useRef<number>(0);
   const touchEndXRef = useRef<number>(0);
-  const minSwipeDistance = 50; // threshold in pixels
+  const minSwipeDistance = 50; // pixels
 
-  // Each slide takes 80% of the container's width.
   const slideWidthPercentage = 80;
 
-  // Reset the auto-advance timer whenever called.
   const resetTimer = () => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-    }
+    if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = window.setInterval(() => {
       nextSlide();
     }, 8000);
   };
 
-  // Manual navigation resets the timer.
   const prevSlide = () => {
+    if (isAnimatingRef.current) return; // block if animating
     resetTimer();
+    isAnimatingRef.current = true;
     setCurrentIndex((prev) => prev - 1);
   };
 
   const nextSlide = () => {
+    if (isAnimatingRef.current) return; // block if animating
     resetTimer();
+    isAnimatingRef.current = true;
     setCurrentIndex((prev) => prev + 1);
   };
 
-  // Set up auto-advance when the component mounts.
   useEffect(() => {
     resetTimer();
     return () => clearInterval(timerRef.current);
   }, []);
 
-  // Whenever currentIndex changes, update the transform.
   useEffect(() => {
     if (sliderRef.current) {
       sliderRef.current.style.transform = `translateX(-${currentIndex * slideWidthPercentage}%)`;
     }
   }, [currentIndex]);
 
-  // When the transition ends, check if we've reached a cloned slide.
   const handleTransitionEnd = () => {
     if (currentIndex === 0) {
-      // If at clone of last slide (index 0), jump to the real last image.
       setCurrentIndex(rawImages.length);
       if (sliderRef.current) {
         sliderRef.current.style.transition = "none";
         sliderRef.current.style.transform = `translateX(-${rawImages.length * slideWidthPercentage}%)`;
-        void sliderRef.current.offsetWidth;
-        sliderRef.current.style.transition = "transform 500ms ease-in-out";
+        void sliderRef.current.offsetWidth; // force reflow
+        sliderRef.current.style.transition = "transform 700ms ease-in-out";
       }
     } else if (currentIndex === rawImages.length + 1) {
-      // If at clone of first slide, jump to the real first image.
       setCurrentIndex(1);
       if (sliderRef.current) {
         sliderRef.current.style.transition = "none";
         sliderRef.current.style.transform = `translateX(-${slideWidthPercentage}%)`;
         void sliderRef.current.offsetWidth;
-        sliderRef.current.style.transition = "transform 500ms ease-in-out";
+        sliderRef.current.style.transition = "transform 700ms ease-in-out";
       }
     }
+    isAnimatingRef.current = false;
   };
 
   // Touch handlers for swiping.
@@ -104,41 +124,35 @@ const Carousel: React.FC = () => {
   };
 
   const handleTouchEnd = () => {
+    if (isAnimatingRef.current) return;
     const distance = touchStartXRef.current - touchEndXRef.current;
-    if (distance > minSwipeDistance) {
-      // Swiped left -> next slide.
-      nextSlide();
-    } else if (distance < -minSwipeDistance) {
-      // Swiped right -> previous slide.
-      prevSlide();
-    }
+    if (distance > minSwipeDistance) nextSlide();
+    else if (distance < -minSwipeDistance) prevSlide();
   };
 
   return (
     <FadeIn duration={100}>
       <div className="relative w-full max-w-4xl mx-auto pb-10">
-        {/* Carousel Container with touch handlers */}
         <div
           className="overflow-hidden rounded"
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
-          {/* Slider */}
           <div
             ref={sliderRef}
-            className="flex transition-transform duration-500 ease-in-out"
+            className="flex transition-transform duration-700 ease-in-out"
+            style={{ gap: "1rem" }}
             onTransitionEnd={handleTransitionEnd}
           >
             {images.map((src, index) => (
-              <div key={index} className="flex-shrink-0 w-[80%] h-96 mx-2 overflow-hidden">
-                <img src={src} alt={`Slide ${index}`} className="w-full h-full object-cover rounded" />
+              <div key={index} className="flex-shrink-0 w-[80%] h-96 overflow-hidden">
+                <LazyImage src={src} alt={`Slide ${index}`} />
               </div>
             ))}
           </div>
         </div>
 
-        {/* Navigation Buttons */}
         <button
           onClick={prevSlide}
           className="absolute top-1/2 left-0 transform -translate-y-1/2 text-white p-2 hover:text-gray-300 transition"
