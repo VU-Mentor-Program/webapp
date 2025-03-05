@@ -150,13 +150,15 @@ export const BallBouncingGame: React.FC = () => {
   // Gravity.
   const GRAVITY = 200;
 
+  const randomVelocity = () => (Math.random() < 0.5 ? 1 : -1) * (40 + Math.random() * 50);
+
   // Ball state.
   const ballRef = useRef({
     x: LOGICAL_SIZE / 2,
     y: LOGICAL_SIZE / 2,
     radius: 6,
-    vx: 70,
-    vy: 90,
+    vx: randomVelocity(), 
+    vy: randomVelocity(), 
   });
 
   // Store rings and particles.
@@ -405,8 +407,8 @@ export const BallBouncingGame: React.FC = () => {
       x: LOGICAL_SIZE / 2,
       y: LOGICAL_SIZE / 2,
       radius: 6,
-      vx: 70,
-      vy: 90,
+      vx: randomVelocity(), 
+      vy: randomVelocity(), 
     };
     updateRings();
     particlesRef.current = [];
