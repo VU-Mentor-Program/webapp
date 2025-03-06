@@ -252,8 +252,9 @@ const PlinkoGame: React.FC = () => {
             soundToPlay = multiplierSounds[0];
           }
           if (soundToPlay && !muted) {
-            soundToPlay.currentTime = 0;
-            soundToPlay.play();
+            const winSound = new Audio(soundToPlay.src);
+            winSound.currentTime = 0;
+            winSound.play();
           }
 
           // Update history with a new unique history item.
