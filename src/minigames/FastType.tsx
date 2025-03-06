@@ -336,6 +336,7 @@ const TypingGame: React.FC = () => {
           type="text"
           value={userInput}
           onChange={handleChange}
+          onPaste={(e) => e.preventDefault()}
           disabled={!gameStarted || gameEnded}
           placeholder="Start typing here..."
           className="w-full p-3 rounded bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
