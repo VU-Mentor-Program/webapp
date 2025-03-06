@@ -2,8 +2,16 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import mpLogoCircle from "../assets/mp_logo-CIRCLE.png";
 import GameOverModal from "../components/minigame page/GameOverModal";
+import MuteButton from "../components/minigame page/MuteButton";
+import { useTranslations } from "../contexts/TranslationContext";
 
-// A dropped ball carries its physics state plus the bet it was dropped with.
+import beep from "../assets/plinko_sounds/beep.mp3";
+import bounce from "../assets/plinko_sounds/bounce.mp3";
+import drop from "../assets/plinko_sounds/drop.mp3";
+import ping from "../assets/plinko_sounds/ping.mp3";
+import ping2 from "../assets/plinko_sounds/ping2.mp3";
+import stop from "../assets/plinko_sounds/stop.mp3";
+
 interface BallState {
   x: number;
   y: number;
@@ -12,29 +20,61 @@ interface BallState {
   bet: number;
 }
 
+interface HistoryItem {
+  id: number;
+  payout: number;
+  color: string;
+}
+
 const PlinkoGame: React.FC = () => {
-  // Canvas dimensions and radii.
+  const t = useTranslations("minigames");
+
   const CANVAS_WIDTH = 350;
   const CANVAS_HEIGHT = 600;
-  const ballRadius = 10; 
+  const ballRadius = 10;
   const pegRadius = 5;
 
+  // Sound refs.
+  const beepSoundRef = useRef(new Audio(beep));
+  const dropSoundRef = useRef(new Audio(drop));
+  const pingSoundRef = useRef(new Audio(ping));
+  const ping2SoundRef = useRef(new Audio(ping2));
+  const stopSoundRef = useRef(new Audio(stop));
+
+  // Preloaded multiplier sounds (mapping: 0.2 => beep, 1 => ping, 2 => ping2, 4 => stop).
+  const multiplierSounds: HTMLAudioElement[] = [
+    stopSoundRef.current,
+    pingSoundRef.current,
+    ping2SoundRef.current,
+    beepSoundRef.current,
+  ];
+
+  // Colors for each landing slot.
+  const multiplierColors = [
+    "#00FF7F",
+    "#FFFF00",
+    "#FFA500",
+    "#FF4500",
+    "#FF4500",
+    "#FFA500",
+    "#FFFF00",
+    "#00FF7F",
+  ];
+
   // Game states.
+  const [muted, setMuted] = useState(false);
   const [currency, setCurrency] = useState(10);
   const [bet, setBet] = useState(2);
-  // We'll show the most recent landed ball's payout.
-  const [result, setResult] = useState<number | null>(null);
   const [showModal, setShowModal] = useState(false);
+  // Change history to store objects with payout and color.
+  const [history, setHistory] = useState<HistoryItem[]>([]);
 
-  // Instead of a single ball, we maintain an array of dropped balls.
-  // Each ball holds its own physics state and the bet associated with it.
+  // Store balls and animation frame.
   const ballsRef = useRef<BallState[]>([]);
-
-  // Animation frame and time tracking.
   const animationFrameId = useRef<number | null>(null);
   const lastTimeRef = useRef<number | null>(null);
 
-  // Peg configuration – 10 rows with alternating peg counts.
+  // Peg configuration.
   const rows = 10;
   const pegs = useRef(
     (() => {
@@ -51,7 +91,7 @@ const PlinkoGame: React.FC = () => {
     })()
   );
 
-  // Landing slots configuration – 8 slots with multipliers.
+  // Landing slots configuration.
   const slotCount = 8;
   const slotMultipliers = [4, 2, 1, 0.2, 0.2, 1, 2, 4];
 
@@ -72,20 +112,17 @@ const PlinkoGame: React.FC = () => {
   const restitution = 0.5; // bounce factor.
   const jitterRange = Math.PI / 180; // small random angle for collision.
   const damping = 0.995; // damping per frame.
-  // Using a smaller fixed timestep (e.g. 1/120 sec) increases the physics update frequency.
-  const fixedDelta = 1 / 120; // ~0.00833 sec per physics step.
+  const fixedDelta = 1 / 120; // fixed timestep.
 
-  // Reference to the canvas element.
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Draw the scene: background, pegs, landing slots, and every dropped ball.
   const drawCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Clear canvas and draw background.
+    // Clear and draw background.
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "#222";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -103,14 +140,14 @@ const PlinkoGame: React.FC = () => {
     for (let i = 0; i < slotCount; i++) {
       ctx.fillStyle = "#555";
       ctx.fillRect(i * slotWidth, canvas.height - 20, slotWidth - 2, 20);
-      ctx.fillStyle = "white";
+      ctx.fillStyle = multiplierColors[i];
       ctx.font = "14px Arial";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText("x" + slotMultipliers[i], i * slotWidth + slotWidth / 2, canvas.height - 10);
     }
 
-    // Draw each dropped ball.
+    // Draw each ball.
     ballsRef.current.forEach((ball) => {
       if (ballImgLoaded && ballImgRef.current) {
         ctx.drawImage(
@@ -127,17 +164,14 @@ const PlinkoGame: React.FC = () => {
         ctx.fill();
       }
     });
-  }, [ballImgLoaded, ballRadius, slotCount, slotMultipliers, pegRadius]);
+  }, [ballImgLoaded, ballRadius, slotCount, slotMultipliers, pegRadius, multiplierColors]);
 
-  // Physics update for one ball.
   const updatePhysicsForBall = useCallback(
     (ball: BallState, delta: number) => {
-      // Apply gravity.
       ball.vy += gravity * delta;
-      // Update position.
       ball.x += ball.vx * delta;
       ball.y += ball.vy * delta;
-      // Bounce off left/right walls.
+
       if (ball.x < ballRadius) {
         ball.x = ballRadius;
         ball.vx = Math.abs(ball.vx);
@@ -145,7 +179,7 @@ const PlinkoGame: React.FC = () => {
         ball.x = CANVAS_WIDTH - ballRadius;
         ball.vx = -Math.abs(ball.vx);
       }
-      // Process collisions with each peg.
+
       pegs.current.forEach((peg) => {
         const dx = ball.x - peg.x;
         const dy = ball.y - peg.y;
@@ -154,14 +188,11 @@ const PlinkoGame: React.FC = () => {
         if (dist < minDist) {
           const nx = dx / dist;
           const ny = dy / dist;
-          // Push the ball out of the peg.
           ball.x = peg.x + nx * minDist;
           ball.y = peg.y + ny * minDist;
-          // Reflect velocity.
           const dot = ball.vx * nx + ball.vy * ny;
           let rvx = ball.vx - (1 + restitution) * dot * nx;
           let rvy = ball.vy - (1 + restitution) * dot * ny;
-          // Add a small random perturbation.
           const currentAngle = Math.atan2(rvy, rvx);
           const jitter = (Math.random() - 0.5) * jitterRange;
           const newAngle = currentAngle + jitter;
@@ -170,16 +201,13 @@ const PlinkoGame: React.FC = () => {
           ball.vy = speed * Math.sin(newAngle);
         }
       });
-      // Apply damping.
+
       ball.vx *= damping;
       ball.vy *= damping;
     },
     [gravity, ballRadius, CANVAS_WIDTH, pegRadius, restitution, jitterRange, damping]
   );
 
-  // The main animation loop.
-  // It updates physics for every dropped ball, draws the scene,
-  // removes landed balls (and computes their payout), and continues as long as any ball is in flight.
   const animate = useCallback(
     (time: number) => {
       if (lastTimeRef.current === null) {
@@ -189,10 +217,8 @@ const PlinkoGame: React.FC = () => {
       }
       let dt = (time - lastTimeRef.current) / 1000;
       lastTimeRef.current = time;
-      // Clamp dt in case of tab switching.
       dt = Math.min(dt, 0.05);
 
-      // Update physics for each ball using fixed timestep integration.
       for (let i = 0; i < ballsRef.current.length; i++) {
         let ball = ballsRef.current[i];
         let t = dt;
@@ -208,45 +234,77 @@ const PlinkoGame: React.FC = () => {
       for (let i = 0; i < ballsRef.current.length; i++) {
         const ball = ballsRef.current[i];
         if (ball.y >= CANVAS_HEIGHT - ballRadius) {
-          // The ball has landed. Determine its landing slot.
           const slotWidth = CANVAS_WIDTH / slotCount;
           const slotIndex = Math.min(Math.floor(ball.x / slotWidth), slotCount - 1);
           const multiplier = slotMultipliers[slotIndex];
-          const payout = ball.bet * multiplier;
-          setResult(payout);
-          setCurrency((prev) => prev + payout);
+          // Round payout to nearest .01.
+          const payout = Math.round((ball.bet * multiplier) * 100) / 100;
+          setCurrency((prev) => Math.round((prev + payout) * 100) / 100);
+
+          // Choose and play multiplier sound.
+          let soundToPlay: HTMLAudioElement | null = null;
+          if (multiplier === 4) {
+            soundToPlay = multiplierSounds[3];
+          } else if (multiplier === 2) {
+            soundToPlay = multiplierSounds[2];
+          } else if (multiplier === 1) {
+            soundToPlay = multiplierSounds[1];
+          } else if (multiplier === 0.2) {
+            soundToPlay = multiplierSounds[0];
+          }
+          if (soundToPlay && !muted) {
+            soundToPlay.currentTime = 0;
+            soundToPlay.play();
+          }
+
+          // Update history with a new unique history item.
+          setHistory((prev) => {
+            const newItem: HistoryItem = {
+              id: Date.now() + Math.random(),
+              payout,
+              color: multiplierColors[slotIndex],
+            };
+            // Keep only the last 5 items.
+            return [newItem, ...prev].slice(0, 5);
+          });
         } else {
           remainingBalls.push(ball);
         }
       }
       ballsRef.current = remainingBalls;
-
-      // Redraw the scene.
       drawCanvas();
 
-      // Continue animating if there are still balls in flight.
       if (ballsRef.current.length > 0) {
         animationFrameId.current = requestAnimationFrame(animate);
       } else {
         animationFrameId.current = null;
       }
     },
-    [CANVAS_HEIGHT, ballRadius, CANVAS_WIDTH, updatePhysicsForBall, drawCanvas, fixedDelta, slotCount, slotMultipliers]
+    [
+      CANVAS_HEIGHT,
+      ballRadius,
+      CANVAS_WIDTH,
+      updatePhysicsForBall,
+      drawCanvas,
+      fixedDelta,
+      slotCount,
+      slotMultipliers,
+      muted,
+      multiplierSounds,
+      multiplierColors,
+    ]
   );
 
-  // When the user clicks "Drop Ball":
-  //  - Deduct the current bet from currency,
-  //  - Push a new ball (with its own bet value) into the balls array,
-  //  - And start the animation loop if not already running.
   const handleDrop = () => {
-    if (bet > currency) {
-      return;
-    }
-    // Deduct the bet immediately.
-    setCurrency((prev) => prev - bet);
-    // Add a new ball drop (its bet is locked in here).
+    if (bet > currency) return;
+    setCurrency((prev) => Math.round((prev - bet) * 100) / 100);
     ballsRef.current.push({ x: CANVAS_WIDTH / 2, y: 0, vx: 0, vy: 0, bet });
-    // Start animation if not already running.
+
+    if (!muted) {
+      dropSoundRef.current.currentTime = 0;
+      dropSoundRef.current.play();
+    }
+
     if (!animationFrameId.current) {
       lastTimeRef.current = null;
       animationFrameId.current = requestAnimationFrame(animate);
@@ -275,11 +333,32 @@ const PlinkoGame: React.FC = () => {
 
   return (
     <div style={{ textAlign: "center", color: "white" }}>
+      <style>
+        {`
+          .history-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+          }
+          .history-item {
+            background: #333;
+            padding: 0.5rem;
+            margin: 0 0.5rem;
+            border-radius: 4px;
+            animation: fadeIn 0.5s ease-out;
+          }
+          @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+        `}
+      </style>
+      <MuteButton onToggle={(newMuted) => setMuted(newMuted)} />
       <h3>Plinko Ball</h3>
-      <p>Currency: {currency}</p>
+      <p>{t("currency")} {currency.toFixed(2)}</p>
       <div style={{ marginBottom: "1rem" }}>
         <label>
-          Bet Amount:{" "}
+          {t("bet_amount")}{" "}
           <input
             type="number"
             value={bet}
@@ -310,14 +389,13 @@ const PlinkoGame: React.FC = () => {
         }}
       />
       <div style={{ marginTop: "1rem" }}>
-        {/* The drop button is always enabled so the user can drop multiple balls concurrently. */}
         <button
           onClick={handleDrop}
           style={buttonStyle}
           onMouseOver={handleMouseOver}
           onMouseOut={handleMouseOut}
         >
-          Drop Ball
+          {t("drop_ball")}
         </button>
         <button
           onClick={() => setShowModal(true)}
@@ -325,14 +403,21 @@ const PlinkoGame: React.FC = () => {
           onMouseOver={handleMouseOver}
           onMouseOut={handleMouseOut}
         >
-          Submit Score
+          {t("submit_score")}
         </button>
       </div>
-      {result !== null && (
-        <p style={{ marginTop: "1rem" }}>
-          {result >= 0 ? `You won ${result}!` : `You lost ${-result}!`}
-        </p>
-      )}
+      <p>{t("history")}</p>
+      <div className="history-container">
+        {history.map((item) => (
+          <div
+            key={item.id}
+            className="history-item"
+            style={{ color: item.color }}
+          >
+            {item.payout.toFixed(2)}
+          </div>
+        ))}
+      </div>
       <GameOverModal
         isOpen={showModal}
         score={currency}
@@ -340,11 +425,8 @@ const PlinkoGame: React.FC = () => {
         onClose={() => setShowModal(false)}
         onRestart={() => {
           setCurrency(10);
-          // Clear all balls.
           ballsRef.current = [];
-          setResult(null);
           setShowModal(false);
-          // Clear any pending animation.
           if (animationFrameId.current) {
             cancelAnimationFrame(animationFrameId.current);
             animationFrameId.current = null;

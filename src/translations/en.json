@@ -78,6 +78,12 @@
     "score": "Score: ",
     "round": "Round: ",
     "grid_size": "Grid Size: ",
-    "sequence_speed": "Sequence Speed: "
+    "sequence_speed": "Sequence Speed: ",
+    "currency": "Currency: ",
+    "bet_amount": "Bet Amount: ",
+    "you_won": "You won: ",
+    "history": "History: ",
+    "drop_ball": "Drop Ball",
+    "submit_score": "Submit Score"
   }
 }

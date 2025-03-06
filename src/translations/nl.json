@@ -77,6 +77,12 @@
     "score": "Partituur: ",
     "round": "Ronde: ",
     "grid_size": "Rastergrootte: ",
-    "sequence_speed": "Sequentiesnelheid: "
+    "sequence_speed": "Sequentiesnelheid: ",
+    "currency": "Valuta: ",
+    "bet_amount": "Inzetbedrag: ",
+    "you_won": "Je hebt gewonnen: ",
+    "history": "Geschiedenis: ",
+    "drop_ball": "Laat Bal Vallen",
+    "submit_score": "Score Indienen"
   }
 }
