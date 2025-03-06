@@ -3,9 +3,8 @@ import PauseButton from "../components/minigame page/PauseButton";
 import RestartButton from "../components/minigame page/RestartButton";
 import GameOverModal from "../components/minigame page/GameOverModal";
 import { useTranslations } from "../contexts/TranslationContext";
+import MuteButton from "../components/minigame page/MuteButton";
 
-// ------------------ Types ------------------
-// Added an optional "flash" property to rings for bounce visual effect.
 interface Ring {
   radius: number;
   angle: number;       // current start angle for the gap (in radians)
@@ -25,8 +24,6 @@ interface Particle {
   color: { r: number; g: number; b: number }; // particle color
 }
 
-// ------------------ Helpers ------------------
-// Helper: convert HSL to RGB.
 function hslToRgb(h: number, s: number, l: number) {
   s /= 100;
   l /= 100;
@@ -43,7 +40,6 @@ function hslToRgb(h: number, s: number, l: number) {
   return { r: Math.round((r1 + m) * 255), g: Math.round((g1 + m) * 255), b: Math.round((b1 + m) * 255) };
 }
 
-// Default ring settings.
 const defaultControls = {
   baseSpeed: 0.3,
   speedVariation: 0.2,
@@ -52,7 +48,6 @@ const defaultControls = {
 };
 
 // ------------------ Audio ------------------
-// Three octaves of notes (24 notes total).
 const noteFrequencies = [
   261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25,  // octave 1 (C4 - C5)
   523.25, 587.33, 659.26, 698.46, 783.99, 880.00, 987.77, 1046.50,   // octave 2 (C5 - C6)
@@ -134,6 +129,8 @@ function spawnBounceEffect(ring: Ring, x: number, y: number, particles: Particle
 
 // ------------------ Component ------------------
 export const BallBouncingGame: React.FC = () => {
+  const [muted, setMuted] = useState(false);
+
   const LOGICAL_SIZE = 400;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [canvasSize, setCanvasSize] = useState({ width: 300, height: 300 });
@@ -143,16 +140,13 @@ export const BallBouncingGame: React.FC = () => {
   const [score, setScore] = useState(0);
   const t = useTranslations("minigames");
 
-  // Audio context and bounce note index (using a ref for fast updates).
   const audioCtxRef = useRef<AudioContext | null>(null);
   const bounceNoteIndexRef = useRef<number>(0);
 
-  // Gravity.
   const GRAVITY = 200;
 
   const randomVelocity = () => (Math.random() < 0.5 ? 1 : -1) * (40 + Math.random() * 50);
 
-  // Ball state.
   const ballRef = useRef({
     x: LOGICAL_SIZE / 2,
     y: LOGICAL_SIZE / 2,
@@ -165,14 +159,17 @@ export const BallBouncingGame: React.FC = () => {
   const ringsRef = useRef<Ring[]>([]);
   const particlesRef = useRef<Particle[]>([]);
 
-  // Global ring speed ramp factor.
   const ringSpeedRampRef = useRef(1);
 
-  // Update rings based on canvas size using default settings.
   function updateRings() {
     const count = Math.max(5, Math.floor(canvasSize.width / 50));
     ringsRef.current = generateRings(count);
   }
+
+  const mutedRef = useRef(muted);
+  useEffect(() => {
+    mutedRef.current = muted;
+  }, [muted]);
 
   useEffect(() => {
     updateRings();
@@ -202,11 +199,9 @@ export const BallBouncingGame: React.FC = () => {
     }
   }, [hasStarted, canvasSize]);
 
-  // Animation refs.
   const animationFrameId = useRef<number>(0);
   const lastTimeRef = useRef<number>(0);
 
-  // Main game loop.
   function updateGame(timestamp: number) {
     if (!lastTimeRef.current) lastTimeRef.current = timestamp;
     const dt = (timestamp - lastTimeRef.current) / 1000;
@@ -250,8 +245,10 @@ export const BallBouncingGame: React.FC = () => {
             if (!audioCtxRef.current) {
               audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
             }
-            playBounceSound(noteFrequencies[bounceNoteIndexRef.current], audioCtxRef.current);
-            bounceNoteIndexRef.current = (bounceNoteIndexRef.current + 1) % noteFrequencies.length;
+            if (!mutedRef.current) {
+              playBounceSound(noteFrequencies[bounceNoteIndexRef.current], audioCtxRef.current);
+              bounceNoteIndexRef.current = (bounceNoteIndexRef.current + 1) % noteFrequencies.length;
+            }
             bounced = true;
             spawnBounceEffect(ring, ball.x, ball.y, particlesRef.current);
           }
@@ -449,6 +446,7 @@ export const BallBouncingGame: React.FC = () => {
 
   return (
     <div style={{ marginBottom: "1rem", textAlign: "center", color: "white" }}>
+      <MuteButton onToggle={(newMuted) => setMuted(newMuted)} />
       <h3>🏀 Bouncing Ball Game</h3>
       <p className="text-lg font-bold">
         {t("score")} {score}
