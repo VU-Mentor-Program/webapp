@@ -2,40 +2,39 @@ import React, { useEffect, useRef, useState } from "react";
 import mpLogo from "../assets/mp_logo-CIRCLE.png";
 import GameOverModal from "../components/minigame page/GameOverModal";
 import PauseButton from "../components/minigame page/PauseButton";
+import MuteButton from "../components/minigame page/MuteButton";
+
 import sfx_die from "../assets/flappy_sounds/sfx_die.mp3";
 import sfx_hit from "../assets/flappy_sounds/sfx_hit.mp3";
 import sfx_point from "../assets/flappy_sounds/sfx_point.mp3";
 import sfx_swooshing from "../assets/flappy_sounds/sfx_swooshing.mp3";
 import sfx_wing from "../assets/flappy_sounds/sfx_wing.mp3";
 
+
 export const FlappyLogoGame: React.FC = () => {
-  // ---------------- Constants ----------------
   const LOGICAL_WIDTH = 800;
   const LOGICAL_HEIGHT = 600;
   const FLOOR_Y = 540;
   const FLOOR_HEIGHT = 80;
 
-  // Canvas
+  const [muted, setMuted] = useState(false);
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [canvasSize, setCanvasSize] = useState({ width: 800, height: 600 });
 
-  // Game states
   const [hasStarted, setHasStarted] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  // Frame rate: 60 or 120
   const [frameRateMode, setFrameRateMode] = useState<60 | 120>(60);
 
-  // Audio refs
   const wingSoundRef = useRef(new Audio(sfx_wing));
   const pointSoundRef = useRef(new Audio(sfx_point));
   const hitSoundRef = useRef(new Audio(sfx_hit));
   const dieSoundRef = useRef(new Audio(sfx_die));
   const swooshSoundRef = useRef(new Audio(sfx_swooshing));
 
-  // Adjust volumes on mount
   useEffect(() => {
     wingSoundRef.current.volume = 0.5;
     pointSoundRef.current.volume = 0.5;
@@ -52,7 +51,6 @@ export const FlappyLogoGame: React.FC = () => {
   const pipeSpeed = 2;
   const gapHeight = 150;
 
-  // Bird, pipe, score
   const birdYRef = useRef(300);
   const birdVYRef = useRef(0);
   const pipeXRef = useRef(LOGICAL_WIDTH);
@@ -61,10 +59,8 @@ export const FlappyLogoGame: React.FC = () => {
   const passedPipeRef = useRef(false);
   const scoreRef = useRef(0);
 
-  // BG parallax
   const bgXRef = useRef(0);
 
-  // Clouds
   interface Cloud {
     x: number;
     y: number;
@@ -72,7 +68,6 @@ export const FlappyLogoGame: React.FC = () => {
   }
   const cloudsRef = useRef<Cloud[]>([]);
 
-  // Stars
   interface Star {
     x: number;
     y: number;
@@ -80,7 +75,6 @@ export const FlappyLogoGame: React.FC = () => {
   }
   const starsRef = useRef<Star[]>([]);
 
-  // City silhouette segments (for a more interesting silhouette)
   interface CitySegment {
     xOffset: number;
     width: number;
@@ -88,7 +82,6 @@ export const FlappyLogoGame: React.FC = () => {
   }
   const citySegmentsRef = useRef<CitySegment[]>([]);
 
-  // Load the bird (logo) image
   const logoRef = useRef<HTMLImageElement | null>(null);
   useEffect(() => {
     const img = new Image();
@@ -98,9 +91,7 @@ export const FlappyLogoGame: React.FC = () => {
     };
   }, []);
 
-  // On mount, create clouds, stars, city segments
   useEffect(() => {
-    // Clouds
     const clouds: Cloud[] = [];
     for (let i = 0; i < 5; i++) {
       clouds.push({
@@ -128,7 +119,7 @@ export const FlappyLogoGame: React.FC = () => {
     let curX = 0;
     for (let i = 0; i < 8; i++) {
       const segWidth = 100 + Math.random() * 40; // random widths
-      const segHeight = 80 + Math.random() * 60; // random heights
+      const segHeight = 80 + Math.random() * 250; // random heights
       segments.push({
         xOffset: curX,
         width: segWidth,
@@ -151,20 +142,22 @@ export const FlappyLogoGame: React.FC = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Start / Jump
   const handleCanvasClick = () => {
     if (!hasStarted) {
       setHasStarted(true);
-      swooshSoundRef.current.currentTime = 0;
-      swooshSoundRef.current.play();
+      if (!muted) {
+        swooshSoundRef.current.currentTime = 0;
+        swooshSoundRef.current.play();
+      }
     } else if (!gameOver) {
-      wingSoundRef.current.currentTime = 0;
-      wingSoundRef.current.play();
+      if (!muted) {
+        wingSoundRef.current.currentTime = 0;
+        wingSoundRef.current.play();
+      }
       birdVYRef.current = -5;
     }
   };
 
-  // The main animation loop with delta-time
   const lastTimeRef = useRef<number>(0);
   useEffect(() => {
     let animId: number;
@@ -219,8 +212,10 @@ export const FlappyLogoGame: React.FC = () => {
       scoreRef.current += 100;
       setScore(scoreRef.current);
       passedPipeRef.current = true;
-      pointSoundRef.current.currentTime = 0;
-      pointSoundRef.current.play();
+      if (!muted) {
+        pointSoundRef.current.currentTime = 0;
+        pointSoundRef.current.play();
+      }
     }
 
     checkCollision();
@@ -235,7 +230,7 @@ export const FlappyLogoGame: React.FC = () => {
 
     // Floor / Ceiling
     if (birdTop < 0 || birdBottom > FLOOR_Y) {
-      if (!gameOver) {
+      if (!gameOver && !muted) {
         hitSoundRef.current.currentTime = 0;
         hitSoundRef.current.play();
         dieSoundRef.current.currentTime = 0;
@@ -250,7 +245,7 @@ export const FlappyLogoGame: React.FC = () => {
     const birdRight = birdLeft + birdSize;
     if (birdRight > px && birdLeft < px + pipeWidth) {
       if (birdTop < holeStart || birdBottom > holeEnd) {
-        if (!gameOver) {
+        if (!gameOver && !muted) {
           hitSoundRef.current.currentTime = 0;
           hitSoundRef.current.play();
           dieSoundRef.current.currentTime = 0;
@@ -412,10 +407,21 @@ export const FlappyLogoGame: React.FC = () => {
 
   return (
     <div style={{ textAlign: "center", color: "white", overflow: "hidden" }}>
+      <MuteButton onToggle={(newMuted) => setMuted(newMuted)} />
       <h3>Flappy Logo</h3>
       <div style={{ margin: "10px" }}>
-        <button onClick={() => setFrameRateMode(60)} className="bg-gray-600 rounded p-2 m-1">60Hz Mode</button>
-        <button onClick={() => setFrameRateMode(120)} className="bg-gray-600 rounded p-2 m-1">120Hz Mode</button>
+        <button
+          onClick={() => setFrameRateMode(60)}
+          className={`rounded p-2 m-1 ${frameRateMode === 60 ? "bg-gray-700" : "bg-gray-800"}`}
+        >
+          60Hz Mode
+        </button>
+        <button
+          onClick={() => setFrameRateMode(120)}
+          className={`rounded p-2 m-1 ${frameRateMode === 120 ? "bg-gray-700" : "bg-gray-800"}`}
+        >
+          120Hz Mode
+        </button>
       </div>
       <canvas
         ref={canvasRef}
