@@ -6,7 +6,6 @@ import MuteButton from "../components/minigame page/MuteButton";
 import { useTranslations } from "../contexts/TranslationContext";
 
 import beep from "../assets/plinko_sounds/beep.mp3";
-import bounce from "../assets/plinko_sounds/bounce.mp3";
 import drop from "../assets/plinko_sounds/drop.mp3";
 import ping from "../assets/plinko_sounds/ping.mp3";
 import ping2 from "../assets/plinko_sounds/ping2.mp3";
