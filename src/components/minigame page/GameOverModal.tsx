@@ -10,7 +10,7 @@ interface GameOverModalProps {
   onRestart: () => void;
 }
 
-// We'll define a global callback for the "posting" response
+// global callback for the "posting" response
 declare global {
   interface Window {
     saveScoreCallback: (result: any) => void;
@@ -67,6 +67,10 @@ const GameOverModal: React.FC<GameOverModalProps> = ({
   const handleSubmit = () => {
     if (!username.trim()) {
       setError("Username cannot be empty!");
+      return;
+    }
+    else if (username.length > 40) {
+      setError("Username cannot be longer than 40 characters!");
       return;
     }
 
