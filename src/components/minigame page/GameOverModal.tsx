@@ -73,6 +73,16 @@ const GameOverModal: React.FC<GameOverModalProps> = ({
       setError("Username cannot be longer than 40 characters!");
       return;
     }
+    else if (username.length < 3) {
+      setError("Username must be at least 3 characters long!");
+      return;
+    }
+
+    const regex = /^[a-zA-Z0-9 ]*$/;
+    if (!regex.test(username)) {
+      setError("Username can only contain letters, numbers and spaces!");
+      return;
+    }
 
     setError("");
     setSuccessMsg("");
