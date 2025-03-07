@@ -1,10 +1,13 @@
 import React from "react";
+import { useTranslations } from "../contexts/TranslationContext";
 
 export const LoadingAnimation: React.FC = () => {
+  const t = useTranslations("statusMessage");
+
   return (
     <div style={{ textAlign: "center", marginTop: "2rem" }}>
       <div className="spinner" />
-      <p>Loading... Please wait.</p>
+      <p>{t("loading")}</p>
 
       <style>{`
         .spinner {

@@ -17,7 +17,8 @@
     "thank_you_decline": "Bedankt voor het annuleren en voor het geven van je plek aan iemand anders!",
     "confetti_burst": "🎉 Confetti Explosie! 🎉",
     "title_accept": "Geaccepteerde Plek",
-    "title_decline": "Geannuleerde Plek"
+    "title_decline": "Geannuleerde Plek",
+    "loading": "Laden... Een ogenblik geduld"
   },
   "faq": {
     "title": "Veelgestelde vragen",

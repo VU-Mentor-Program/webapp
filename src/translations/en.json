@@ -18,7 +18,8 @@
     "thank_you_decline": "Thank you for cancelling and giving a spot to someone else!",
     "confetti_burst": "🎉 Confetti Burst! 🎉",
     "title_accept": "Accepted Spot",
-    "title_decline": "Cancelled Spot"
+    "title_decline": "Cancelled Spot",
+    "loading": "Loading... Please wait."
   },
   "faq": {
     "title": "Frequently asked questions",
