@@ -7,6 +7,19 @@
     "link4": "Minigames",
     "link5": "Leaderboard"
   },
+  "statusMessage": {
+    "missing_API_URL": "Missing API URL",
+    "no_API_provided": "No api_url provided in the query parameters.",
+    "error_accept": "Something went wrong while accepting your spot.",
+    "error_decline": "Something went wrong while declining your spot.",
+    "error": "Error",
+    "suggestion": "Please try using a different browser. If that doesn't work, contact the Mentor Team!",
+    "thank_you_accept": "Thank you for accepting your spot! 😊",
+    "thank_you_decline": "Thank you for cancelling and giving a spot to someone else!",
+    "confetti_burst": "🎉 Confetti Burst! 🎉",
+    "title_accept": "Accepted Spot",
+    "title_decline": "Cancelled Spot"
+  },
   "faq": {
     "title": "Frequently asked questions",
     "question1": "I signed up for an event but I can't attend anymore, what should I do?",

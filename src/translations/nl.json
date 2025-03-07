@@ -6,6 +6,19 @@
     "link3": "Kalender",
     "link4": "Minigames"
   },
+  "statusMessage": {
+    "missing_API_URL": "Ontbrekende API URL",
+    "no_API_provided": "Geen api_url opgegeven in de queryparameters.",
+    "error_accept": "Er is iets misgegaan bij het accepteren van je plek.",
+    "error_decline": "Er is iets misgegaan bij het annuleren van je plek.",
+    "error": "Fout",
+    "suggestion": "Probeer een andere browser te gebruiken. Als dat niet werkt, neem dan contact op met het Mentor Team!",
+    "thank_you_accept": "Bedankt voor het accepteren van je plek! 😊",
+    "thank_you_decline": "Bedankt voor het annuleren en voor het geven van je plek aan iemand anders!",
+    "confetti_burst": "🎉 Confetti Explosie! 🎉",
+    "title_accept": "Geaccepteerde Plek",
+    "title_decline": "Geannuleerde Plek"
+  },
   "faq": {
     "title": "Veelgestelde vragen",
     "question1": "Ik heb me ingeschreven voor een evenement, maar ik kan toch niet meer komen. Wat moet ik doen?",

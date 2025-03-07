@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import Confetti from "react-confetti";
+import { useTranslations } from "../contexts/TranslationContext";
 
 interface Burst {
   id: number;
@@ -33,6 +34,8 @@ function useWindowSize() {
 }
 
 export const SuccessAnimation: React.FC = () => {
+  const t = useTranslations("statusMessage");
+  
   const { width, height } = useWindowSize();
 
   const [mainConfettiPieces, setMainConfettiPieces] = useState(200);
@@ -117,7 +120,7 @@ export const SuccessAnimation: React.FC = () => {
             borderRadius: "0.5rem",
           }}
         >
-          🎉 Confetti Burst! 🎉
+          {t("confetti_burst")}
         </button>
       </div>
     </div>

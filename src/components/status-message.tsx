@@ -3,6 +3,7 @@ import { Logo } from "./logo";
 import { LoadingAnimation } from "./LoadingAnimation";
 import { ErrorAnimation } from "./ErrorAnimation";
 import { SuccessAnimation } from "./SuccessAnimation";
+import { useTranslations } from "../contexts/TranslationContext";
 
 interface StatusMessageProps {
   status: "loading" | "error" | "success" | "idle";
@@ -15,12 +16,15 @@ export const StatusMessage: React.FC<StatusMessageProps> = ({
   apiUrl,
   type,
 }) => {
+
+  const t = useTranslations("statusMessage");
+
   if (!apiUrl) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gray-800 text-white text-center px-5">
         <Logo />
-        <h1 className="text-3xl">Missing API URL</h1>
-        <p className="text-xl">No api_url provided in the query parameters.</p>
+        <h1 className="text-3xl">{t("missing_API_URL")}</h1>
+        <p className="text-xl">{t("no_API_provided")}</p>
       </div>
     );
   }
@@ -37,19 +41,16 @@ export const StatusMessage: React.FC<StatusMessageProps> = ({
   if (status === "error") {
     const errorMessage =
       type === "accept"
-        ? "Something went wrong while accepting your spot."
-        : "Something went wrong while declining your spot.";
+        ? t("error_accept")
+        : t("error_decline");
 
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gray-800 text-white text-center px-5">
         <Logo />
           <ErrorAnimation />
-          <h1 className="text-3xl">Error</h1>
+          <h1 className="text-3xl">{t("error")}</h1>
           <p className="text-xl">{errorMessage}</p>
-          <p className="text-xl">
-            Please try using a different browser. If that doesn't work, contact
-            the Mentor Team!
-          </p>
+          <p className="text-xl"> {t("suggestion")} </p>
       </div>
     );
   }
@@ -57,10 +58,10 @@ export const StatusMessage: React.FC<StatusMessageProps> = ({
   if (status === "success") {
     const isAccept = type === "accept";
 
-    const title = isAccept ? "Accepted Spot" : "Cancelled Spot";
+    const title = isAccept ? t("title_accept") : t("title_decline");
     const message = isAccept
-      ? "Thank you for accepting your spot! 😊"
-      : "Thank you for cancelling and giving a spot to someone else!";
+      ? t("thank_you_accept")
+      : t("thank_you_decline");
 
     const textColorClass = isAccept ? "text-green-400" : "text-red-400";
 
