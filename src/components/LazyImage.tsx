@@ -4,13 +4,14 @@ interface LazyImageProps {
   src: string;
   alt: string;
   className?: string;
+  style?: React.CSSProperties;
 }
 
-const LazyImage: React.FC<LazyImageProps> = ({ src, alt, className = "" }) => {
+const LazyImage: React.FC<LazyImageProps> = ({ src, alt, className = "", style = {} }) => {
   const [loaded, setLoaded] = useState(false);
 
   return (
-    <div className="relative w-full h-full overflow-hidden rounded">
+    <div style={style} className="relative w-full h-full overflow-hidden rounded">
       <img
         src={src}
         alt={alt}

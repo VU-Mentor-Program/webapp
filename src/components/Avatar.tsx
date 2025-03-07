@@ -28,6 +28,7 @@ const Avatar: React.FC<AvatarProps> = ({
             src={src} 
             alt={alt} 
             className="rounded-full object-cover w-full h-full" 
+            style={{borderRadius: '50%'}}
           />
           {country && (
             <span className="absolute bottom-[-11px] right-[-2px]">
