@@ -25,7 +25,9 @@ export function useApiRequest(apiUrl: string | null, allParams: URLSearchParams)
           redirect: "follow",
         });
 
-        if (!response.ok) {
+        const data = await response.json();
+
+        if (data.code && data.code !== 200) {
           setStatus("error");
         } else {
           setStatus("success");
