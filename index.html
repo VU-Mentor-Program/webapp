@@ -1,60 +1,58 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/x-icon" href="/webapp/favicon.ico" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mentor Programme</title>
-  <style>
-    #splash {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: #1f2937;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      transition: opacity 0.5s ease;
-    }
-
-    #splash.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    #splash .logo-wrapper {
-      background-color: white;
-      border-radius: 50%;
-      padding: 1rem;
-      animation: spin 5s linear infinite;
-    }
-
-    @keyframes spin {
-      from {
-        transform: rotate(0deg);
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/x-icon" href="/webapp/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mentor Program</title>
+    <style>
+      #splash {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #1f2937;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        transition: opacity 0.5s ease;
       }
 
-      to {
-        transform: rotate(360deg);
+      #splash.hidden {
+        opacity: 0;
+        pointer-events: none;
       }
-    }
-  </style>
-  <script type="module" crossorigin src="/webapp/assets/index-CdzgvKNy.js"></script>
-  <link rel="stylesheet" crossorigin href="/webapp/assets/index-PaYL0Odp.css">
-</head>
 
-<body>
-  <div id="splash">
-    <div class="logo-wrapper">
-      <img src="/webapp/black_logo.png" alt="Logo" width="100" height="100" />
+      #splash .logo-wrapper {
+        background-color: white;
+        border-radius: 50%;
+        padding: 1rem;
+        animation: spin 5s linear infinite;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+    <script type="module" crossorigin src="/webapp/assets/index-ffEQwzgA.js"></script>
+    <link rel="stylesheet" crossorigin href="/webapp/assets/index-C_bqfIqN.css">
+  </head>
+
+  <body>
+    <div id="splash">
+      <div class="logo-wrapper">
+        <img src="/webapp/black_logo.png" alt="Logo" width="100" height="100" />
+      </div>
     </div>
-  </div>
 
-  <div id="root"></div>
-</body>
-
+    <div id="root"></div>
+  </body>
 </html>
