@@ -86,7 +86,7 @@ export const Header: React.FC = () => {
               key={link.path}
               to={link.path.startsWith("/minigames") ? link.path : "#"}
               onClick={(e) => handleAnchorClick(e, link.path)}
-              className="text-white hover:text-gray-300 transition"
+              className="text-white hover:text-gray-300 transition whitespace-nowrap"
             >
               {link.name}
             </Link>
