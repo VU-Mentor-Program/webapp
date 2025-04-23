@@ -27,11 +27,14 @@ export function useApiRequest(apiUrl: string | null, allParams: URLSearchParams)
 
         if (!response.ok) {
           setStatus("error");
+          alert(`Error: ${response.status} ${response.statusText}. Please try again or contact us through Whatsapp.`);
+          return;
         } else {
           setStatus("success");
         }
       } catch (error) {
         setStatus("error");
+        alert(`Error. Please try again or contact us through Whatsapp.`);
       }
     };
 
