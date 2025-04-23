@@ -4,7 +4,9 @@
     "link1": "FAQ",
     "link2": "Team",
     "link3": "Kalender",
-    "link4": "Minigames"
+    "link4": "Minigames",
+    "link5": "Leaderboard",
+    "link6": "Help ons!"
   },
   "statusMessage": {
     "missing_API_URL": "Ontbrekende API URL",
@@ -98,5 +100,11 @@
     "history": "Geschiedenis: ",
     "drop_ball": "Laat Bal Vallen",
     "submit_score": "Score Indienen"
+  },
+  "forms": {
+    "exam_title": "Feedback over tentamenvoorbereiding",
+    "feedback_title": "Feedback over het Mentorprogramma",
+    "help_us": "Help ons!",
+    "prompt": "We waarderen je feedback en moeten studentenfeedback presenteren aan de VU. Vul alstublieft de onderstaande formulieren in:"
   }
 }

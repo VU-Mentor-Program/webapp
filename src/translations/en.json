@@ -5,7 +5,8 @@
     "link2": "Team",
     "link3": "Calendar",
     "link4": "Minigames",
-    "link5": "Leaderboard"
+    "link5": "Leaderboard",
+    "link6": "Help us!"
   },
   "statusMessage": {
     "missing_API_URL": "Missing API URL",
@@ -99,5 +100,11 @@
     "history": "History: ",
     "drop_ball": "Drop Ball",
     "submit_score": "Submit Score"
+  },
+  "forms": {
+    "exam_title": "Exam Preparation Feedback",
+    "feedback_title": "Mentor Program Feedback",
+    "help_us": "Help us out!",
+    "prompt": "We value your feedback and need to present student feedback to VU. Please fill out the forms below:"
   }
 }

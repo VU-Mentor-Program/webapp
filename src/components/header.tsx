@@ -19,6 +19,7 @@ export const Header: React.FC = () => {
     { name: t("link5"), path: "#leaderboard" },
     { name: t("link3"), path: "#calendar" },
     { name: t("link4"), path: "/minigames" },
+    { name: t("link6"), path: "#help-us-out" },
   ];
 
   const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
