@@ -21,4 +21,4 @@ export const POST_API_URL = "https://script.google.com/macros/s/AKfycbxyo5AK1sHq
 
 // This is for events (and the showup leaderboard)
 // npm run deploy
-export const GET_SIGNUP_COUNT_API_URL = "https://script.google.com/macros/s/AKfycbxlmZ4NxoBnffIo_kbSIYxyGuAsaba9E1y5VerAt8sGOq9E9Pnn5yzyOviiKxL9Rxk5dg/exec";
+export const GET_SIGNUP_COUNT_API_URL = "https://script.google.com/macros/s/AKfycbws_9qb5bLbP-jl6KdcuE6ZGupthhdBRppoJXbCA2S3LajGffpqwduChXSZ-C4fu-6Bjg/exec";
