@@ -99,7 +99,12 @@
     "you_won": "You won: ",
     "history": "History: ",
     "drop_ball": "Drop Ball",
-    "submit_score": "Submit Score"
+    "submit_score": "Submit Score",
+    "wordle_title": "Wordle",
+    "score_label": "Score",
+    "submit": "Submit",
+    "you_lost": "You lost",
+    "solution": "Solution"
   },
   "forms": {
     "exam_title": "Exam Preparation Feedback",

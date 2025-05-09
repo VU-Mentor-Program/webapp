@@ -19,6 +19,7 @@ import SimonSaysGame from "../minigames/SimonSays";
 import Game2048 from "../minigames/2048";
 // import { PinballGame } from "../minigames/PinBallGame";
 import { BallBouncingGame } from "../minigames/Bouncer";
+import WordleGame from "../minigames/Wordle";
 
 export const MinigamesPage: React.FC = () => {
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
@@ -42,7 +43,8 @@ export const MinigamesPage: React.FC = () => {
       "fasttype",
       "simonsays",
       "2048",
-      "bouncer"
+      "bouncer",
+      "wordle",
     ],
     []
   );
@@ -172,6 +174,12 @@ export const MinigamesPage: React.FC = () => {
               className="bg-yellow-400 px-4 py-2 rounded hover:bg-orange-700"
             > 🪩Bouncer
             </button>
+            <button
+              onClick={() => handleSelectGame("wordle")}
+              className="bg-gray-600 px-4 py-2 rounded hover:bg-gray-700"
+            >
+              🧩 Wordle
+            </button>
           </div>
         </FadeIn>
 
@@ -193,6 +201,7 @@ export const MinigamesPage: React.FC = () => {
             {selectedGame === "2048" && <Game2048 />}
             {/* {selectedGame === "pinball" && <PinballGame />} */}
             {selectedGame === "bouncer" && <BallBouncingGame />}
+            {selectedGame === "wordle" && <WordleGame />}
           </div>
         </FadeIn>
       </div>
