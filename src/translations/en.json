@@ -111,5 +111,10 @@
     "feedback_title": "Mentor Program Feedback",
     "help_us": "Help us out!",
     "prompt": "We value your feedback and need to present student feedback to VU. Please fill out the forms below:"
+  },
+  "job_application": {
+    "help_us": "Apply to be a mentor!",
+    "prompt": "We're looking for enthusiastic mentors to join our team! If you're interested in helping first-year students navigate their university journey, please fill out the application form below. We can't wait to hear from you!",
+    "appication_form": "Fill this out to apply! Deadline is 23rd of May!"
   }
 }

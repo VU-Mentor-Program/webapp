@@ -9,8 +9,8 @@ import Carousel from "../components/Carousel"
 import MonthlyEvents from "../components/MonthlyEvents";
 import AttendanceLeaderBoard from "../components/attendanceLeaderboard";
 import FadeIn from "../components/Fadein-Wrapper";
-import { FormsAccordion } from "../components/FormsAccordion";
-
+import { FeedbackForms } from "../components/FeedbackForms";
+import { JobApplication } from "../components/JobApplication";
 const locale = "nl";
 
 export default function Home() {
@@ -33,8 +33,9 @@ export default function Home() {
           <Carousel />
           <MonthlyEvents />
           <FAQ />
+          <JobApplication />
           <Team title={t("title")} description={t("subtitle")} />
-          <FormsAccordion />
+          <FeedbackForms />
           <AttendanceLeaderBoard />
           <Calendar />
 
