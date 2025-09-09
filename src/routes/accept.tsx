@@ -4,17 +4,15 @@ import { useApiRequest } from "../hooks/useApiRequest";
 import { StatusMessage } from "../components/status-message";
 
 const Accept: React.FC = () => {
-  const [searchParams] = useSearchParams();
-  const apiUrl = searchParams.get("api_url") || null;
-  const status = useApiRequest(apiUrl, searchParams);
+    const [searchParams] = useSearchParams();
+    const status = useApiRequest(searchParams);
 
-  return (
-    <StatusMessage 
-      status={status} 
-      apiUrl={apiUrl} 
-      type="accept" 
-    />
-  );
+    return (
+        <StatusMessage
+            status={status}
+            type="accept"
+        />
+    );
 };
 
 export default Accept;
