@@ -14,10 +14,10 @@ export const SocialLinks = () => {
       <SocialIcon href="https://github.com/VU-Mentor-Program">
         <FaGithub />
       </SocialIcon>
-      <SocialIcon href="https://www.instagram.com/bscmentorsprogram?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==">
+      <SocialIcon href="https://www.instagram.com/bscmentorsprogram/?utm_source=ig_web_button_share_sheet">
         <FaInstagram />
       </SocialIcon>
-      <SocialIcon href="https://chat.whatsapp.com/I6CQX1yyYM830oTZks5lX7">
+      <SocialIcon href="https://chat.whatsapp.com/DtzNHL2mZo1LNTlYruM0Sx">
         <FaWhatsapp />
       </SocialIcon>
       <SocialIcon href="https://drive.google.com/drive/folders/1F-RjBrZq7mie_sZjr_oJwLzC6VyjvHO8?usp=sharing">
