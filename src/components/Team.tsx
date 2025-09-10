@@ -46,11 +46,16 @@ const Team: React.FC<TeamProps> = ({ title, description, background }) => {
           <h2 className="text-3xl sm:text-4xl py-4 lg:py-8">{title}</h2>
           {description && <p>{description}</p>}
         </div>
-        <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 p-0 justify-items-center">
-            {teamMembers}
+          <div className="max-w-4xl mx-auto">
+            <div
+              className="
+                grid justify-center place-items-center gap-x-10 gap-y-12
+                [grid-template-columns:repeat(auto-fit,minmax(160px,max-content))]
+              "
+            >
+              {teamMembers}
+            </div>
           </div>
-        </div>
       </section>
     </FadeIn>
   );
