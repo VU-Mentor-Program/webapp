@@ -4,8 +4,8 @@ import LazyImage from "./LazyImage";
 
 const rawImages = 
 [
-  "/webapp/public/events/studysession/studysession1.png",
-  "/webapp/public/studysession/studysession2.png",
+  "/webapp/studysession1.png",
+  "/webapp/studysession2.png",
 ];
 
 const images = [
