@@ -2,9 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import FadeIn from "./Fadein-Wrapper";
 import LazyImage from "./LazyImage";
 
-const rawImages = [
-  "webapp\2025.2026\StudySession10.09\studysession1.jpg",
-  "webapp\2025.2026\StudySession10.09\studysession2.jpg",
+const rawImages = 
+[
+  "/webapp/events/studysession1.jpg",
+  "/webapp/events/studysession2.jpg",
   "/webapp/IMG_4097.JPG",
 ];
 
