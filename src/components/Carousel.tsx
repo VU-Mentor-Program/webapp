@@ -3,17 +3,8 @@ import FadeIn from "./Fadein-Wrapper";
 import LazyImage from "./LazyImage";
 
 const rawImages = [
-  "/webapp/IMG_2333.JPG",
-  "/webapp/IMG_3302.JPG",
-  "/webapp/IMG_3369.JPG",
-  "/webapp/IMG_2220.JPEG",
-  "/webapp/IMG_2591.JPG",
-  "/webapp/IMG_2615.JPG",
-  "/webapp/IMG_3086.JPG",
-  "/webapp/IMG_3229.JPG",
-  "/webapp/IMG_3354.JPG",
-  "/webapp/IMG_4036.JPG",
-  "/webapp/IMG_4028.JPG",
+  "webapp\2025.2026\StudySession10.09\studysession1.jpg",
+  "webapp\2025.2026\StudySession10.09\studysession2.jpg",
   "/webapp/IMG_4097.JPG",
 ];
 
