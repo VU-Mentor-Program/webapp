@@ -23,10 +23,9 @@ interface IMember {
 const Team: React.FC<TeamProps> = ({ title, description, background }) => {
   const intl = useIntl();
 
-  // Split into first two + the rest
   const members: IMember[] = mentorTeam.members ?? [];
-  const topTwo = members.slice(0, 2);
-  const others = members.slice(2);
+  const topThree = members.slice(0, 3);
+  const others = members.slice(3);
 
   const toAvatar = (m: IMember) => (
     <div key={m.name} className="w-56 flex flex-col items-center">
@@ -52,12 +51,18 @@ const Team: React.FC<TeamProps> = ({ title, description, background }) => {
         </div>
 
         <div className="max-w-6xl mx-auto px-4">
-          {/* Row 1: exactly two, centered */}
-          <div className="flex justify-center gap-x-12 gap-y-10 mb-12">
-            {topTwo.map(toAvatar)}
+          {/* Top row: exactly 3, centered */}
+          <div
+            className="
+              w-fit mx-auto grid place-items-center gap-x-12 gap-y-10 mb-12
+              [grid-template-columns:repeat(1,max-content)]
+              sm:[grid-template-columns:repeat(3,max-content)]
+            "
+          >
+            {topThree.map(toAvatar)}
           </div>
 
-          {/* Row 2+: remaining members, centered and wrapping */}
+          {/* Bottom row: remaining members, centered and wrapping */}
           <div className="flex flex-wrap justify-center gap-x-12 gap-y-12">
             {others.map(toAvatar)}
           </div>
