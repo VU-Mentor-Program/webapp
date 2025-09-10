@@ -23,21 +23,25 @@ interface IMember {
 const Team: React.FC<TeamProps> = ({ title, description, background }) => {
   const intl = useIntl();
 
-  const teamMembers = mentorTeam.members.map((member: IMember) => (
-    <Avatar
-      key={member.name}
-      src={member.photo}
-      alt={member.full_name}
-      linkedin_github={member.linkedin_github}
-      role={
-        intl.formatMessage({
-          id: `roles.${member.study?.toLowerCase() ?? "defaultRole"}`,
-          defaultMessage: member.study ?? "Member",
-        })
-      }
-      country={member.country}
-    />
-  ));
+  // Split into first two + the rest
+  const members: IMember[] = mentorTeam.members ?? [];
+  const topTwo = members.slice(0, 2);
+  const others = members.slice(2);
+
+  const toAvatar = (m: IMember) => (
+    <div key={m.name} className="w-56 flex flex-col items-center">
+      <Avatar
+        src={m.photo}
+        alt={m.full_name}
+        linkedin_github={m.linkedin_github}
+        role={intl.formatMessage({
+          id: `roles.${m.study?.toLowerCase() ?? "defaultRole"}`,
+          defaultMessage: m.study ?? "Member",
+        })}
+        country={m.country}
+      />
+    </div>
+  );
 
   return (
     <FadeIn duration={100} className="mt-6">
@@ -46,16 +50,18 @@ const Team: React.FC<TeamProps> = ({ title, description, background }) => {
           <h2 className="text-3xl sm:text-4xl py-4 lg:py-8">{title}</h2>
           {description && <p>{description}</p>}
         </div>
-          <div className="max-w-4xl mx-auto">
-            <div
-              className="
-                grid justify-center place-items-center gap-x-10 gap-y-12
-                [grid-template-columns:repeat(auto-fit,minmax(160px,max-content))]
-              "
-            >
-              {teamMembers}
-            </div>
+
+        <div className="max-w-6xl mx-auto px-4">
+          {/* Row 1: exactly two, centered */}
+          <div className="flex justify-center gap-x-12 gap-y-10 mb-12">
+            {topTwo.map(toAvatar)}
           </div>
+
+          {/* Row 2+: remaining members, centered and wrapping */}
+          <div className="flex flex-wrap justify-center gap-x-12 gap-y-12">
+            {others.map(toAvatar)}
+          </div>
+        </div>
       </section>
     </FadeIn>
   );
