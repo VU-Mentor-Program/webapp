@@ -13,23 +13,7 @@ body {
   }
 }
 
-/* Simple single logo background - big and subtle */
-body::before {
-  content: '';
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 800px;
-  height: 800px;
-  background-image: url('/webapp/assets/images/logos/black_logo.png');
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
-  opacity: 0.02;
-  pointer-events: none;
-  z-index: -1;
-}
+/* Logo background removed - was causing issues */
 
 /* Fix for text rendering issues */
 * {

@@ -63,9 +63,25 @@ const HomeCarousel: React.FC = () => {
 
   useEffect(() => {
     if (sliderRef.current) {
-      // Simplified mobile-friendly centering
-      const offset = currentIndex * 100;
-      sliderRef.current.style.transform = `translateX(-${offset}%)`;
+      // Mobile-optimized centering for multi-image display
+      const isMobile = window.innerWidth < 768;
+      const centerWidth = isMobile ? 70 : 60; // Center image width %
+      const sideWidth = isMobile ? 25 : 20;   // Side image width %
+      const gap = isMobile ? 12 : 24;         // Gap in px (3*4 or 6*4)
+      
+      // Calculate offset to center the current image
+      let offset = 0;
+      for (let i = 0; i < currentIndex; i++) {
+        if (i === currentIndex - 1) {
+          offset += centerWidth + gap / window.innerWidth * 100;
+        } else {
+          offset += sideWidth + gap / window.innerWidth * 100;
+        }
+      }
+      
+      // Adjust to center the current image in viewport
+      const adjustment = (100 - centerWidth) / 2;
+      sliderRef.current.style.transform = `translateX(${adjustment - offset}%)`;
     }
   }, [currentIndex]);
 
@@ -135,38 +151,46 @@ const HomeCarousel: React.FC = () => {
         </div>
       </div>
 
-          {/* Simplified mobile-friendly carousel container */}
+          {/* Mobile-optimized multi-image carousel */}
           <div className="relative w-full pb-16 overflow-hidden">
-            <div className="relative w-full max-w-6xl mx-auto px-4">
+            <div className="relative w-full max-w-7xl mx-auto px-2 md:px-4">
               <div
-                className="relative overflow-hidden rounded-xl"
+                className="relative overflow-visible"
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}
                 onTouchEnd={handleTouchEnd}
               >
                 <div
                   ref={sliderRef}
-                  className="flex transition-transform duration-700 ease-in-out"
+                  className="flex transition-transform duration-700 ease-in-out gap-3 md:gap-6"
                   onTransitionEnd={handleTransitionEnd}
                 >
-                  {images.map((src, index) => (
-                    <div 
-                      key={index} 
-                      className="flex-shrink-0 w-full h-64 md:h-96 lg:h-[28rem]"
-                    >
-                      <div className="w-full h-full rounded-xl overflow-hidden border border-white/15 shadow-lg mx-2">
-                        <img 
-                          src={src} 
-                          alt={`Event slide ${index}`}
-                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                          onError={(e) => {
-                            console.error('Image failed to load:', src);
-                            e.currentTarget.style.display = 'none';
-                          }}
-                        />
+                  {images.map((src, index) => {
+                    const isCenterImage = index === currentIndex;
+                    
+                    return (
+                      <div 
+                        key={index} 
+                        className={`flex-shrink-0 transition-all duration-700 ease-in-out ${
+                          isCenterImage 
+                            ? 'w-[70%] md:w-[60%] h-64 md:h-96 lg:h-[32rem] scale-100 opacity-100 z-10' 
+                            : 'w-[25%] md:w-[20%] h-48 md:h-80 lg:h-96 scale-90 opacity-70 z-0'
+                        }`}
+                      >
+                        <div className="w-full h-full rounded-xl overflow-hidden border border-white/15 shadow-lg">
+                          <img 
+                            src={src} 
+                            alt={`Event slide ${index}`}
+                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                            onError={(e) => {
+                              console.error('Image failed to load:', src);
+                              e.currentTarget.style.display = 'none';
+                            }}
+                          />
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 
