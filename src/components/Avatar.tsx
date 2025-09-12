@@ -23,11 +23,11 @@ const Avatar: React.FC<AvatarProps> = ({
   return (
     <div className="w-[200px] md:w-[240px] h-[220px] md:h-[260px] flex flex-col items-center text-center pb-5" style={{minWidth: '200px'}}>
       <a href={linkedin_github} target="_blank" rel="noopener noreferrer" className="group block">
-        <div className="relative w-[120px] md:w-[140px] h-[120px] md:h-[140px] transition-all duration-500 ease-out transform group-hover:scale-125 group-hover:shadow-2xl group-hover:shadow-blue-400/30 hover:z-10">
+        <div className="relative w-[120px] md:w-[140px] h-[120px] md:h-[140px] transition-all duration-500 ease-out transform group-hover:scale-125 group-hover:shadow-2xl group-hover:shadow-pink-500/30 hover:z-10">
           <img
             src={src} 
             alt={alt} 
-            className="rounded-full object-cover w-full h-full transition-all duration-500 ease-out group-hover:brightness-115 group-hover:contrast-115 group-hover:ring-4 group-hover:ring-blue-400/20" 
+            className="rounded-full object-cover w-full h-full transition-all duration-500 ease-out group-hover:brightness-115 group-hover:contrast-115 group-hover:ring-4 group-hover:ring-pink-400/30" 
             style={{borderRadius: '50%'}}
             onError={(e) => {
               e.currentTarget.src = teamPhotos.defaultPerson;

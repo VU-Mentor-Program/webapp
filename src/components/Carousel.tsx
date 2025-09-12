@@ -31,8 +31,8 @@ const HomeCarousel: React.FC = () => {
   const touchEndXRef = useRef<number>(0);
   const minSwipeDistance = 50; // pixels
 
-  const slideWidth = 90; // Simplified slide width
-  const gap = 2; // Gap between slides in rem
+  const slideWidth = 85; // Better mobile fit
+  const gap = 1.5; // Smaller gap for mobile
 
   const resetTimer = () => {
     if (timerRef.current) clearInterval(timerRef.current);
@@ -162,8 +162,8 @@ const HomeCarousel: React.FC = () => {
                     key={index} 
                     className={`flex-shrink-0 transition-all duration-700 ease-in-out ${
                       isCenterImage 
-                        ? 'h-96 md:h-[32rem] scale-100 z-10 opacity-100' 
-                        : 'h-80 md:h-96 scale-100 z-10 opacity-90'
+                        ? 'h-80 md:h-[32rem] scale-100 z-10 opacity-100' 
+                        : 'h-72 md:h-96 scale-100 z-10 opacity-90'
                     }`}
                     style={{
                       width: `${slideWidth}%`

@@ -25,7 +25,8 @@ const Team: React.FC<TeamProps> = ({ title, description, background }) => {
 
   const members: IMember[] = mentorTeam.members ?? [];
   const topThree = members.slice(0, 3);
-  const others = members.slice(3);
+  const bottomFour = members.slice(3, 7); // Exactly 4 on bottom
+  const extraMembers = members.slice(7); // Any additional members
 
   const toAvatar = (m: IMember) => (
     <div key={m.name} className="w-[220px] md:w-[260px] flex flex-col items-center">
@@ -62,10 +63,17 @@ const Team: React.FC<TeamProps> = ({ title, description, background }) => {
             {topThree.map(toAvatar)}
           </div>
 
-          {/* Bottom row: remaining members, centered and wrapping */}
-          <div className="flex flex-wrap justify-center gap-x-8 md:gap-x-12 gap-y-12">
-            {others.map(toAvatar)}
+          {/* Bottom row: exactly 4 members, centered */}
+          <div className="flex flex-wrap justify-center gap-x-8 md:gap-x-12 gap-y-12 max-w-4xl mx-auto">
+            {bottomFour.map(toAvatar)}
           </div>
+          
+          {/* Extra members if any, in additional rows */}
+          {extraMembers.length > 0 && (
+            <div className="flex flex-wrap justify-center gap-x-8 md:gap-x-12 gap-y-12 mt-12">
+              {extraMembers.map(toAvatar)}
+            </div>
+          )}
         </div>
       </section>
     </FadeIn>

@@ -1,29 +1,32 @@
 /* ===== THEME VARIABLES ===== */
 @theme {
-  /* Colors */
-  --color-primary: #1e40af;
-  --color-primary-hover: #1d4ed8;
-  --color-primary-dark: #1e3a8a;
+  /* 🎨 NEW THEME: Clean Dark, White, Pink & Blue */
+  --color-primary: #0f172a;              /* Slate 900 - Clean dark */
+  --color-primary-hover: #1e293b;        /* Slate 800 - Hover state */
+  --color-primary-dark: #020617;         /* Slate 950 - Deep dark */
   
-  --color-secondary: #374151;
-  --color-secondary-hover: #4b5563;
-  --color-secondary-dark: #1f2937;
+  --color-secondary: #ffffff;             /* Pure White */
+  --color-secondary-hover: #f8fafc;      /* Light Gray */
+  --color-secondary-dark: #e2e8f0;       /* Soft Gray */
   
-  --color-accent: #3b82f6;
-  --color-accent-hover: #2563eb;
+  --color-accent: #ec4899;               /* Hot Pink */
+  --color-accent-hover: #db2777;        /* Deeper Pink */
   
-  /* Background Colors */
-  --color-bg-primary: #111827;
-  --color-bg-secondary: #1f2937;
-  --color-bg-tertiary: #374151;
-  --color-bg-card: #1f2937;
-  --color-bg-modal: #111827;
+  --color-tertiary: #3b82f6;            /* Blue */
+  --color-tertiary-hover: #2563eb;      /* Deeper Blue */
   
-  /* Text Colors */
-  --color-text-primary: #ffffff;
-  --color-text-secondary: #d1d5db;
-  --color-text-muted: #9ca3af;
-  --color-text-accent: #60a5fa;
+  /* Background Colors - Clean Dark Theme */
+  --color-bg-primary: #0f172a;          /* Slate 900 - Clean dark */
+  --color-bg-secondary: #1e293b;        /* Slate 800 - Softer dark */
+  --color-bg-tertiary: #334155;         /* Slate 700 - Lighter accent */
+  --color-bg-card: #1e293b;             /* Card background */
+  --color-bg-modal: #0f172a;            /* Modal background */
+  
+  /* Text Colors - High Contrast */
+  --color-text-primary: #ffffff;        /* Pure White */
+  --color-text-secondary: #f1f5f9;      /* Soft White */
+  --color-text-muted: #cbd5e1;          /* Light Gray */
+  --color-text-accent: #ec4899;         /* Pink Accent */
   
   /* Status Colors */
   --color-success: #10b981;
@@ -33,16 +36,18 @@
   --color-warning: #f59e0b;
   --color-warning-hover: #d97706;
   
-  /* Border Colors */
-  --color-border: #374151;
-  --color-border-hover: #4b5563;
-  --color-border-focus: #3b82f6;
+  /* Border Colors - Pink & Blue Accents */
+  --color-border: #1a1a1a;              /* Dark Border */
+  --color-border-hover: #ec4899;        /* Pink Border */
+  --color-border-focus: #3b82f6;        /* Blue Border */
   
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  /* Shadows - Enhanced for Black Theme */
+  --shadow-sm: 0 1px 2px 0 rgb(236 72 153 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(236 72 153 / 0.15), 0 2px 4px -2px rgb(59 130 246 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(236 72 153 / 0.2), 0 4px 6px -4px rgb(59 130 246 / 0.15);
+  --shadow-xl: 0 20px 25px -5px rgb(236 72 153 / 0.25), 0 8px 10px -6px rgb(59 130 246 / 0.2);
+  --shadow-pink: 0 0 20px rgb(236 72 153 / 0.3);
+  --shadow-blue: 0 0 20px rgb(59 130 246 / 0.3);
   
   /* Spacing */
   --spacing-xs: 0.25rem;

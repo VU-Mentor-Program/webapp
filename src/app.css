@@ -3,14 +3,39 @@
 
 html,
 body {
-  @apply bg-gray-800 text-white;
+  @apply bg-slate-900 text-white;
   font-family: var(--font-sans);
   word-break: normal;
   white-space: normal;
   
+  /* Subtle logo background texture */
+  background-image: url('/webapp/assets/images/logos/black_logo.png');
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  background-position: center;
+  background-attachment: fixed;
+  opacity: 1;
+  
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;
   }
+}
+
+/* Create a subtle overlay for the background texture */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/webapp/assets/images/logos/black_logo.png');
+  background-repeat: repeat;
+  background-size: 300px 300px;
+  background-position: center;
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: -1;
 }
 
 /* Fix for text rendering issues */

@@ -17,7 +17,7 @@ export const StatusMessage: React.FC<StatusMessageProps> = ({
 
     if (status === "loading") {
         return (
-            <div className="flex flex-col items-center justify-center h-screen bg-gray-800 text-white text-center px-5">
+            <div className="flex flex-col items-center justify-center h-screen bg-slate-900 text-white text-center px-5">
                 <Logo />
                 <LoadingAnimation />
             </div>
@@ -31,7 +31,7 @@ export const StatusMessage: React.FC<StatusMessageProps> = ({
                 : t("error_decline");
 
         return (
-            <div className="flex flex-col items-center justify-center h-screen bg-gray-800 text-white text-center px-5">
+            <div className="flex flex-col items-center justify-center h-screen bg-slate-900 text-white text-center px-5">
                 <Logo />
                 <div className="mb-8 text-6xl animate-pulse">❌</div>
                 <h1 className="text-3xl">{t("error")}</h1>
@@ -52,7 +52,7 @@ export const StatusMessage: React.FC<StatusMessageProps> = ({
         const textColorClass = isAccept ? "text-green-400" : "text-red-400";
 
         return (
-            <div className="flex flex-col items-center justify-center h-screen bg-gray-800 text-white text-center px-5">
+            <div className="flex flex-col items-center justify-center h-screen bg-slate-900 text-white text-center px-5">
                 <Logo />
                 {isAccept && <div className="mb-8 text-6xl animate-bounce">✅</div>}
 

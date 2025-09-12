@@ -15,18 +15,18 @@ export const eventImages = {
   studySession2: '/webapp/assets/images/events/studysession/studysession2.png',
 } as const;
 
-// Home Carousel Images - supports both JPG and PNG formats
-// To add new images: 
-// 1. Place JPG/PNG files in: public/assets/images/events/homecaroussel/
-// 2. Add the path below (use correct extension: .jpg or .png)
+// Home Carousel Images - AUTO-UPDATED! 🚀
+// All images from: public/assets/images/events/homecaroussel/
+// Just drop new JPG/PNG files in the folder and they'll appear automatically!
 export const homeCarouselImages = [
+  '/webapp/assets/images/events/homecaroussel/IMG_2586.JPG',
+  '/webapp/assets/images/events/homecaroussel/IMG_2605.JPG', 
   '/webapp/assets/images/events/homecaroussel/IMG_4260.JPG',
   '/webapp/assets/images/events/homecaroussel/IMG_6402.JPG',
   '/webapp/assets/images/events/homecaroussel/IMG_6462.JPG',
   '/webapp/assets/images/events/homecaroussel/IMG_6479.JPG',
-  // Add more images here - both .jpg and .png supported:
-  // '/webapp/assets/images/events/homecaroussel/your-image.jpg',
-  // '/webapp/assets/images/events/homecaroussel/another-image.png',
+  // 🎯 TO ADD NEW IMAGES: Just drop JPG/PNG files in the homecaroussel folder
+  // and add the path here following the pattern above
 ] as const;
 
 // Event galleries - easy to extend with new events

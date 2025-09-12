@@ -8,7 +8,7 @@ export const JoinCommunityButton: React.FC = () => {
       href="https://chat.whatsapp.com/I6CQX1yyYM830oTZks5lX7"
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-block bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300"
+      className="inline-block bg-gradient-to-r from-pink-500 to-blue-500 hover:from-pink-600 hover:to-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
     >
       {t("join")}
     </a>

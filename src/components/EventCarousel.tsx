@@ -36,8 +36,8 @@ const EventCarousel: React.FC<EventCarouselProps> = ({
     images[0],
   ];
 
-  const slideWidth = 85;
-  const gap = 1.5;
+  const slideWidth = 80; // Better mobile centering
+  const gap = 1.2; // Tighter spacing for mobile
 
   const resetTimer = () => {
     if (timerRef.current) clearInterval(timerRef.current);
@@ -168,8 +168,8 @@ const EventCarousel: React.FC<EventCarouselProps> = ({
                   key={index} 
                   className={`flex-shrink-0 transition-all duration-600 ease-in-out ${
                     isCenterImage 
-                      ? 'h-96 md:h-[32rem] scale-100 opacity-100' 
-                      : 'h-80 md:h-96 scale-100 opacity-90'
+                      ? 'h-80 md:h-[32rem] scale-100 opacity-100' 
+                      : 'h-72 md:h-96 scale-100 opacity-90'
                   }`}
                   style={{ width: `${slideWidth}%` }}
                 >
