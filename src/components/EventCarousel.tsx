@@ -68,25 +68,9 @@ const EventCarousel: React.FC<EventCarouselProps> = ({
 
   useEffect(() => {
     if (sliderRef.current) {
-      // Mobile-optimized centering for multi-image display
-      const isMobile = window.innerWidth < 768;
-      const centerWidth = isMobile ? 70 : 60; // Center image width %
-      const sideWidth = isMobile ? 25 : 20;   // Side image width %
-      const gap = isMobile ? 12 : 24;         // Gap in px
-      
-      // Calculate offset to center the current image
-      let offset = 0;
-      for (let i = 0; i < currentIndex; i++) {
-        if (i === currentIndex - 1) {
-          offset += centerWidth + gap / window.innerWidth * 100;
-        } else {
-          offset += sideWidth + gap / window.innerWidth * 100;
-        }
-      }
-      
-      // Adjust to center the current image in viewport
-      const adjustment = (100 - centerWidth) / 2;
-      sliderRef.current.style.transform = `translateX(${adjustment - offset}%)`;
+      // Dead simple: each slide is 100% wide, just move by 100% per slide
+      const offset = currentIndex * 100;
+      sliderRef.current.style.transform = `translateX(-${offset}%)`;
     }
   }, [currentIndex]);
 
@@ -160,44 +144,36 @@ const EventCarousel: React.FC<EventCarouselProps> = ({
         </div>
       </div>
 
-          <div className="relative w-full max-w-6xl mx-auto">
+          <div className="relative w-full max-w-5xl mx-auto">
             <div
-              className="overflow-visible rounded-xl"
+              className="overflow-hidden rounded-xl"
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
             >
               <div
                 ref={sliderRef}
-                className="flex transition-transform duration-600 ease-in-out gap-3 md:gap-6"
+                className="flex transition-transform duration-600 ease-in-out"
                 onTransitionEnd={handleTransitionEnd}
               >
-                {infiniteImages.map((src, index) => {
-                  const isCenterImage = index === currentIndex;
-                  
-                  return (
-                    <div 
-                      key={index} 
-                      className={`flex-shrink-0 transition-all duration-600 ease-in-out ${
-                        isCenterImage 
-                          ? 'w-[70%] md:w-[60%] h-60 md:h-80 lg:h-96 scale-100 opacity-100 z-10' 
-                          : 'w-[25%] md:w-[20%] h-44 md:h-64 lg:h-80 scale-90 opacity-70 z-0'
-                      }`}
-                    >
-                      <div className="w-full h-full rounded-lg overflow-hidden border border-white/15 shadow-lg">
-                        <img
-                          src={src}
-                          alt={`${title} ${index + 1}`}
-                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                          onError={(e) => {
-                            console.error('Event image failed to load:', src);
-                            e.currentTarget.style.display = 'none';
-                          }}
-                        />
-                      </div>
+                {infiniteImages.map((src, index) => (
+                  <div 
+                    key={index} 
+                    className="flex-shrink-0 w-full h-60 md:h-80 lg:h-96"
+                  >
+                    <div className="w-full h-full rounded-lg overflow-hidden border border-white/15 shadow-lg mx-2">
+                      <img
+                        src={src}
+                        alt={`${title} ${index + 1}`}
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                          console.error('Event image failed to load:', src);
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
                     </div>
-                  );
-                })}
+                  </div>
+                ))}
               </div>
             </div>
 

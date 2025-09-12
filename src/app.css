@@ -13,7 +13,70 @@ body {
   }
 }
 
-/* Logo background removed - was causing issues */
+/* Lava lamp gradient animations */
+@keyframes lava-flow {
+  0% { 
+    background: linear-gradient(135deg, #1e3a8a, #1e293b, #0c4a6e);
+    background-size: 400% 400%;
+    background-position: 0% 50%;
+  }
+  25% {
+    background: linear-gradient(135deg, #1e3a8a, #831843, #1e293b);
+    background-size: 400% 400%;
+    background-position: 100% 50%;
+  }
+  50% {
+    background: linear-gradient(135deg, #831843, #ec4899, #be185d);
+    background-size: 400% 400%;
+    background-position: 100% 100%;
+  }
+  75% {
+    background: linear-gradient(135deg, #ec4899, #1e3a8a, #831843);
+    background-size: 400% 400%;
+    background-position: 0% 100%;
+  }
+  100% { 
+    background: linear-gradient(135deg, #1e3a8a, #1e293b, #0c4a6e);
+    background-size: 400% 400%;
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes lava-flow-vertical {
+  0% { 
+    background: linear-gradient(180deg, #1e3a8a, #1e293b, #0c4a6e);
+    background-size: 400% 400%;
+    background-position: 50% 0%;
+  }
+  25% {
+    background: linear-gradient(180deg, #1e3a8a, #831843, #1e293b);
+    background-size: 400% 400%;
+    background-position: 50% 100%;
+  }
+  50% {
+    background: linear-gradient(180deg, #831843, #ec4899, #be185d);
+    background-size: 400% 400%;
+    background-position: 100% 100%;
+  }
+  75% {
+    background: linear-gradient(180deg, #ec4899, #1e3a8a, #831843);
+    background-size: 400% 400%;
+    background-position: 100% 0%;
+  }
+  100% { 
+    background: linear-gradient(180deg, #1e3a8a, #1e293b, #0c4a6e);
+    background-size: 400% 400%;
+    background-position: 50% 0%;
+  }
+}
+
+.bg-gradient-lava {
+  animation: lava-flow 12s ease-in-out infinite;
+}
+
+.bg-gradient-lava-vertical {
+  animation: lava-flow-vertical 12s ease-in-out infinite;
+}
 
 /* Fix for text rendering issues */
 * {

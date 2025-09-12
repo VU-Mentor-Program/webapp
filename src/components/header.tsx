@@ -65,7 +65,7 @@ export const Header: React.FC = () => {
       <header
         onClick={() => setHeaderHidden(false)}
         className={`fixed left-0 right-0 px-4 md:px-24 py-4 flex items-center z-50 
-          bg-gradient-to-r from-blue-900 to-slate-800 bg-opacity-95 backdrop-blur-sm rounded transition-transform duration-300 shadow-lg shadow-pink-500/10
+          bg-gradient-lava bg-opacity-95 backdrop-blur-sm rounded transition-transform duration-300 shadow-lg
           ${isHeaderHidden ? "-translate-y-20" : "translate-y-0"} md:translate-y-0`}
       >
         {/* Left Section: Logo + Title */}
@@ -86,7 +86,7 @@ export const Header: React.FC = () => {
               key={link.path}
               to={link.path.startsWith("/") ? link.path : "#"}
               onClick={(e) => handleAnchorClick(e, link.path)}
-              className="text-white hover:text-pink-200 transition whitespace-nowrap hover:shadow-sm hover:shadow-pink-400/10"
+              className="text-white hover:text-pink-200 transition whitespace-nowrap"
             >
               {link.name}
             </Link>
@@ -97,13 +97,13 @@ export const Header: React.FC = () => {
         <div className="hidden md:flex items-center space-x-2 flex-1 justify-end">
           <button
             onClick={() => setLanguage("en")}
-            className={`px-3 py-1 transition-colors ${currentLanguage === "en" ? "bg-blue-800 rounded shadow-sm shadow-pink-400/20" : ""}`}
+            className={`px-3 py-1 transition-colors ${currentLanguage === "en" ? "bg-blue-800 rounded" : ""}`}
           >
             EN
           </button>
           <button
             onClick={() => setLanguage("nl")}
-            className={`px-3 py-1 transition-colors ${currentLanguage === "nl" ? "bg-blue-800 rounded shadow-sm shadow-pink-400/20" : ""}`}
+            className={`px-3 py-1 transition-colors ${currentLanguage === "nl" ? "bg-blue-800 rounded" : ""}`}
           >
             NL
           </button>
@@ -114,7 +114,7 @@ export const Header: React.FC = () => {
           <select
             onChange={(e) => setLanguage(e.target.value)}
             value={currentLanguage}
-            className="bg-transparent text-white border border-blue-600 rounded p-1 focus:outline-none focus:border-pink-400"
+            className="bg-transparent text-white border border-blue-600 rounded p-1 focus:outline-none focus:border-blue-400"
           >
             <option value="en">EN</option>
             <option value="nl">NL</option>
@@ -136,7 +136,7 @@ export const Header: React.FC = () => {
         onClick={() => setMobileMenuOpen(false)}
       ></div>
       <div
-        className={`fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-blue-900 to-slate-800 shadow-lg shadow-pink-500/20 transform transition-transform duration-300 ease-in-out z-50 ${
+        className={`fixed top-0 left-0 h-full w-64 bg-gradient-lava-vertical shadow-lg transform transition-transform duration-300 ease-in-out z-50 ${
           mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
