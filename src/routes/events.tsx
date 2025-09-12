@@ -80,8 +80,8 @@ export default function Events() {
        title: "new_event_title", // Add to translations
        description: "new_event_desc", // Add to translations  
        images: [
-         '/assets/images/events/new-event/image1.png',
-         '/assets/images/events/new-event/image2.png',
+         '/webapp/assets/images/events/new-event/image1.png',
+         '/webapp/assets/images/events/new-event/image2.png',
        ],
      },
   
