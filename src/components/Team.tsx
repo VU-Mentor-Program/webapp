@@ -28,7 +28,7 @@ const Team: React.FC<TeamProps> = ({ title, description, background }) => {
   const others = members.slice(3);
 
   const toAvatar = (m: IMember) => (
-    <div key={m.name} className="w-56 flex flex-col items-center">
+    <div key={m.name} className="w-[220px] md:w-[260px] flex flex-col items-center">
       <Avatar
         src={m.photo}
         alt={m.full_name}
@@ -54,7 +54,7 @@ const Team: React.FC<TeamProps> = ({ title, description, background }) => {
           {/* Top row: exactly 3, centered */}
           <div
             className="
-              w-fit mx-auto grid place-items-center gap-x-12 gap-y-10 mb-12
+              w-fit mx-auto grid place-items-center gap-x-8 md:gap-x-12 gap-y-10 mb-12
               [grid-template-columns:repeat(1,max-content)]
               sm:[grid-template-columns:repeat(3,max-content)]
             "
@@ -63,7 +63,7 @@ const Team: React.FC<TeamProps> = ({ title, description, background }) => {
           </div>
 
           {/* Bottom row: remaining members, centered and wrapping */}
-          <div className="flex flex-wrap justify-center gap-x-12 gap-y-12">
+          <div className="flex flex-wrap justify-center gap-x-8 md:gap-x-12 gap-y-12">
             {others.map(toAvatar)}
           </div>
         </div>
