@@ -248,7 +248,7 @@ const EventCarousel: React.FC<EventCarouselProps> = ({
         {/* Modal for full image view */}
         {modalImage && (
           <div 
-            className="fixed inset-0 bg-black/95 z-[9999] flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/95 flex items-center justify-center p-4"
             onClick={() => setModalImage(null)}
             style={{ 
               position: 'fixed',
@@ -257,7 +257,8 @@ const EventCarousel: React.FC<EventCarouselProps> = ({
               right: 0,
               bottom: 0,
               width: '100vw',
-              height: '100vh'
+              height: '100vh',
+              zIndex: 99999
             }}
           >
             <div className="relative w-full h-full flex items-center justify-center">

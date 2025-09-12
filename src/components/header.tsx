@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { logoImages } from "../assets/images";
 import { useTranslations, useSetLanguage, useCurrentLanguage } from "../contexts/TranslationContext";
+import { AudioControlButton } from "./AudioControlButton";
 
 export const Header: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -148,7 +149,7 @@ export const Header: React.FC = () => {
             <XMarkIcon className="h-6 w-6" />
           </button>
         </div>
-        <nav className="flex flex-col p-4 space-y-4">
+        <nav className="flex flex-col p-4 space-y-4 flex-1">
           {navLinks.map((link) => (
             <Link
               key={link.path}
@@ -160,6 +161,14 @@ export const Header: React.FC = () => {
             </Link>
           ))}
         </nav>
+        
+        {/* Audio Control at Bottom of Sidebar */}
+        <div className="p-4 border-t border-white/20">
+          <AudioControlButton 
+            volume={0.1}
+            className="text-white hover:text-pink-200 transition flex items-center space-x-2 w-full"
+          />
+        </div>
       </div>
     </>
   );
