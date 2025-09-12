@@ -40,6 +40,14 @@ export const eventGalleries = {
       '/webapp/assets/images/events/studysession/studysession2.png',
     ],
   },
+  mexicanDinner_12_09_2025: {
+    title: "mexican_dinner_title",
+    subtitle: "mexican_dinner_date", 
+    description: "mexican_dinner_desc",
+    images: [
+      '/webapp/assets/images/events/mexicandinner/cover.jpg',
+    ],
+  },
   // Easy to add new event categories:
   // socialEvents: {
   //   title: "social_events",

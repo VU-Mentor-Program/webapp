@@ -44,7 +44,7 @@
   "hero": {
     "title": "Mentor Program for CS & AI",
     "subtitle": "Aiming to bring first-year students together 😊",
-    "text": "Starting your first year in AI or CS? VU's Mentor Program is here to support your transition to university life in Amsterdam. Join our community for free social events, study sessions, and exam preparations designed to help you thrive both academically and socially!",
+    "text": "Starting your first year in AI or CS? VU's Mentor Program is here to support your transition to university life in Amsterdam. Join you guys for free social events, study sessions, and exam preparations designed to help you thrive both academically and socially!",
     "join": "Join the Community!"
   },
   "home_carousel": {
@@ -93,10 +93,13 @@
   },
   "events": {
     "title": "Past Events", 
-    "subtitle": "Take a look at the amazing events we've organized for our community!",
+    "subtitle": "Take a look at the amazing events we've organized for you guys!",
     "study_sessions_title": "Study Session",
-    "study_sessions_date": "September 10, 2024",
-    "study_sessions_desc": "First collaborative study session to help students prepare for their exams",
+    "study_sessions_date": "September 10, 2025",
+    "study_sessions_desc": "First exam preparation of the year with some snacks to get to know everyone",
+    "mexican_dinner_title": "Mexican Dinner",
+    "mexican_dinner_date": "September 12, 2025",
+    "mexican_dinner_desc": "Delicious Mexican food and great company - what more could you want?",
     "social_events": "Social Events", 
     "social_events_desc": "Fun activities to build connections and create memories",
     "workshops": "Workshops & Presentations",

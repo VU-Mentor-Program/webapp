@@ -58,7 +58,7 @@ export default function Events() {
           {/* Easy to add new events section */}
           <FadeIn duration={100}>
             <div className="mt-16 p-8 bg-gray-900/50 rounded-xl border border-gray-700/50 max-w-4xl mx-auto">
-              <h2 className="text-2xl font-semibold mb-4 text-blue-400">📸 More Events Coming Soon!</h2>
+              <h2 className="text-2xl font-semibold mb-4 text-blue-400">More Events Coming Soon!</h2>
               <p className="text-gray-400 leading-relaxed">
                 We're constantly organizing events for you guys. 
                 New photo galleries will be added here as we capture more memories together!

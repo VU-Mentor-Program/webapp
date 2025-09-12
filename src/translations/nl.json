@@ -44,7 +44,7 @@
   "hero": {
     "title": "Mentorprogramma voor CS & AI",
     "subtitle": "Om eerstejaars studenten samen te brengen 😊",
-    "text": "Ben je eerstejaarsstudent AI of CS? Het VU Mentorprogramma ondersteunt je overgang naar het universiteitsleven in Amsterdam. Word lid van onze community voor gratis sociale evenementen, studiebijeenkomsten en examenvoorbereidingen!",
+    "text": "Ben je eerstejaarsstudent AI of CS? Het VU Mentorprogramma ondersteunt je overgang naar het universiteitsleven in Amsterdam. Sluit je aan bij ons voor gratis sociale evenementen, studiebijeenkomsten en examenvoorbereidingen!",
     "join": "Word lid van de Community!"
   },
   "home_carousel": {
@@ -93,10 +93,13 @@
   },
   "events": {
     "title": "Eerdere Evenementen",
-    "subtitle": "Bekijk de geweldige evenementen die we hebben georganiseerd voor onze gemeenschap!", 
+    "subtitle": "Bekijk de geweldige evenementen die we hebben georganiseerd voor jullie!", 
     "study_sessions_title": "Studiesessie",
-    "study_sessions_date": "10 September 2024",
-    "study_sessions_desc": "Eerste gezamenlijke studiesessie om studenten te helpen bij hun tentamenvoorbereiding",
+    "study_sessions_date": "10 September 2025",
+    "study_sessions_desc": "Eerste tentamenvoorbereiding van het jaar met wat snacks om elkaar te leren kennen",
+    "mexican_dinner_title": "Mexicaans Diner",
+    "mexican_dinner_date": "12 September 2025",
+    "mexican_dinner_desc": "Heerlijk Mexicaans eten en geweldig gezelschap - wat wil je nog meer?",
     "social_events": "Sociale Evenementen",
     "social_events_desc": "Leuke activiteiten om verbindingen te bouwen en herinneringen te creëren",
     "workshops": "Workshops & Presentaties",
