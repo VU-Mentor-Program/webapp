@@ -13,69 +13,65 @@ body {
   }
 }
 
-/* Lava lamp gradient animations */
-@keyframes lava-flow {
-  0% { 
-    background: linear-gradient(135deg, #1e3a8a, #1e293b, #0c4a6e);
-    background-size: 400% 400%;
-    background-position: 0% 50%;
-  }
-  25% {
-    background: linear-gradient(135deg, #1e3a8a, #831843, #1e293b);
-    background-size: 400% 400%;
-    background-position: 100% 50%;
-  }
-  50% {
-    background: linear-gradient(135deg, #831843, #ec4899, #be185d);
-    background-size: 400% 400%;
-    background-position: 100% 100%;
-  }
-  75% {
-    background: linear-gradient(135deg, #ec4899, #1e3a8a, #831843);
-    background-size: 400% 400%;
-    background-position: 0% 100%;
-  }
-  100% { 
-    background: linear-gradient(135deg, #1e3a8a, #1e293b, #0c4a6e);
-    background-size: 400% 400%;
-    background-position: 0% 50%;
-  }
-}
-
-@keyframes lava-flow-vertical {
-  0% { 
-    background: linear-gradient(180deg, #1e3a8a, #1e293b, #0c4a6e);
-    background-size: 400% 400%;
-    background-position: 50% 0%;
-  }
-  25% {
-    background: linear-gradient(180deg, #1e3a8a, #831843, #1e293b);
-    background-size: 400% 400%;
-    background-position: 50% 100%;
-  }
-  50% {
-    background: linear-gradient(180deg, #831843, #ec4899, #be185d);
-    background-size: 400% 400%;
-    background-position: 100% 100%;
-  }
-  75% {
-    background: linear-gradient(180deg, #ec4899, #1e3a8a, #831843);
-    background-size: 400% 400%;
-    background-position: 100% 0%;
-  }
-  100% { 
-    background: linear-gradient(180deg, #1e3a8a, #1e293b, #0c4a6e);
-    background-size: 400% 400%;
-    background-position: 50% 0%;
-  }
-}
-
+/* Smooth lava lamp gradient - no glitches */
 .bg-gradient-lava {
-  animation: lava-flow 12s ease-in-out infinite;
+  background: linear-gradient(135deg, 
+    #1e3a8a 0%, 
+    #1e293b 25%, 
+    #831843 50%, 
+    #ec4899 75%, 
+    #1e3a8a 100%
+  );
+  background-size: 300% 300%;
+  animation: lava-flow-smooth 45s ease-in-out infinite;
 }
 
 .bg-gradient-lava-vertical {
-  animation: lava-flow-vertical 12s ease-in-out infinite;
+  background: linear-gradient(180deg, 
+    #1e3a8a 0%, 
+    #1e293b 25%, 
+    #831843 50%, 
+    #ec4899 75%, 
+    #1e3a8a 100%
+  );
+  background-size: 300% 300%;
+  animation: lava-flow-vertical-smooth 45s ease-in-out infinite;
+}
+
+@keyframes lava-flow-smooth {
+  0% { 
+    background-position: 0% 50%;
+  }
+  25% {
+    background-position: 100% 25%;
+  }
+  50% {
+    background-position: 100% 75%;
+  }
+  75% {
+    background-position: 50% 100%;
+  }
+  100% { 
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes lava-flow-vertical-smooth {
+  0% { 
+    background-position: 50% 0%;
+  }
+  25% {
+    background-position: 25% 100%;
+  }
+  50% {
+    background-position: 75% 100%;
+  }
+  75% {
+    background-position: 100% 50%;
+  }
+  100% { 
+    background-position: 50% 0%;
+  }
 }
 
 /* Fix for text rendering issues */
