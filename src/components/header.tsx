@@ -94,8 +94,12 @@ export const Header: React.FC = () => {
           ))}
         </nav>
 
-        {/* Right Section: Language Switcher */}
-        <div className="hidden md:flex items-center space-x-2 flex-[0.8] justify-end">
+        {/* Right Section: Language Switcher + Music Control */}
+        <div className="hidden md:flex items-center space-x-3 flex-[0.8] justify-end">
+          <AudioControlButton 
+            volume={0.1}
+            className="bg-white/10 hover:bg-white/20 text-white p-2 rounded-full transition-colors duration-200 backdrop-blur-sm"
+          />
           <button
             onClick={() => setLanguage("en")}
             className={`px-3 py-1 transition-colors ${currentLanguage === "en" ? "bg-blue-800 rounded" : ""}`}
@@ -164,10 +168,13 @@ export const Header: React.FC = () => {
         
         {/* Audio Control at Bottom of Sidebar */}
         <div className="p-4 border-t border-white/20">
-          <AudioControlButton 
-            volume={0.1}
-            className="text-white hover:text-pink-200 transition flex items-center space-x-2 w-full"
-          />
+          <div className="flex items-center space-x-2">
+            <AudioControlButton 
+              volume={0.1}
+              className="text-white hover:text-pink-200 transition p-2 rounded-full"
+            />
+            <span className="text-white text-sm">Music</span>
+          </div>
         </div>
       </div>
     </>

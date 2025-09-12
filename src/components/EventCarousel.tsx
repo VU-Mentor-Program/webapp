@@ -247,37 +247,80 @@ const EventCarousel: React.FC<EventCarouselProps> = ({
 
         {/* Modal for full image view */}
         {modalImage && (
-          <div 
-            className="fixed inset-0 bg-black/95 flex items-center justify-center p-4"
-            onClick={() => setModalImage(null)}
-            style={{ 
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              width: '100vw',
-              height: '100vh',
-              zIndex: 99999
-            }}
-          >
-            <div className="relative w-full h-full flex items-center justify-center">
-              <img
-                src={modalImage}
-                alt="Full size image"
-                className="max-w-[90vw] max-h-[90vh] object-contain rounded-lg shadow-2xl"
-                onClick={(e) => e.stopPropagation()}
-              />
-              <button
-                onClick={() => setModalImage(null)}
-                className="absolute top-4 right-4 bg-black/60 text-white p-3 rounded-full hover:bg-black/80 transition-all duration-200 z-10"
+          <>
+            {/* Create a portal-like overlay that truly covers everything */}
+            <div 
+              className="fixed bg-black"
+              onClick={() => setModalImage(null)}
+              style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100vw',
+                height: '100vh',
+                zIndex: 2147483647, // Maximum z-index value
+                backgroundColor: 'rgba(0, 0, 0, 0.95)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '20px'
+              }}
+            >
+              <div 
+                className="relative flex items-center justify-center"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  maxWidth: '100vw',
+                  maxHeight: '100vh'
+                }}
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
+                <img
+                  src={modalImage}
+                  alt="Full size image"
+                  onClick={(e) => e.stopPropagation()}
+                  style={{
+                    maxWidth: 'calc(100vw - 40px)',
+                    maxHeight: 'calc(100vh - 40px)',
+                    width: 'auto',
+                    height: 'auto',
+                    objectFit: 'contain',
+                    borderRadius: '8px',
+                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8)'
+                  }}
+                />
+                <button
+                  onClick={() => setModalImage(null)}
+                  style={{
+                    position: 'absolute',
+                    top: '16px',
+                    right: '16px',
+                    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '50%',
+                    padding: '12px',
+                    cursor: 'pointer',
+                    zIndex: 10,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'background-color 0.2s'
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.target as HTMLElement).style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.target as HTMLElement).style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
+                  }}
+                >
+                  <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
             </div>
-          </div>
+          </>
         )}
       </div>
     </FadeIn>
