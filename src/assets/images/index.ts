@@ -11,8 +11,8 @@ export { mpLogoPrimary, mpLogoCircle, blackLogo };
 
 // Event Images - now properly organized in events folder
 export const eventImages = {
-  studySession1: '/webapp/assets/images/events/studysession/studysession1.png',
-  studySession2: '/webapp/assets/images/events/studysession/studysession2.png',
+  studySession1: '/assets/images/events/studysession/studysession1.png',
+  studySession2: '/assets/images/events/studysession/studysession2.png',
 } as const;
 
 // Event galleries - easy to extend with new events
@@ -22,8 +22,8 @@ export const eventGalleries = {
     subtitle: "study_sessions_date",
     description: "study_sessions_desc",
     images: [
-      '/webapp/assets/images/events/studysession/studysession1.png',
-      '/webapp/assets/images/events/studysession/studysession2.png',
+      '/assets/images/events/studysession/studysession1.png',
+      '/assets/images/events/studysession/studysession2.png',
     ],
   },
   // Easy to add new event categories:
@@ -46,30 +46,30 @@ export const eventGalleries = {
 
 // Team Photos - now properly organized in team folder
 export const teamPhotos = {
-  vitor: '/webapp/assets/images/team/vitor.png',
-  noor: '/webapp/assets/images/team/noor.png',
-  goncalo: '/webapp/assets/images/team/goncalo.png',
-  nox: '/webapp/assets/images/team/nox.png',
-  anastasia: '/webapp/assets/images/team/anastasia.png',
-  mariana: '/webapp/assets/images/team/mariana.png',
-  amina: '/webapp/assets/images/team/amina.png',
-  defaultPerson: '/webapp/assets/images/team/default person.jpg',
+  vitor: '/assets/images/team/vitor.png',
+  noor: '/assets/images/team/noor.png',
+  goncalo: '/assets/images/team/goncalo.png',
+  nox: '/assets/images/team/nox.png',
+  anastasia: '/assets/images/team/anastasia.png',
+  mariana: '/assets/images/team/mariana.png',
+  amina: '/assets/images/team/amina.png',
+  defaultPerson: '/assets/images/team/default person.jpg',
 } as const;
 
 // Asset organization paths - now implemented!
 export const ASSET_PATHS = {
   images: {
-    events: '/webapp/assets/images/events/',
-    team: '/webapp/assets/images/team/',
-    logos: '/webapp/assets/images/logos/',
+    events: '/assets/images/events/',
+    team: '/assets/images/team/',
+    logos: '/assets/images/logos/',
   },
   sounds: {
-    games: '/webapp/assets/sounds/games/',
+    games: '/assets/sounds/games/',
   },
 } as const;
 
 // Organized logo paths
 export const logoImages = {
-  primary: '/webapp/assets/images/logos/mp_logo-CIRCLE.png',
-  black: '/webapp/assets/images/logos/black_logo.png',
+  primary: '/assets/images/logos/mp_logo-CIRCLE.png',
+  black: '/assets/images/logos/black_logo.png',
 } as const;

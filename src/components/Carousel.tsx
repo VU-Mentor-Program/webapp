@@ -33,7 +33,7 @@ const HomeCarousel: React.FC = () => {
   const touchEndXRef = useRef<number>(0);
   const minSwipeDistance = 50; // pixels
 
-  const slideWidthPercentage = 82; // Slightly adjusted for better spacing
+  const slideWidthPercentage = 84; // Better centering
 
   const resetTimer = () => {
     if (timerRef.current) clearInterval(timerRef.current);
@@ -66,7 +66,9 @@ const HomeCarousel: React.FC = () => {
 
   useEffect(() => {
     if (sliderRef.current) {
-      sliderRef.current.style.transform = `translateX(-${currentIndex * slideWidthPercentage}%)`;
+      // Improved centering calculation
+      const offset = currentIndex * (slideWidthPercentage + 2); // Account for gap
+      sliderRef.current.style.transform = `translateX(calc(-${offset}% + 8%))`;
     }
   }, [currentIndex]);
 
@@ -75,7 +77,8 @@ const HomeCarousel: React.FC = () => {
       setCurrentIndex(safeRawImages.length);
       if (sliderRef.current) {
         sliderRef.current.style.transition = "none";
-        sliderRef.current.style.transform = `translateX(-${safeRawImages.length * slideWidthPercentage}%)`;
+        const offset = safeRawImages.length * (slideWidthPercentage + 2);
+        sliderRef.current.style.transform = `translateX(calc(-${offset}% + 8%))`;
         void sliderRef.current.offsetWidth; // force reflow
         sliderRef.current.style.transition = "transform 700ms ease-in-out";
       }
@@ -83,7 +86,8 @@ const HomeCarousel: React.FC = () => {
       setCurrentIndex(1);
       if (sliderRef.current) {
         sliderRef.current.style.transition = "none";
-        sliderRef.current.style.transform = `translateX(-${slideWidthPercentage}%)`;
+        const offset = slideWidthPercentage + 2;
+        sliderRef.current.style.transform = `translateX(calc(-${offset}% + 8%))`;
         void sliderRef.current.offsetWidth;
         sliderRef.current.style.transition = "transform 700ms ease-in-out";
       }
@@ -158,7 +162,7 @@ const HomeCarousel: React.FC = () => {
                 return (
                   <div 
                     key={index} 
-                    className={`flex-shrink-0 w-[80%] transition-all duration-700 ease-in-out ${
+                    className={`flex-shrink-0 w-[84%] transition-all duration-700 ease-in-out ${
                       isCenterImage 
                         ? 'h-[28rem] scale-110 z-20 opacity-100 shadow-2xl' 
                         : 'h-96 scale-90 z-10 opacity-70'

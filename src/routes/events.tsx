@@ -12,7 +12,7 @@ export default function Events() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-800 text-white text-center px-5">
-      <div className="flex-grow flex flex-col items-center justify-center py-10">
+      <div className="flex-grow flex flex-col items-center justify-start pt-20 pb-10">
         <IntlProvider
           locale={locale}
           defaultLocale="en"
@@ -80,8 +80,8 @@ export default function Events() {
        title: "new_event_title", // Add to translations
        description: "new_event_desc", // Add to translations  
        images: [
-         '/webapp/assets/images/events/new-event/image1.png',
-         '/webapp/assets/images/events/new-event/image2.png',
+         '/assets/images/events/new-event/image1.png',
+         '/assets/images/events/new-event/image2.png',
        ],
      },
   

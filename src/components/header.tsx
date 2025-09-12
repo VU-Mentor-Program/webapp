@@ -84,7 +84,7 @@ export const Header: React.FC = () => {
           {navLinks.map((link) => (
             <Link
               key={link.path}
-              to={link.path.startsWith("/minigames") ? link.path : "#"}
+              to={link.path.startsWith("/") ? link.path : "#"}
               onClick={(e) => handleAnchorClick(e, link.path)}
               className="text-white hover:text-gray-300 transition whitespace-nowrap"
             >
@@ -152,7 +152,7 @@ export const Header: React.FC = () => {
           {navLinks.map((link) => (
             <Link
               key={link.path}
-              to={link.path.startsWith("/minigames") ? link.path : "#"}
+              to={link.path.startsWith("/") ? link.path : "#"}
               onClick={(e) => handleAnchorClick(e, link.path)}
               className="text-white hover:text-gray-300 transition"
             >
