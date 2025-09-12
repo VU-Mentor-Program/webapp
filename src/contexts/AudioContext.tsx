@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useRef, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 
 // Global audio instance to ensure only one exists across the entire app
 let globalAudio: HTMLAudioElement | null = null;
