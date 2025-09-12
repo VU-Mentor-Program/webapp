@@ -84,4 +84,4 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children, volume =
       {children}
     </AudioContext.Provider>
   );
-};}
+};
