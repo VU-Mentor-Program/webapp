@@ -22,22 +22,22 @@ const Avatar: React.FC<AvatarProps> = ({
   }
   return (
     <div className="w-[200px] md:w-[240px] h-[220px] md:h-[260px] flex flex-col items-center text-center pb-5" style={{minWidth: '200px'}}>
-      <a href={linkedin_github} target="_blank" rel="noopener noreferrer" className="group">
-        <div className="relative w-[120px] md:w-[140px] h-[120px] md:h-[140px] transition-all duration-300 ease-in-out group-hover:scale-110 group-hover:shadow-2xl group-hover:shadow-blue-500/20">
+      <a href={linkedin_github} target="_blank" rel="noopener noreferrer" className="group block">
+        <div className="relative w-[120px] md:w-[140px] h-[120px] md:h-[140px] transition-all duration-500 ease-out transform group-hover:scale-125 group-hover:shadow-2xl group-hover:shadow-blue-400/30 hover:z-10">
           <img
             src={src} 
             alt={alt} 
-            className="rounded-full object-cover w-full h-full transition-all duration-300 ease-in-out group-hover:brightness-110 group-hover:contrast-110" 
+            className="rounded-full object-cover w-full h-full transition-all duration-500 ease-out group-hover:brightness-115 group-hover:contrast-115 group-hover:ring-4 group-hover:ring-blue-400/20" 
             style={{borderRadius: '50%'}}
             onError={(e) => {
               e.currentTarget.src = teamPhotos.defaultPerson;
             }}
           />
           {country && (
-            <span className="absolute bottom-[-15px] right-[-5px] transition-all duration-300 ease-in-out group-hover:scale-125 group-hover:rotate-12 group-hover:shadow-lg">
+            <span className="absolute bottom-[-15px] right-[-5px] transition-all duration-500 ease-out transform group-hover:scale-140 group-hover:rotate-15 group-hover:shadow-xl group-hover:-translate-y-1">
               <CircleFlag
                 countryCode={country.toLowerCase()}
-                className="rounded-full border-2 border-white shadow-md"
+                className="rounded-full border-3 border-white shadow-lg transition-all duration-500 ease-out"
                 width="40"
                 height="40"
                 style={{width: '40px', height: '40px'}}
