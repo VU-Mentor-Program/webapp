@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import FadeIn from "./Fadein-Wrapper";
-import LazyImage from "./LazyImage";
 
 interface EventCarouselProps {
   images: readonly string[];
@@ -37,14 +36,15 @@ const EventCarousel: React.FC<EventCarouselProps> = ({
     images[0],
   ];
 
-  const slideWidthPercentage = 85;
+  const slideWidth = 85;
+  const gap = 1.5;
 
   const resetTimer = () => {
     if (timerRef.current) clearInterval(timerRef.current);
     if (autoPlay && images.length > 1) {
       timerRef.current = window.setInterval(() => {
         nextSlide();
-      }, 5000); // 5 seconds for events
+      }, 6000); // 6 seconds for events
     }
   };
 
@@ -69,16 +69,19 @@ const EventCarousel: React.FC<EventCarouselProps> = ({
 
   useEffect(() => {
     if (sliderRef.current) {
-      sliderRef.current.style.transform = `translateX(-${currentIndex * slideWidthPercentage}%)`;
+      // Same centering logic as main carousel
+      const offset = currentIndex * (slideWidth + gap);
+      sliderRef.current.style.transform = `translateX(calc(-${offset}% + 50% - ${slideWidth/2}%))`;
     }
-  }, [currentIndex]);
+  }, [currentIndex, slideWidth]);
 
   const handleTransitionEnd = () => {
     if (currentIndex === 0) {
       setCurrentIndex(images.length);
       if (sliderRef.current) {
         sliderRef.current.style.transition = "none";
-        sliderRef.current.style.transform = `translateX(-${images.length * slideWidthPercentage}%)`;
+        const offset = images.length * (slideWidth + gap);
+        sliderRef.current.style.transform = `translateX(calc(-${offset}% + 50% - ${slideWidth/2}%))`;
         void sliderRef.current.offsetWidth;
         sliderRef.current.style.transition = "transform 600ms ease-in-out";
       }
@@ -86,7 +89,8 @@ const EventCarousel: React.FC<EventCarouselProps> = ({
       setCurrentIndex(1);
       if (sliderRef.current) {
         sliderRef.current.style.transition = "none";
-        sliderRef.current.style.transform = `translateX(-${slideWidthPercentage}%)`;
+        const offset = slideWidth + gap;
+        sliderRef.current.style.transform = `translateX(calc(-${offset}% + 50% - ${slideWidth/2}%))`;
         void sliderRef.current.offsetWidth;
         sliderRef.current.style.transition = "transform 600ms ease-in-out";
       }
@@ -118,25 +122,29 @@ const EventCarousel: React.FC<EventCarouselProps> = ({
 
   if (!images.length) {
     return (
-      <div className={`text-center py-12 ${className}`}>
-        <h3 className="text-xl font-semibold mb-2">{title}</h3>
+      <div className={`text-center py-12 w-full ${className}`}>
+        <h3 className="text-xl font-semibold mb-3 w-full">{title}</h3>
         {subtitle && (
-          <p className="text-lg text-blue-300 font-medium mb-3">{subtitle}</p>
+          <p className="text-lg text-blue-300 font-medium mb-4 w-full">{subtitle}</p>
         )}
-        <p className="text-gray-400 mb-4">{description}</p>
-        <p className="text-gray-500">No images available yet</p>
+        <div className="max-w-2xl mx-auto px-6 py-3 bg-gray-900/20 rounded-lg border border-gray-700/30 mb-4">
+          <p className="text-gray-400 leading-relaxed">{description}</p>
+        </div>
+        <p className="text-gray-500 w-full">No images available yet</p>
       </div>
     );
   }
 
   return (
     <FadeIn duration={100} className={`w-full ${className}`}>
-      <div className="text-center mb-8">
-        <h3 className="text-2xl font-bold text-white mb-2">{title}</h3>
+      <div className="text-center mb-8 w-full">
+        <h3 className="text-2xl font-bold text-white mb-3 w-full">{title}</h3>
         {subtitle && (
-          <p className="text-lg text-blue-300 font-medium mb-3">{subtitle}</p>
+          <p className="text-lg text-blue-300 font-medium mb-4 w-full">{subtitle}</p>
         )}
-        <p className="text-gray-300 max-w-2xl mx-auto">{description}</p>
+        <div className="max-w-lg mx-auto px-6 py-3 bg-gray-900/20 rounded-lg border border-gray-700/30" style={{maxWidth: '450px', whiteSpace: 'normal', wordBreak: 'normal', width: 'auto', display: 'block'}}>
+          <p className="text-gray-300 leading-relaxed" style={{whiteSpace: 'normal', wordBreak: 'normal', width: 'auto', display: 'block'}}>{description}</p>
+        </div>
       </div>
 
       <div className="relative w-full max-w-5xl mx-auto">
@@ -149,31 +157,31 @@ const EventCarousel: React.FC<EventCarouselProps> = ({
           <div
             ref={sliderRef}
             className="flex transition-transform duration-600 ease-in-out"
-            style={{ gap: "1rem" }}
+            style={{ gap: `${gap}rem` }}
             onTransitionEnd={handleTransitionEnd}
           >
             {infiniteImages.map((src, index) => {
               const isCenterImage = index === currentIndex;
-              const isVisible = Math.abs(index - currentIndex) <= 1;
               
               return (
                 <div 
                   key={index} 
-                  className={`flex-shrink-0 w-[85%] transition-all duration-600 ease-in-out ${
+                  className={`flex-shrink-0 transition-all duration-600 ease-in-out ${
                     isCenterImage 
-                      ? 'h-80 scale-105 opacity-100 z-10' 
-                      : 'h-72 scale-95 opacity-75 z-5'
-                  } ${isVisible ? 'shadow-xl' : 'opacity-40'}`}
+                      ? 'h-96 md:h-[32rem] scale-100 opacity-100' 
+                      : 'h-80 md:h-96 scale-100 opacity-90'
+                  }`}
+                  style={{ width: `${slideWidth}%` }}
                 >
-                  <div className={`w-full h-full rounded-xl overflow-hidden ${
-                    isCenterImage 
-                      ? 'border-2 border-white/30 shadow-2xl' 
-                      : 'border border-white/20 shadow-lg'
-                  }`}>
-                    <LazyImage 
-                      src={src} 
-                      alt={`${title} - Image ${(index % images.length) + 1}`}
-                      className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                  <div className="w-full h-full rounded-lg overflow-hidden border border-white/15 shadow-lg">
+                    <img
+                      src={src}
+                      alt={`${title} ${index + 1}`}
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                      onError={(e) => {
+                        console.error('Event image failed to load:', src);
+                        e.currentTarget.style.display = 'none';
+                      }}
                     />
                   </div>
                 </div>

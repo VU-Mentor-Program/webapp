@@ -5,10 +5,44 @@ html,
 body {
   @apply bg-gray-800 text-white;
   font-family: var(--font-sans);
+  word-break: normal;
+  white-space: normal;
   
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;
   }
+}
+
+/* Fix for text rendering issues */
+* {
+  word-break: normal !important;
+  white-space: normal !important;
+  word-wrap: normal !important;
+  overflow-wrap: normal !important;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+  word-break: normal !important;
+  white-space: normal !important;
+  word-wrap: normal !important;
+  overflow-wrap: normal !important;
+}
+
+/* Don't override all div widths - this breaks layouts */
+.text-content {
+  max-width: none !important;
+  width: auto !important;
+  min-width: 200px !important;
+}
+
+/* Force text containers to behave properly */
+.text-container {
+  display: block !important;
+  white-space: normal !important;
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+  width: auto !important;
+  min-width: 300px !important;
 }
 
 .faq-content {

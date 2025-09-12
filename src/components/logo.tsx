@@ -6,7 +6,7 @@ export const Logo = () => {
     <div className="flex items-center justify-center rounded-full pt-16">
       <img 
         className="w-24 h-24 mb-4 rounded-full bg-white" 
-        src={logoImages.primary} 
+        src={logoImages.black} 
         alt="Mentor Program Logo" 
       />
     </div>

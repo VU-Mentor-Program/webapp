@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import FadeIn from "./Fadein-Wrapper";
-import LazyImage from "./LazyImage";
 
 // Import organized image constants
 import { eventImages } from '../assets/images';
@@ -33,11 +32,11 @@ const HomeCarousel: React.FC = () => {
   const touchEndXRef = useRef<number>(0);
   const minSwipeDistance = 50; // pixels
 
-  const slideWidthPercentage = 84; // Better centering
+  const slideWidth = 90; // Simplified slide width
+  const gap = 2; // Gap between slides in rem
 
   const resetTimer = () => {
     if (timerRef.current) clearInterval(timerRef.current);
-    // Only auto-play if we have multiple images
     if (safeRawImages.length > 1) {
       timerRef.current = window.setInterval(() => {
         nextSlide();
@@ -46,14 +45,14 @@ const HomeCarousel: React.FC = () => {
   };
 
   const prevSlide = () => {
-    if (isAnimatingRef.current || safeRawImages.length <= 1) return; // block if animating or single image
+    if (isAnimatingRef.current || safeRawImages.length <= 1) return;
     resetTimer();
     isAnimatingRef.current = true;
     setCurrentIndex((prev) => prev - 1);
   };
 
   const nextSlide = () => {
-    if (isAnimatingRef.current || safeRawImages.length <= 1) return; // block if animating or single image
+    if (isAnimatingRef.current || safeRawImages.length <= 1) return;
     resetTimer();
     isAnimatingRef.current = true;
     setCurrentIndex((prev) => prev + 1);
@@ -62,32 +61,32 @@ const HomeCarousel: React.FC = () => {
   useEffect(() => {
     resetTimer();
     return () => clearInterval(timerRef.current);
-  }, []); // resetTimer is stable, doesn't need to be in deps
+  }, []);
 
   useEffect(() => {
     if (sliderRef.current) {
-      // Improved centering calculation
-      const offset = currentIndex * (slideWidthPercentage + 2); // Account for gap
-      sliderRef.current.style.transform = `translateX(calc(-${offset}% + 8%))`;
+      // Simple centering: move by slide width + gap, center with 50% offset
+      const offset = currentIndex * (slideWidth + gap);
+      sliderRef.current.style.transform = `translateX(calc(-${offset}% + 50% - ${slideWidth/2}%))`;
     }
-  }, [currentIndex]);
+  }, [currentIndex, slideWidth]);
 
   const handleTransitionEnd = () => {
     if (currentIndex === 0) {
       setCurrentIndex(safeRawImages.length);
       if (sliderRef.current) {
         sliderRef.current.style.transition = "none";
-        const offset = safeRawImages.length * (slideWidthPercentage + 2);
-        sliderRef.current.style.transform = `translateX(calc(-${offset}% + 8%))`;
-        void sliderRef.current.offsetWidth; // force reflow
+        const offset = safeRawImages.length * (slideWidth + gap);
+        sliderRef.current.style.transform = `translateX(calc(-${offset}% + 50% - ${slideWidth/2}%))`;
+        void sliderRef.current.offsetWidth;
         sliderRef.current.style.transition = "transform 700ms ease-in-out";
       }
     } else if (currentIndex === safeRawImages.length + 1) {
       setCurrentIndex(1);
       if (sliderRef.current) {
         sliderRef.current.style.transition = "none";
-        const offset = slideWidthPercentage + 2;
-        sliderRef.current.style.transform = `translateX(calc(-${offset}% + 8%))`;
+        const offset = slideWidth + gap;
+        sliderRef.current.style.transform = `translateX(calc(-${offset}% + 50% - ${slideWidth/2}%))`;
         void sliderRef.current.offsetWidth;
         sliderRef.current.style.transition = "transform 700ms ease-in-out";
       }
@@ -115,13 +114,15 @@ const HomeCarousel: React.FC = () => {
   if (!images.length) {
     return (
       <FadeIn duration={100}>
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-white mb-3">{t("title")}</h2>
-          <p className="text-lg text-blue-300 font-medium mb-2">{t("subtitle")}</p>
-          <p className="text-gray-300 max-w-2xl mx-auto leading-relaxed">{t("description")}</p>
+        <div className="text-center mb-8 w-full">
+          <h2 className="text-3xl font-bold text-white mb-4 w-full">{t("title")}</h2>
+          <p className="text-lg text-blue-300 font-medium mb-4 w-full">{t("subtitle")}</p>
+          <div className="max-w-xl mx-auto px-6 py-4 bg-gray-900/20 rounded-lg border border-gray-700/30" style={{maxWidth: '500px', whiteSpace: 'normal', wordBreak: 'normal', width: 'auto', display: 'block'}}>
+            <p className="text-gray-300 leading-relaxed" style={{whiteSpace: 'normal', wordBreak: 'normal', width: 'auto', display: 'block'}}>{t("description")}</p>
+          </div>
         </div>
-        <div className="text-center py-12">
-          <p className="text-gray-500">No images available yet</p>
+        <div className="text-center py-12 w-full">
+          <p className="text-gray-500 w-full">No images available yet</p>
         </div>
       </FadeIn>
     );
@@ -130,10 +131,12 @@ const HomeCarousel: React.FC = () => {
   return (
     <FadeIn duration={100}>
       {/* Header Section */}
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-white mb-3">{t("title")}</h2>
-        <p className="text-lg text-blue-300 font-medium mb-2">{t("subtitle")}</p>
-        <p className="text-gray-300 max-w-2xl mx-auto leading-relaxed">{t("description")}</p>
+      <div className="text-center mb-8 w-full">
+        <h2 className="text-3xl font-bold text-white mb-4 w-full">{t("title")}</h2>
+        <p className="text-lg text-blue-300 font-medium mb-4 w-full">{t("subtitle")}</p>
+        <div className="max-w-xl mx-auto px-6 py-4 bg-gray-900/20 rounded-lg border border-gray-700/30" style={{maxWidth: '500px', whiteSpace: 'normal', wordBreak: 'normal', width: 'auto', display: 'block'}}>
+          <p className="text-gray-300 leading-relaxed" style={{whiteSpace: 'normal', wordBreak: 'normal', width: 'auto', display: 'block'}}>{t("description")}</p>
+        </div>
       </div>
 
       {/* Full-width container that breaks out of normal layout */}
@@ -149,56 +152,35 @@ const HomeCarousel: React.FC = () => {
             <div
               ref={sliderRef}
               className="flex transition-transform duration-700 ease-in-out"
-              style={{ gap: "2rem" }}
+              style={{ gap: `${gap}rem` }}
               onTransitionEnd={handleTransitionEnd}
             >
               {images.map((src, index) => {
-                // Calculate if this is the center image
                 const isCenterImage = index === currentIndex;
-                const isLeftSide = index === currentIndex - 1;
-                const isRightSide = index === currentIndex + 1;
-                const isVisible = isCenterImage || isLeftSide || isRightSide;
                 
                 return (
                   <div 
                     key={index} 
-                    className={`flex-shrink-0 w-[84%] transition-all duration-700 ease-in-out ${
+                    className={`flex-shrink-0 transition-all duration-700 ease-in-out ${
                       isCenterImage 
-                        ? 'h-[28rem] scale-110 z-20 opacity-100 shadow-2xl' 
-                        : 'h-96 scale-90 z-10 opacity-70'
-                    } ${
-                      isLeftSide || isRightSide 
-                        ? 'shadow-xl' 
-                        : isVisible ? 'shadow-lg' : 'opacity-40'
+                        ? 'h-96 md:h-[32rem] scale-100 z-10 opacity-100' 
+                        : 'h-80 md:h-96 scale-100 z-10 opacity-90'
                     }`}
                     style={{
-                      filter: isCenterImage 
-                        ? 'brightness(1.1) contrast(1.05)' 
-                        : 'brightness(0.8) contrast(0.95)'
+                      width: `${slideWidth}%`
                     }}
                   >
-                    <div className={`w-full h-full rounded-xl overflow-hidden ${
-                      isCenterImage 
-                        ? 'border-4 border-white/20 shadow-2xl ring-1 ring-white/10' 
-                        : isLeftSide || isRightSide 
-                          ? 'border-2 border-white/10 shadow-xl' 
-                          : 'border border-white/5'
-                    }`}>
-                      <LazyImage 
+                    <div className="w-full h-full rounded-xl overflow-hidden border border-white/15 shadow-lg">
+                      <img 
                         src={src} 
                         alt={`Event slide ${index}`}
                         className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                        onError={(e) => {
+                          console.error('Image failed to load:', src);
+                          e.currentTarget.style.display = 'none';
+                        }}
                       />
                     </div>
-                    
-                    {/* Side image shadows/overlays */}
-                    {(isLeftSide || isRightSide) && (
-                      <div className={`absolute inset-0 rounded-xl ${
-                        isLeftSide 
-                          ? 'bg-gradient-to-r from-transparent via-transparent to-black/20' 
-                          : 'bg-gradient-to-l from-transparent via-transparent to-black/20'
-                      } pointer-events-none`} />
-                    )}
                   </div>
                 );
               })}

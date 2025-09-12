@@ -29,11 +29,13 @@ export default function Events() {
           </FadeIn>
 
           <FadeIn duration={100}>
-            <div className="text-center mb-12">
-              <h1 className="text-4xl font-bold mb-4">{t("title")}</h1>
-              <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-                {t("subtitle")}
-              </p>
+            <div className="text-center mb-12 w-full">
+              <h1 className="text-4xl font-bold mb-4 w-full">{t("title")}</h1>
+              <div className="max-w-2xl mx-auto px-6 py-4 bg-gray-900/20 rounded-lg border border-gray-700/30" style={{maxWidth: '600px', whiteSpace: 'normal', wordBreak: 'normal', width: 'auto', display: 'block'}}>
+                <p className="text-xl text-gray-300 leading-relaxed" style={{whiteSpace: 'normal', wordBreak: 'normal', width: 'auto', display: 'block'}}>
+                  {t("subtitle")}
+                </p>
+              </div>
             </div>
           </FadeIn>
 
@@ -58,7 +60,7 @@ export default function Events() {
             <div className="mt-16 p-8 bg-gray-900/50 rounded-xl border border-gray-700/50 max-w-4xl mx-auto">
               <h2 className="text-2xl font-semibold mb-4 text-blue-400">📸 More Events Coming Soon!</h2>
               <p className="text-gray-400 leading-relaxed">
-                We're constantly organizing amazing events for you guys. 
+                We're constantly organizing events for you guys. 
                 New photo galleries will be added here as we capture more memories together!
                 Keep showing up and you might appear in the next gallery. ;p
               </p>
