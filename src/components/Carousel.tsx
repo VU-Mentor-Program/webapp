@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import FadeIn from "./Fadein-Wrapper";
+import { ImageModal } from "./ImageModal";
 
 // Import organized image constants
 import { homeCarouselImages } from '../assets/images';
@@ -243,45 +244,13 @@ const HomeCarousel: React.FC = () => {
             </div>
           )}
 
-        {/* Modal for full image view */}
+        {/* Modal for full image view using Portal */}
         {modalImage && (
-          <div 
-            className="fixed inset-0 bg-black bg-opacity-95 flex items-center justify-center p-5"
-            onClick={() => setModalImage(null)}
-            style={{
-              position: 'fixed !important' as any,
-              top: '0 !important',
-              left: '0 !important',
-              right: '0 !important',
-              bottom: '0 !important',
-              width: '100vw !important',
-              height: '100vh !important',
-              zIndex: '999999 !important',
-              backgroundColor: 'rgba(0, 0, 0, 0.95) !important',
-              margin: '0 !important',
-              padding: '20px !important'
-            }}
-          >
-            <div 
-              className="relative w-full h-full flex items-center justify-center"
-            >
-              <img
-                src={modalImage}
-                alt="Full size image"
-                onClick={(e) => e.stopPropagation()}
-                className="max-w-[calc(100vw-40px)] max-h-[calc(100vh-40px)] object-contain rounded-lg shadow-2xl"
-              />
-              <button
-                onClick={() => setModalImage(null)}
-                className="absolute top-4 right-4 bg-black bg-opacity-60 hover:bg-opacity-80 text-white p-3 rounded-full transition-all duration-200"
-                style={{ zIndex: '1000000 !important' as any }}
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-          </div>
+          <ImageModal
+            src={modalImage}
+            alt="Full size image"
+            onClose={() => setModalImage(null)}
+          />
         )}
         </div>
       </div>

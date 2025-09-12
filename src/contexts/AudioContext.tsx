@@ -1,9 +1,12 @@
 import React, { createContext, useContext, useEffect, useRef, useState, ReactNode } from 'react';
 
+// Global audio instance to ensure only one exists across the entire app
+let globalAudio: HTMLAudioElement | null = null;
+let globalAudioListeners: (() => void)[] = [];
+
 interface AudioContextType {
   isPlaying: boolean;
   toggleMusic: () => void;
-  audioRef: React.RefObject<HTMLAudioElement>;
 }
 
 const AudioContext = createContext<AudioContextType | undefined>(undefined);
@@ -22,48 +25,63 @@ interface AudioProviderProps {
 }
 
 export const AudioProvider: React.FC<AudioProviderProps> = ({ children, volume = 0.1 }) => {
-  const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
+  // Initialize global audio instance only once
   useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
+    if (!globalAudio) {
+      globalAudio = new Audio('/webapp/assets/music/backroundsong.mp3');
+      globalAudio.loop = true;
+      globalAudio.volume = volume;
+      globalAudio.preload = 'auto';
+      
+      // Set up event listeners for state synchronization
+      const handlePlay = () => {
+        globalAudioListeners.forEach(callback => callback());
+      };
+      const handlePause = () => {
+        globalAudioListeners.forEach(callback => callback());
+      };
+      
+      globalAudio.addEventListener('play', handlePlay);
+      globalAudio.addEventListener('pause', handlePause);
+      globalAudio.addEventListener('ended', handlePause);
+    }
 
-    audio.loop = true;
-    audio.volume = volume;
-    audio.preload = 'auto';
+    // Register this component for state updates
+    const updateState = () => {
+      setIsPlaying(globalAudio ? !globalAudio.paused : false);
+    };
     
-    // No auto-play - music only starts when user clicks the button
+    globalAudioListeners.push(updateState);
+    updateState(); // Set initial state
+
+    return () => {
+      // Cleanup listener on unmount
+      const index = globalAudioListeners.indexOf(updateState);
+      if (index > -1) {
+        globalAudioListeners.splice(index, 1);
+      }
+    };
   }, [volume]);
 
   const toggleMusic = () => {
-    const audio = audioRef.current;
-    if (!audio) return;
+    if (!globalAudio) return;
 
     if (isPlaying) {
       // Stop music completely
-      audio.pause();
-      setIsPlaying(false);
+      globalAudio.pause();
     } else {
       // Start playing music (only when user explicitly clicks)
-      audio.play().then(() => {
-        setIsPlaying(true);
-      }).catch((error) => {
+      globalAudio.play().catch((error) => {
         console.log('Failed to play background music:', error);
-        // You might want to show a user-friendly message here
       });
     }
   };
 
   return (
-    <AudioContext.Provider value={{ isPlaying, toggleMusic, audioRef }}>
-      <audio
-        ref={audioRef}
-        src="/webapp/assets/music/backroundsong.mp3"
-        preload="auto"
-        loop
-      />
+    <AudioContext.Provider value={{ isPlaying, toggleMusic }}>
       {children}
     </AudioContext.Provider>
   );
-};
+};}
