@@ -23,6 +23,7 @@ const images = safeRawImages.length > 0 ? [
 const HomeCarousel: React.FC = () => {
   const t = useTranslations("home_carousel");
   const [currentIndex, setCurrentIndex] = useState(1);
+  const [modalImage, setModalImage] = useState<string | null>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<number>();
   const isAnimatingRef = useRef(false); // Prevent rapid clicks
@@ -33,12 +34,26 @@ const HomeCarousel: React.FC = () => {
 
   // Simplified mobile-first approach - no complex calculations needed
 
+  // Handle body scroll lock when modal is open
+  useEffect(() => {
+    if (modalImage) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [modalImage]);
+
   const resetTimer = () => {
     if (timerRef.current) clearInterval(timerRef.current);
     if (safeRawImages.length > 1) {
-      timerRef.current = window.setInterval(() => {
-        nextSlide();
-      }, 8000);
+    timerRef.current = window.setInterval(() => {
+      nextSlide();
+    }, 8000);
     }
   };
 
@@ -137,44 +152,45 @@ const HomeCarousel: React.FC = () => {
 
           {/* Simple reliable carousel with side preview */}
           <div className="relative w-full pb-16 overflow-hidden">
-            <div className="relative w-full max-w-6xl mx-auto">
+            <div className="relative w-full max-w-6xl mx-auto px-2">
               <div
-                className="relative overflow-hidden rounded-xl"
-                onTouchStart={handleTouchStart}
-                onTouchMove={handleTouchMove}
-                onTouchEnd={handleTouchEnd}
-              >
-                <div
-                  ref={sliderRef}
-                  className="flex transition-transform duration-700 ease-in-out"
-                  onTransitionEnd={handleTransitionEnd}
-                >
-                  {images.map((src, index) => (
+                className="relative overflow-hidden rounded-xl -mx-2"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          <div
+            ref={sliderRef}
+            className="flex transition-transform duration-700 ease-in-out"
+            onTransitionEnd={handleTransitionEnd}
+          >
+            {images.map((src, index) => (
                     <div 
                       key={index} 
-                      className="flex-shrink-0 w-full h-64 md:h-96 lg:h-[32rem]"
+                      className="flex-shrink-0 w-full h-80 md:h-[28rem] lg:h-[36rem] px-2"
                     >
-                      <div className="w-full h-full rounded-xl overflow-hidden border border-white/15 shadow-lg mx-2">
+                      <div className="w-full h-full rounded-xl overflow-hidden border border-white/15 shadow-lg">
                         <img 
                           src={src} 
                           alt={`Event slide ${index}`}
-                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300 cursor-pointer"
                           onError={(e) => {
                             console.error('Image failed to load:', src);
                             e.currentTarget.style.display = 'none';
                           }}
+                          onClick={() => setModalImage(src)}
                         />
                       </div>
-                    </div>
-                  ))}
-                </div>
               </div>
+            ))}
+          </div>
+        </div>
 
         {/* Enhanced Navigation Buttons - only show if more than one image */}
         {safeRawImages.length > 1 && (
           <>
-            <button
-              onClick={prevSlide}
+        <button
+          onClick={prevSlide}
               className="absolute top-1/2 left-4 transform -translate-y-1/2 z-30
                          bg-black/40 backdrop-blur-md text-white p-3 rounded-full 
                          hover:bg-black/60 hover:scale-110 transition-all duration-300
@@ -185,9 +201,9 @@ const HomeCarousel: React.FC = () => {
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
               </svg>
-            </button>
-            <button
-              onClick={nextSlide}
+        </button>
+        <button
+          onClick={nextSlide}
               className="absolute top-1/2 right-4 transform -translate-y-1/2 z-30
                          bg-black/40 backdrop-blur-md text-white p-3 rounded-full 
                          hover:bg-black/60 hover:scale-110 transition-all duration-300
@@ -224,6 +240,31 @@ const HomeCarousel: React.FC = () => {
               ))}
             </div>
           )}
+
+        {/* Modal for full image view */}
+        {modalImage && (
+          <div 
+            className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setModalImage(null)}
+          >
+            <div className="relative max-w-7xl max-h-full">
+              <img
+                src={modalImage}
+                alt="Full size image"
+                className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+                onClick={(e) => e.stopPropagation()}
+              />
+              <button
+                onClick={() => setModalImage(null)}
+                className="absolute top-4 right-4 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-all duration-200"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+        </button>
+            </div>
+          </div>
+        )}
         </div>
       </div>
     </FadeIn>

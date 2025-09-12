@@ -21,6 +21,7 @@ const EventCarousel: React.FC<EventCarouselProps> = ({
   className = "",
 }) => {
   const [currentIndex, setCurrentIndex] = useState(1);
+  const [modalImage, setModalImage] = useState<string | null>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<number>();
   const isAnimatingRef = useRef(false);
@@ -28,6 +29,20 @@ const EventCarousel: React.FC<EventCarouselProps> = ({
   const touchStartXRef = useRef<number>(0);
   const touchEndXRef = useRef<number>(0);
   const minSwipeDistance = 50;
+
+  // Handle body scroll lock when modal is open
+  useEffect(() => {
+    if (modalImage) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [modalImage]);
 
   // Create infinite loop array
   const infiniteImages = [
@@ -144,9 +159,9 @@ const EventCarousel: React.FC<EventCarouselProps> = ({
         </div>
       </div>
 
-          <div className="relative w-full max-w-5xl mx-auto">
+          <div className="relative w-full max-w-5xl mx-auto px-2">
             <div
-              className="overflow-hidden rounded-xl"
+              className="overflow-hidden rounded-xl -mx-2"
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
@@ -159,17 +174,18 @@ const EventCarousel: React.FC<EventCarouselProps> = ({
                 {infiniteImages.map((src, index) => (
                   <div 
                     key={index} 
-                    className="flex-shrink-0 w-full h-60 md:h-80 lg:h-96"
+                    className="flex-shrink-0 w-full h-72 md:h-96 lg:h-[28rem] px-2"
                   >
-                    <div className="w-full h-full rounded-lg overflow-hidden border border-white/15 shadow-lg mx-2">
+                    <div className="w-full h-full rounded-lg overflow-hidden border border-white/15 shadow-lg">
                       <img
                         src={src}
                         alt={`${title} ${index + 1}`}
-                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300 cursor-pointer"
                         onError={(e) => {
                           console.error('Event image failed to load:', src);
                           e.currentTarget.style.display = 'none';
                         }}
+                        onClick={() => setModalImage(src)}
                       />
                     </div>
                   </div>
@@ -224,6 +240,31 @@ const EventCarousel: React.FC<EventCarouselProps> = ({
                 aria-label={`Go to image ${index + 1}`}
               />
             ))}
+          </div>
+        )}
+
+        {/* Modal for full image view */}
+        {modalImage && (
+          <div 
+            className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setModalImage(null)}
+          >
+            <div className="relative max-w-7xl max-h-full">
+              <img
+                src={modalImage}
+                alt="Full size image"
+                className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+                onClick={(e) => e.stopPropagation()}
+              />
+              <button
+                onClick={() => setModalImage(null)}
+                className="absolute top-4 right-4 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-all duration-200"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
           </div>
         )}
       </div>
