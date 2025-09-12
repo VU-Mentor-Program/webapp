@@ -31,8 +31,7 @@ const HomeCarousel: React.FC = () => {
   const touchEndXRef = useRef<number>(0);
   const minSwipeDistance = 50; // pixels
 
-  const slideWidth = 85; // Better mobile fit
-  const gap = 1.5; // Smaller gap for mobile
+  // Simplified mobile-first approach - no complex calculations needed
 
   const resetTimer = () => {
     if (timerRef.current) clearInterval(timerRef.current);
@@ -64,19 +63,18 @@ const HomeCarousel: React.FC = () => {
 
   useEffect(() => {
     if (sliderRef.current) {
-      // Simple centering: move by slide width + gap, center with 50% offset
-      const offset = currentIndex * (slideWidth + gap);
-      sliderRef.current.style.transform = `translateX(calc(-${offset}% + 50% - ${slideWidth/2}%))`;
+      // Simplified mobile-friendly centering
+      const offset = currentIndex * 100;
+      sliderRef.current.style.transform = `translateX(-${offset}%)`;
     }
-  }, [currentIndex, slideWidth]);
+  }, [currentIndex]);
 
   const handleTransitionEnd = () => {
     if (currentIndex === 0) {
       setCurrentIndex(safeRawImages.length);
       if (sliderRef.current) {
         sliderRef.current.style.transition = "none";
-        const offset = safeRawImages.length * (slideWidth + gap);
-        sliderRef.current.style.transform = `translateX(calc(-${offset}% + 50% - ${slideWidth/2}%))`;
+        sliderRef.current.style.transform = `translateX(-${safeRawImages.length * 100}%)`;
         void sliderRef.current.offsetWidth;
         sliderRef.current.style.transition = "transform 700ms ease-in-out";
       }
@@ -84,8 +82,7 @@ const HomeCarousel: React.FC = () => {
       setCurrentIndex(1);
       if (sliderRef.current) {
         sliderRef.current.style.transition = "none";
-        const offset = slideWidth + gap;
-        sliderRef.current.style.transform = `translateX(calc(-${offset}% + 50% - ${slideWidth/2}%))`;
+        sliderRef.current.style.transform = `translateX(-100%)`;
         void sliderRef.current.offsetWidth;
         sliderRef.current.style.transition = "transform 700ms ease-in-out";
       }
@@ -138,53 +135,40 @@ const HomeCarousel: React.FC = () => {
         </div>
       </div>
 
-      {/* Full-width container that breaks out of normal layout */}
-      <div className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] pb-16 overflow-hidden">
-        {/* Inner container for the carousel */}
-        <div className="relative w-full max-w-7xl mx-auto px-4">
-          <div
-            className="relative overflow-visible"
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-          >
-            <div
-              ref={sliderRef}
-              className="flex transition-transform duration-700 ease-in-out"
-              style={{ gap: `${gap}rem` }}
-              onTransitionEnd={handleTransitionEnd}
-            >
-              {images.map((src, index) => {
-                const isCenterImage = index === currentIndex;
-                
-                return (
-                  <div 
-                    key={index} 
-                    className={`flex-shrink-0 transition-all duration-700 ease-in-out ${
-                      isCenterImage 
-                        ? 'h-80 md:h-[32rem] scale-100 z-10 opacity-100' 
-                        : 'h-72 md:h-96 scale-100 z-10 opacity-90'
-                    }`}
-                    style={{
-                      width: `${slideWidth}%`
-                    }}
-                  >
-                    <div className="w-full h-full rounded-xl overflow-hidden border border-white/15 shadow-lg">
-                      <img 
-                        src={src} 
-                        alt={`Event slide ${index}`}
-                        className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-                        onError={(e) => {
-                          console.error('Image failed to load:', src);
-                          e.currentTarget.style.display = 'none';
-                        }}
-                      />
+          {/* Simplified mobile-friendly carousel container */}
+          <div className="relative w-full pb-16 overflow-hidden">
+            <div className="relative w-full max-w-6xl mx-auto px-4">
+              <div
+                className="relative overflow-hidden rounded-xl"
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+              >
+                <div
+                  ref={sliderRef}
+                  className="flex transition-transform duration-700 ease-in-out"
+                  onTransitionEnd={handleTransitionEnd}
+                >
+                  {images.map((src, index) => (
+                    <div 
+                      key={index} 
+                      className="flex-shrink-0 w-full h-64 md:h-96 lg:h-[28rem]"
+                    >
+                      <div className="w-full h-full rounded-xl overflow-hidden border border-white/15 shadow-lg mx-2">
+                        <img 
+                          src={src} 
+                          alt={`Event slide ${index}`}
+                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                          onError={(e) => {
+                            console.error('Image failed to load:', src);
+                            e.currentTarget.style.display = 'none';
+                          }}
+                        />
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+                  ))}
+                </div>
+              </div>
 
         {/* Enhanced Navigation Buttons - only show if more than one image */}
         {safeRawImages.length > 1 && (

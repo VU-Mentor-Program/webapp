@@ -65,7 +65,7 @@ export const Header: React.FC = () => {
       <header
         onClick={() => setHeaderHidden(false)}
         className={`fixed left-0 right-0 px-4 md:px-24 py-4 flex items-center z-50 
-          bg-slate-800 bg-opacity-95 backdrop-blur-sm rounded transition-transform duration-300 
+          bg-gradient-to-r from-rose-900 to-pink-900 bg-opacity-95 backdrop-blur-sm rounded transition-transform duration-300 
           ${isHeaderHidden ? "-translate-y-20" : "translate-y-0"} md:translate-y-0`}
       >
         {/* Left Section: Logo + Title */}
@@ -73,7 +73,7 @@ export const Header: React.FC = () => {
           <img src={logoImages.primary} alt="Logo" className="h-10 w-10" />
           <Link
             to="/"
-            className="text-white text-lg font-bold hover:text-slate-300 transition"
+            className="text-white text-lg font-bold hover:text-pink-200 transition"
           >
             {t("title")}
           </Link>
@@ -86,7 +86,7 @@ export const Header: React.FC = () => {
               key={link.path}
               to={link.path.startsWith("/") ? link.path : "#"}
               onClick={(e) => handleAnchorClick(e, link.path)}
-              className="text-white hover:text-slate-300 transition whitespace-nowrap"
+              className="text-white hover:text-pink-200 transition whitespace-nowrap"
             >
               {link.name}
             </Link>
@@ -97,13 +97,13 @@ export const Header: React.FC = () => {
         <div className="hidden md:flex items-center space-x-2 flex-1 justify-end">
           <button
             onClick={() => setLanguage("en")}
-            className={`px-3 py-1 transition-colors ${currentLanguage === "en" ? "bg-slate-700 rounded" : ""}`}
+            className={`px-3 py-1 transition-colors ${currentLanguage === "en" ? "bg-pink-800 rounded" : ""}`}
           >
             EN
           </button>
           <button
             onClick={() => setLanguage("nl")}
-            className={`px-3 py-1 transition-colors ${currentLanguage === "nl" ? "bg-slate-700 rounded" : ""}`}
+            className={`px-3 py-1 transition-colors ${currentLanguage === "nl" ? "bg-pink-800 rounded" : ""}`}
           >
             NL
           </button>
@@ -114,14 +114,14 @@ export const Header: React.FC = () => {
           <select
             onChange={(e) => setLanguage(e.target.value)}
             value={currentLanguage}
-            className="bg-transparent text-white border border-slate-600 rounded p-1 focus:outline-none"
+            className="bg-transparent text-white border border-pink-600 rounded p-1 focus:outline-none"
           >
             <option value="en">EN</option>
             <option value="nl">NL</option>
           </select>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="text-white hover:text-slate-300 transition focus:outline-none"
+            className="text-white hover:text-pink-200 transition focus:outline-none"
           >
             <Bars3Icon className="h-6 w-6" />
           </button>
@@ -136,14 +136,14 @@ export const Header: React.FC = () => {
         onClick={() => setMobileMenuOpen(false)}
       ></div>
       <div
-        className={`fixed top-0 left-0 h-full w-64 bg-slate-800 shadow-lg transform transition-transform duration-300 ease-in-out z-50 ${
+        className={`fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-rose-900 to-pink-900 shadow-lg transform transition-transform duration-300 ease-in-out z-50 ${
           mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex justify-end p-4">
           <button
             onClick={() => setMobileMenuOpen(false)}
-            className="text-white hover:text-slate-300 transition focus:outline-none"
+            className="text-white hover:text-pink-200 transition focus:outline-none"
           >
             <XMarkIcon className="h-6 w-6" />
           </button>
@@ -154,7 +154,7 @@ export const Header: React.FC = () => {
               key={link.path}
               to={link.path.startsWith("/") ? link.path : "#"}
               onClick={(e) => handleAnchorClick(e, link.path)}
-              className="text-white hover:text-slate-300 transition"
+              className="text-white hover:text-pink-200 transition"
             >
               {link.name}
             </Link>

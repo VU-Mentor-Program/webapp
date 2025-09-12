@@ -36,8 +36,7 @@ const EventCarousel: React.FC<EventCarouselProps> = ({
     images[0],
   ];
 
-  const slideWidth = 80; // Better mobile centering
-  const gap = 1.2; // Tighter spacing for mobile
+  // Simplified mobile-first approach - no complex calculations needed
 
   const resetTimer = () => {
     if (timerRef.current) clearInterval(timerRef.current);
@@ -69,19 +68,18 @@ const EventCarousel: React.FC<EventCarouselProps> = ({
 
   useEffect(() => {
     if (sliderRef.current) {
-      // Same centering logic as main carousel
-      const offset = currentIndex * (slideWidth + gap);
-      sliderRef.current.style.transform = `translateX(calc(-${offset}% + 50% - ${slideWidth/2}%))`;
+      // Simplified mobile-friendly centering
+      const offset = currentIndex * 100;
+      sliderRef.current.style.transform = `translateX(-${offset}%)`;
     }
-  }, [currentIndex, slideWidth]);
+  }, [currentIndex]);
 
   const handleTransitionEnd = () => {
     if (currentIndex === 0) {
       setCurrentIndex(images.length);
       if (sliderRef.current) {
         sliderRef.current.style.transition = "none";
-        const offset = images.length * (slideWidth + gap);
-        sliderRef.current.style.transform = `translateX(calc(-${offset}% + 50% - ${slideWidth/2}%))`;
+        sliderRef.current.style.transform = `translateX(-${images.length * 100}%)`;
         void sliderRef.current.offsetWidth;
         sliderRef.current.style.transition = "transform 600ms ease-in-out";
       }
@@ -89,8 +87,7 @@ const EventCarousel: React.FC<EventCarouselProps> = ({
       setCurrentIndex(1);
       if (sliderRef.current) {
         sliderRef.current.style.transition = "none";
-        const offset = slideWidth + gap;
-        sliderRef.current.style.transform = `translateX(calc(-${offset}% + 50% - ${slideWidth/2}%))`;
+        sliderRef.current.style.transform = `translateX(-100%)`;
         void sliderRef.current.offsetWidth;
         sliderRef.current.style.transition = "transform 600ms ease-in-out";
       }
@@ -147,48 +144,38 @@ const EventCarousel: React.FC<EventCarouselProps> = ({
         </div>
       </div>
 
-      <div className="relative w-full max-w-5xl mx-auto">
-        <div
-          className="overflow-hidden rounded-xl"
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-        >
-          <div
-            ref={sliderRef}
-            className="flex transition-transform duration-600 ease-in-out"
-            style={{ gap: `${gap}rem` }}
-            onTransitionEnd={handleTransitionEnd}
-          >
-            {infiniteImages.map((src, index) => {
-              const isCenterImage = index === currentIndex;
-              
-              return (
-                <div 
-                  key={index} 
-                  className={`flex-shrink-0 transition-all duration-600 ease-in-out ${
-                    isCenterImage 
-                      ? 'h-80 md:h-[32rem] scale-100 opacity-100' 
-                      : 'h-72 md:h-96 scale-100 opacity-90'
-                  }`}
-                  style={{ width: `${slideWidth}%` }}
-                >
-                  <div className="w-full h-full rounded-lg overflow-hidden border border-white/15 shadow-lg">
-                    <img
-                      src={src}
-                      alt={`${title} ${index + 1}`}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                      onError={(e) => {
-                        console.error('Event image failed to load:', src);
-                        e.currentTarget.style.display = 'none';
-                      }}
-                    />
+          <div className="relative w-full max-w-4xl mx-auto">
+            <div
+              className="overflow-hidden rounded-xl"
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+            >
+              <div
+                ref={sliderRef}
+                className="flex transition-transform duration-600 ease-in-out"
+                onTransitionEnd={handleTransitionEnd}
+              >
+                {infiniteImages.map((src, index) => (
+                  <div 
+                    key={index} 
+                    className="flex-shrink-0 w-full h-64 md:h-80 lg:h-96"
+                  >
+                    <div className="w-full h-full rounded-lg overflow-hidden border border-white/15 shadow-lg mx-2">
+                      <img
+                        src={src}
+                        alt={`${title} ${index + 1}`}
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                          console.error('Event image failed to load:', src);
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+                ))}
+              </div>
+            </div>
 
         {/* Navigation buttons - only show if more than one image */}
         {images.length > 1 && (
