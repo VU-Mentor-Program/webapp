@@ -64,7 +64,7 @@ export const Header: React.FC = () => {
       {/* Header */}
       <header
         onClick={() => setHeaderHidden(false)}
-        className={`fixed left-0 right-0 px-4 md:px-24 py-4 flex items-center z-50 
+        className={`fixed left-0 right-0 px-4 md:px-16 lg:px-24 py-4 flex items-center z-50 
           bg-gradient-lava bg-opacity-95 backdrop-blur-sm rounded transition-transform duration-300 shadow-lg
           ${isHeaderHidden ? "-translate-y-20" : "translate-y-0"} md:translate-y-0`}
       >
@@ -80,13 +80,13 @@ export const Header: React.FC = () => {
         </div>
 
         {/* Center Section: Navigation Links */}
-        <nav className="hidden md:flex space-x-6 flex-1 justify-center">
+        <nav className="hidden md:flex space-x-4 lg:space-x-6 flex-[2] justify-center">
           {navLinks.map((link) => (
             <Link
               key={link.path}
               to={link.path.startsWith("/") ? link.path : "#"}
               onClick={(e) => handleAnchorClick(e, link.path)}
-              className="text-white hover:text-pink-200 transition whitespace-nowrap"
+              className="text-white hover:text-pink-200 transition whitespace-nowrap text-sm lg:text-base"
             >
               {link.name}
             </Link>
@@ -94,7 +94,7 @@ export const Header: React.FC = () => {
         </nav>
 
         {/* Right Section: Language Switcher */}
-        <div className="hidden md:flex items-center space-x-2 flex-1 justify-end">
+        <div className="hidden md:flex items-center space-x-2 flex-[0.8] justify-end">
           <button
             onClick={() => setLanguage("en")}
             className={`px-3 py-1 transition-colors ${currentLanguage === "en" ? "bg-blue-800 rounded" : ""}`}

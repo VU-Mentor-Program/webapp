@@ -29,7 +29,7 @@ const Team: React.FC<TeamProps> = ({ title, description, background }) => {
   const extraMembers = members.slice(7); // Any additional members
 
   const toAvatar = (m: IMember) => (
-    <div key={m.name} className="w-[220px] md:w-[260px] flex flex-col items-center">
+    <div key={m.name} className="w-[200px] md:w-[240px] lg:w-[260px] flex flex-col items-center flex-shrink-0">
       <Avatar
         src={m.photo}
         alt={m.full_name}
@@ -51,20 +51,14 @@ const Team: React.FC<TeamProps> = ({ title, description, background }) => {
           {description && <p>{description}</p>}
         </div>
 
-        <div className="max-w-6xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-4">
           {/* Top row: exactly 3, centered */}
-          <div
-            className="
-              w-fit mx-auto grid place-items-center gap-x-8 md:gap-x-12 gap-y-10 mb-12
-              [grid-template-columns:repeat(1,max-content)]
-              sm:[grid-template-columns:repeat(3,max-content)]
-            "
-          >
+          <div className="flex flex-wrap justify-center gap-x-6 md:gap-x-8 lg:gap-x-12 gap-y-10 mb-12 max-w-5xl mx-auto">
             {topThree.map(toAvatar)}
           </div>
 
           {/* Bottom row: exactly 4 members, centered */}
-          <div className="flex flex-wrap justify-center gap-x-8 md:gap-x-12 gap-y-12 max-w-4xl mx-auto">
+          <div className="flex flex-wrap justify-center gap-x-4 md:gap-x-6 lg:gap-x-8 gap-y-12 max-w-6xl mx-auto">
             {bottomFour.map(toAvatar)}
           </div>
           
