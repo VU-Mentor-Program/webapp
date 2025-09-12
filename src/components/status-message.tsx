@@ -1,8 +1,6 @@
 import React from "react";
 import { Logo } from "./logo";
 import { LoadingAnimation } from "./LoadingAnimation";
-import { ErrorAnimation } from "./ErrorAnimation";
-import { SuccessAnimation } from "./SuccessAnimation";
 import { useTranslations } from "../contexts/TranslationContext";
 
 interface StatusMessageProps {
@@ -35,7 +33,7 @@ export const StatusMessage: React.FC<StatusMessageProps> = ({
         return (
             <div className="flex flex-col items-center justify-center h-screen bg-gray-800 text-white text-center px-5">
                 <Logo />
-                <ErrorAnimation />
+                <div className="mb-8 text-6xl animate-pulse">❌</div>
                 <h1 className="text-3xl">{t("error")}</h1>
                 <p className="text-xl">{errorMessage}</p>
                 <p className="text-xl"> {t("suggestion")} </p>
@@ -56,7 +54,7 @@ export const StatusMessage: React.FC<StatusMessageProps> = ({
         return (
             <div className="flex flex-col items-center justify-center h-screen bg-gray-800 text-white text-center px-5">
                 <Logo />
-                {isAccept && <SuccessAnimation />}
+                {isAccept && <div className="mb-8 text-6xl animate-bounce">✅</div>}
 
                 <h1 className={`text-3xl ${textColorClass} pb-3`}>{title}</h1>
                 <p className="text-xl">{message}</p>

@@ -14,7 +14,7 @@ export const SocialLinks = () => {
       <SocialIcon href="https://github.com/VU-Mentor-Program">
         <FaGithub />
       </SocialIcon>
-      <SocialIcon href="https://www.instagram.com/bscmentorsprogram/?utm_source=ig_web_button_share_sheet">
+      <SocialIcon href="https://www.instagram.com/vumentorprogram/">
         <FaInstagram />
       </SocialIcon>
       <SocialIcon href="https://chat.whatsapp.com/DtzNHL2mZo1LNTlYruM0Sx">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import FadeIn from "../components/Fadein-Wrapper";
 import { OnePersonPong } from "../minigames/BrickBreaker";
 import { SnakeGame } from "../minigames/SnakeGame";
@@ -9,7 +9,6 @@ import { LogoSpaceShooterGame } from "../minigames/LogoSpaceShooter";
 // import { LogoCatchGame } from "../minigames/LogoCatch";
 import { LogoDodgeGame } from "../minigames/LogoDodge";
 import { Logo } from "../components/logo";
-import LeaderBoard from "../components/minigame page/LeaderBoard";
 import { useTranslations } from "../contexts/TranslationContext";
 import PlinkoGame from "../minigames/Plinko";
 import MinesweeperGame from "../minigames/MineSweeper";
@@ -28,26 +27,6 @@ export const MinigamesPage: React.FC = () => {
     setSelectedGame(game);
   };
 
-  // Memoize the array so its reference remains the same on every render.
-  const minigames = useMemo(
-    () => [
-      "brickBreaker",
-      "snake",
-      "flappy",
-      "logoDodge",
-      "logoRacer",
-      "spaceShooter",
-      "plinko",
-      "minesweeper",
-      "tower",
-      "fasttype",
-      "simonsays",
-      "2048",
-      "bouncer",
-      "wordle",
-    ],
-    []
-  );
 
   const t = useTranslations("minigames");
 
@@ -212,7 +191,6 @@ export const MinigamesPage: React.FC = () => {
             {t("time_spent")}{" "}
             {hours}:{minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds}
           </p>
-          <LeaderBoard games={minigames} />
         </div>
       </FadeIn>
     </div>

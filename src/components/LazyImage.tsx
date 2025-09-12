@@ -11,17 +11,17 @@ const LazyImage: React.FC<LazyImageProps> = ({ src, alt, className = "", style =
   const [loaded, setLoaded] = useState(false);
 
   return (
-    <div style={style} className="relative w-full h-full overflow-hidden rounded">
+    <div style={style} className="relative w-full h-full overflow-hidden">
       <img
         src={src}
         alt={alt}
         onLoad={() => setLoaded(true)}
-        className={`w-full h-full object-cover transition-opacity duration-500 ${
+        className={`transition-opacity duration-500 ${
           loaded ? "opacity-100" : "opacity-0"
         } ${className}`}
       />
       <div
-        className={`absolute inset-0 bg-gray-300 filter blur-lg transition-opacity duration-500 rounded ${
+        className={`absolute inset-0 bg-gray-700 filter blur-lg transition-opacity duration-500 ${
           loaded ? "opacity-0" : "opacity-100"
         }`}
       ></div>

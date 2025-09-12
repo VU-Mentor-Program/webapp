@@ -5,9 +5,7 @@ import { IntlProvider } from "react-intl";
 import FAQ from "../components/FAQ"
 import Hero from "../components/Hero"
 import { useTranslations } from "../contexts/TranslationContext";
-import Carousel from "../components/Carousel"
-import MonthlyEvents from "../components/MonthlyEvents";
-import AttendanceLeaderBoard from "../components/attendanceLeaderboard";
+import HomeCarousel from "../components/Carousel"
 import FadeIn from "../components/Fadein-Wrapper";
 import { FormsAccordion } from "../components/FormsAccordion";
 
@@ -30,12 +28,10 @@ export default function Home() {
           }}
         >
           <Hero />
-          <Carousel />
-          <MonthlyEvents />
+          <HomeCarousel />
           <FAQ />
           <Team title={t("title")} description={t("subtitle")} />
           <FormsAccordion />
-          <AttendanceLeaderBoard />
           <Calendar />
 
           <FadeIn duration={100} className="mt-6">

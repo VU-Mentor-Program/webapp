@@ -1,6 +1,7 @@
 import React from 'react';
 import { CircleFlag } from 'react-circle-flags';
 import LazyImage from './LazyImage';
+import { teamPhotos } from '../assets/images';
 
 interface AvatarProps {
   src: string;
@@ -18,7 +19,7 @@ const Avatar: React.FC<AvatarProps> = ({
   country,
 }) => {
   if (!src) {
-    src = "/webapp/default person.jpg";
+    src = teamPhotos.defaultPerson;
   }
   return (
     <div className="w-[186px] h-[196px] flex flex-col items-center text-center pb-5">

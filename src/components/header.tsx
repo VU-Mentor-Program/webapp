@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import logo from "../assets/mp_logo-CIRCLE.png";
+import { logoImages } from "../assets/images";
 import { useTranslations, useSetLanguage, useCurrentLanguage } from "../contexts/TranslationContext";
 
 export const Header: React.FC = () => {
@@ -16,9 +16,9 @@ export const Header: React.FC = () => {
   const navLinks = [
     { name: t("link1"), path: "#faq" },
     { name: t("link2"), path: "#team" },
-    { name: t("link5"), path: "#leaderboard" },
     { name: t("link3"), path: "#calendar" },
     { name: t("link4"), path: "/minigames" },
+    { name: t("link5"), path: "/events" },
     { name: t("link6"), path: "#help-us-out" },
   ];
 
@@ -70,7 +70,7 @@ export const Header: React.FC = () => {
       >
         {/* Left Section: Logo + Title */}
         <div className="flex items-center space-x-3 flex-1">
-          <img src={logo} alt="Logo" className="h-10 w-10" />
+          <img src={logoImages.primary} alt="Logo" className="h-10 w-10" />
           <Link
             to="/"
             className="text-white text-lg font-bold hover:text-gray-300 transition"

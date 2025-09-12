@@ -5,7 +5,7 @@
     "link2": "Team",
     "link3": "Calendar",
     "link4": "Minigames",
-    "link5": "Leaderboard",
+    "link5": "Events",
     "link6": "Help us!"
   },
   "statusMessage": {
@@ -47,34 +47,19 @@
     "text": "Starting your first year in AI or CS? VU’s Mentor Program for Computer Science and Artificial Intelligence is here to support your transition to university life in Amsterdam. The program offers a range of free social events, study sessions, and exam preparations, all designed to help you thrive academically and socially. Whether you’re looking to meet new people or need guidance with your studies, Mentor Program offers a welcoming community to ensure a smooth and successful start. Join via our WhatsApp link and make the most of your first year!",
     "join": "Join the Community!"
   },
+  "home_carousel": {
+    "title": "Our Favourite Events",
+    "subtitle": "Captured Memories",
+    "description": "Find yourself in our events and see the amazing community we're building together. Every photo tells a story of connection, learning, and fun!"
+  },
   "team": {
     "title": "Our Team",
-    "subtitle": "Meet our amazing team",
+    "subtitle": "Meet our amazing team", 
     "minigames": "🕹️ Play Minigames! 🕹️"
-  },
-  "monthlyEvents": {
-    "title": "Monthly Events",
-    "description": "Typically, we aim to have one larger social event, two smaller social events, and one academic event per month. This changes based on the students' schedule and we're flexible about it. If first-year students have exams, we will always try to organize an exam preparation session. This session can replace either the academic event or one of the smaller social events.",
-    "eventName": "Go Karting & Laser Tag",
-    "counterLabel": "Time the event:",
-    "signupLinkLabel": "Sign up now!",
-    "loading": "Loading event data..."
-  },
-  "leaderboard": {
-    "title": "Sign-Up Leaderboard",
-    "refreshButton": "Refresh Leaderboard",
-    "noData": "No sign-up data available",
-    "errorLoading": "Failed to load leaderboard data.",
-    "subtitle": "Counter on how many times one has signed up to our events! There is a prize for the one who signs up the most at the end of the academic year!"
   },
   "minigames": {
     "title": "Minigames",
     "game_choice": "Choose a game to play!",
-    "leaderboard_error": "No data available.",
-    "leaderboard_title": "Leaderboards",
-    "refresh_leaderboard": "Refresh Leaderboard",
-    "pergame_leaderboard": "Leaderboard",
-    "overall_leaderboard": "Overall Leaderboard",
     "snake_speed": "Snake Speed:",
     "game_over": "Game Over",
     "your_score": "Your score: ",
@@ -105,6 +90,19 @@
     "submit": "Submit",
     "you_lost": "You lost",
     "solution": "Solution"
+  },
+  "events": {
+    "title": "Past Events", 
+    "subtitle": "Take a look at the amazing events we've organized for our community!",
+    "study_sessions_title": "Study Session",
+    "study_sessions_date": "September 10, 2024",
+    "study_sessions_desc": "First collaborative study session to help students prepare for their exams",
+    "social_events": "Social Events", 
+    "social_events_desc": "Fun activities to build connections and create memories",
+    "workshops": "Workshops & Presentations",
+    "workshops_desc": "Educational sessions and skill-building workshops",
+    "loading": "Loading images...",
+    "no_images": "No images available for this event yet."
   },
   "forms": {
     "exam_title": "Exam Preparation Feedback",

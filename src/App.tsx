@@ -4,6 +4,7 @@ import Home from './routes/home';
 import Accept from './routes/accept';
 import Decline from "./routes/decline";
 import { MinigamesPage } from "./routes/minigames";
+import Events from "./routes/events";
 import { TranslationProvider } from "./contexts/TranslationContext";
 import { Layout } from "./components/Layout"
 
@@ -28,6 +29,10 @@ function App() {
           <Route path="/minigames" element={
             <Layout>
               <MinigamesPage />
+            </Layout>} />
+          <Route path="/events" element={
+            <Layout>
+              <Events />
             </Layout>} />
         </Routes>
       </Router>
