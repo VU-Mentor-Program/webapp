@@ -6,36 +6,39 @@ import Decline from "./routes/decline";
 import { MinigamesPage } from "./routes/minigames";
 import Events from "./routes/events";
 import { TranslationProvider } from "./contexts/TranslationContext";
+import { AudioProvider } from "./contexts/AudioContext";
 import { Layout } from "./components/Layout"
 
 function App() {
 
   return (
-    < TranslationProvider >
-      <Router>
-        <Routes>
-          <Route path="/" element={
-            <Layout>
-              <Home />
-            </Layout>}/>
-          <Route path="/accept" element={
-            <Layout>
-              <Accept />
-            </Layout>} />
-          <Route path="/decline" element={
-            <Layout>
-              <Decline />
-            </Layout>} />
-          <Route path="/minigames" element={
-            <Layout>
-              <MinigamesPage />
-            </Layout>} />
-          <Route path="/events" element={
-            <Layout>
-              <Events />
-            </Layout>} />
-        </Routes>
-      </Router>
+    <TranslationProvider>
+      <AudioProvider volume={0.1}>
+        <Router>
+          <Routes>
+            <Route path="/" element={
+              <Layout>
+                <Home />
+              </Layout>}/>
+            <Route path="/accept" element={
+              <Layout>
+                <Accept />
+              </Layout>} />
+            <Route path="/decline" element={
+              <Layout>
+                <Decline />
+              </Layout>} />
+            <Route path="/minigames" element={
+              <Layout>
+                <MinigamesPage />
+              </Layout>} />
+            <Route path="/events" element={
+              <Layout>
+                <Events />
+              </Layout>} />
+          </Routes>
+        </Router>
+      </AudioProvider>
     </TranslationProvider>
   )
 }

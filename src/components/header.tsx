@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { logoImages } from "../assets/images";
 import { useTranslations, useSetLanguage, useCurrentLanguage } from "../contexts/TranslationContext";
-import { AudioControlButton } from "./AudioControlButton";
+import { MusicButton } from "./MusicButton";
 
 export const Header: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -96,8 +96,7 @@ export const Header: React.FC = () => {
 
         {/* Right Section: Language Switcher + Music Control */}
         <div className="hidden md:flex items-center space-x-3 flex-[0.8] justify-end">
-          <AudioControlButton 
-            volume={0.1}
+          <MusicButton 
             className="bg-white/10 hover:bg-white/20 text-white p-2 rounded-full transition-colors duration-200 backdrop-blur-sm"
           />
           <button
@@ -169,8 +168,7 @@ export const Header: React.FC = () => {
         {/* Audio Control at Bottom of Sidebar */}
         <div className="p-4 border-t border-white/20">
           <div className="flex items-center space-x-2">
-            <AudioControlButton 
-              volume={0.1}
+            <MusicButton 
               className="text-white hover:text-pink-200 transition p-2 rounded-full"
             />
             <span className="text-white text-sm">Music</span>
