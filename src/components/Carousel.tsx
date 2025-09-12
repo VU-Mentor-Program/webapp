@@ -2,13 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import FadeIn from "./Fadein-Wrapper";
 
 // Import organized image constants
-import { eventImages } from '../assets/images';
+import { homeCarouselImages } from '../assets/images';
 import { useTranslations } from '../contexts/TranslationContext';
 
-// Use the same images as events for consistency
+// Use dedicated home carousel images
 const rawImages = [
-  eventImages.studySession1,
-  eventImages.studySession2,
+  ...homeCarouselImages
 ];
 
 // Handle edge case: ensure we have images
