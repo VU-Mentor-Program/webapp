@@ -37,7 +37,7 @@ const Avatar: React.FC<AvatarProps> = ({
             <span className="absolute bottom-[-15px] right-[-5px] transition-all duration-500 ease-out transform group-hover:scale-140 group-hover:rotate-15 group-hover:shadow-xl group-hover:-translate-y-1">
               <CircleFlag
                 countryCode={country.toLowerCase()}
-                className="rounded-full border-3 border-white shadow-lg transition-all duration-500 ease-out"
+                className="rounded-full shadow-lg transition-all duration-500 ease-out"
                 width="40"
                 height="40"
                 style={{width: '40px', height: '40px'}}
