@@ -20,7 +20,7 @@ export const SocialLinks = () => {
       <SocialIcon href="https://chat.whatsapp.com/DtzNHL2mZo1LNTlYruM0Sx">
         <FaWhatsapp />
       </SocialIcon>
-      <SocialIcon href="https://drive.google.com/drive/folders/1F-RjBrZq7mie_sZjr_oJwLzC6VyjvHO8?usp=sharing">
+      <SocialIcon href="https://drive.google.com/drive/folders/1YgNYf9C_y3bb67LvPOQ0go6TVHH0JlDR">
         <FaGoogleDrive />
       </SocialIcon>
     </div>
