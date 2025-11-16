@@ -160,6 +160,16 @@ export const eventGalleries = {
       '/webapp/assets/images/events/pumpkincarving/1 (64).jpg',
     ],
   },
+  hackathon_11_2025: {
+    title: "hackathon_title",
+    subtitle: "hackathon_date",
+    description: "hackathon_desc",
+    images: [
+      '/webapp/assets/images/events/hackathon/1.jpeg',
+      '/webapp/assets/images/events/hackathon/2.jpeg',
+      '/webapp/assets/images/events/hackathon/3.jpeg',
+    ],
+  },
   halloweenClub_10_28_2025: {
     title: "halloween_club_title",
     subtitle: "halloween_club_date",
@@ -199,16 +209,6 @@ export const eventGalleries = {
       '/webapp/assets/images/events/gamenight/9.jpeg',
       '/webapp/assets/images/events/gamenight/10.jpeg',
       '/webapp/assets/images/events/gamenight/11.jpeg',
-    ],
-  },
-  hackathon_11_2025: {
-    title: "hackathon_title",
-    subtitle: "hackathon_date",
-    description: "hackathon_desc",
-    images: [
-      '/webapp/assets/images/events/hackathon/1.jpeg',
-      '/webapp/assets/images/events/hackathon/2.jpeg',
-      '/webapp/assets/images/events/hackathon/3.jpeg',
     ],
   },
   // Easy to add new event categories:
