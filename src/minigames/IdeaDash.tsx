@@ -168,7 +168,8 @@ export const IdeaDashGame: React.FC = () => {
     // Passive score increase based on speed (faster = more points)
     // Only increment score every 60 frames (1 second at 60fps)
     if (frameRef.current % 60 === 0) {
-      setScore((s) => Math.floor(s + speedFactor));
+      const multiplier = powerUpActive === "2x" ? 2 : 1;
+      setScore((s) => Math.floor(s + speedFactor * multiplier));
     }
 
     // Spawn obstacles and ideas
@@ -271,7 +272,9 @@ export const IdeaDashGame: React.FC = () => {
           }
           setObjects((o) => o.filter((item) => item !== obj));
         } else if (obj.type === "idea") {
-          setScore((s) => s + 1);
+          // Double points if 2x powerup is active
+          const points = powerUpActive === "2x" ? 2 : 1;
+          setScore((s) => s + points);
           setIdeasCollected((i) => {
             const newIdeas = i + 1;
             if (newIdeas % 5 === 0) {
@@ -280,11 +283,12 @@ export const IdeaDashGame: React.FC = () => {
             }
             return newIdeas;
           });
-          // Visual feedback
-          createParticleBurst(obj.x, obj.y, "#ffd700", 12);
+          // Visual feedback (gold or green for 2x)
+          const particleColor = powerUpActive === "2x" ? "#00ff00" : "#ffd700";
+          createParticleBurst(obj.x, obj.y, particleColor, 12);
           setObjects((o) => o.filter((item) => item !== obj));
         } else if (obj.type === "powerup") {
-          const powerups = ["shield", "magnet", "slowmo"];
+          const powerups = ["shield", "magnet", "2x"];
           const randomPowerup = powerups[Math.floor(Math.random() * powerups.length)];
           setPowerUpActive(randomPowerup);
           setPowerUpTimer(5);
@@ -640,41 +644,72 @@ export const IdeaDashGame: React.FC = () => {
       }
     }
 
-    // HUD with semi-transparent background
-    ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-    ctx.fillRect(5, 5, 150 * scaleX, 135 * scaleY);
+    // HUD with improved styling
+    // Rounded semi-transparent background
+    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+    ctx.beginPath();
+    ctx.roundRect(8, 8, 165 * scaleX, 140 * scaleY, 8 * scaleX);
+    ctx.fill();
 
+    // Border
+    ctx.strokeStyle = "rgba(83, 168, 226, 0.5)";
+    ctx.lineWidth = 2 * scaleX;
+    ctx.stroke();
+
+    // Score with glow
+    ctx.shadowColor = "#ffd700";
+    ctx.shadowBlur = 10 * scaleX;
+    ctx.fillStyle = "#ffd700";
+    ctx.font = `bold ${22 * Math.min(scaleX, scaleY)}px Arial`;
+    ctx.fillText("💡", 15, 35 * scaleY);
     ctx.fillStyle = "white";
-    ctx.font = `bold ${18 * Math.min(scaleX, scaleY)}px Arial`;
-    ctx.fillText(`💡 ${Math.floor(score)}`, 10, 30 * scaleY);
+    ctx.fillText(Math.floor(score).toString(), 40, 35 * scaleY);
+    ctx.shadowBlur = 0;
 
     // Animated hearts
     for (let i = 0; i < 3; i++) {
       if (i < hearts) {
         const heartPulse = hearts === 1 ? Math.sin(animFrameRef.current * 0.2) * 0.2 + 1 : 1;
-        ctx.font = `${(18 * heartPulse) * Math.min(scaleX, scaleY)}px Arial`;
-        ctx.fillText("❤️", 10 + i * 25 * scaleX, 55 * scaleY);
+        ctx.font = `${(20 * heartPulse) * Math.min(scaleX, scaleY)}px Arial`;
+        ctx.fillText("❤️", 15 + i * 30 * scaleX, 65 * scaleY);
       } else {
-        ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
-        ctx.font = `${18 * Math.min(scaleX, scaleY)}px Arial`;
-        ctx.fillText("🖤", 10 + i * 25 * scaleX, 55 * scaleY);
+        ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
+        ctx.font = `${20 * Math.min(scaleX, scaleY)}px Arial`;
+        ctx.fillText("🖤", 15 + i * 30 * scaleX, 65 * scaleY);
         ctx.fillStyle = "white";
       }
     }
 
-    ctx.font = `${18 * Math.min(scaleX, scaleY)}px Arial`;
-    ctx.fillText(`🏆 ${highScore}`, 10, 80 * scaleY);
-    ctx.fillText(`🔥 ${streak}`, 10, 105 * scaleY);
+    // High score and streak
+    ctx.fillStyle = "rgba(255, 215, 0, 0.8)";
+    ctx.font = `${16 * Math.min(scaleX, scaleY)}px Arial`;
+    ctx.fillText("🏆", 15, 90 * scaleY);
+    ctx.fillStyle = "white";
+    ctx.fillText(Math.floor(highScore).toString(), 40, 90 * scaleY);
 
+    ctx.fillStyle = "rgba(255, 100, 50, 0.8)";
+    ctx.fillText("🔥", 15, 115 * scaleY);
+    ctx.fillStyle = "white";
+    ctx.fillText(streak.toString(), 40, 115 * scaleY);
+
+    // Power-up display
     if (powerUpActive) {
-      const powerUpColor = powerUpActive === "shield" ? "#00ff00" : powerUpActive === "magnet" ? "#ff00ff" : "#00d4ff";
-      ctx.fillStyle = powerUpColor;
-      ctx.fillText(`⚡ ${powerUpActive.toUpperCase()}`, 10, 130 * scaleY);
+      const powerUpColor = powerUpActive === "shield" ? "#00ff00" : powerUpActive === "magnet" ? "#ff00ff" : "#ffd700";
+      const powerUpText = powerUpActive === "2x" ? "2X POINTS" : powerUpActive.toUpperCase();
 
-      // Timer bar
-      const barWidth = (powerUpTimer / 5) * 140 * scaleX;
+      ctx.shadowColor = powerUpColor;
+      ctx.shadowBlur = 15 * scaleX;
       ctx.fillStyle = powerUpColor;
-      ctx.fillRect(10, 135 * scaleY, barWidth, 5 * scaleY);
+      ctx.font = `bold ${16 * Math.min(scaleX, scaleY)}px Arial`;
+      ctx.fillText(`⚡ ${powerUpText}`, 15, 140 * scaleY);
+      ctx.shadowBlur = 0;
+
+      // Timer bar with glow
+      const barWidth = (powerUpTimer / 5) * 150 * scaleX;
+      ctx.fillStyle = powerUpColor;
+      ctx.beginPath();
+      ctx.roundRect(15, 145 * scaleY, barWidth, 6 * scaleY, 3 * scaleX);
+      ctx.fill();
     }
 
     // Flash overlay
