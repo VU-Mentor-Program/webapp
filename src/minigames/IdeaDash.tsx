@@ -58,6 +58,8 @@ export const IdeaDashGame: React.FC = () => {
 
   const [powerUpActive, setPowerUpActive] = useState<string | null>(null);
   const [powerUpTimer, setPowerUpTimer] = useState(0);
+  const [invincible, setInvincible] = useState(false);
+  const [invincibleTimer, setInvincibleTimer] = useState(0);
 
   // Visual effects
   const [particles, setParticles] = useState<Particle[]>([]);
@@ -75,7 +77,7 @@ export const IdeaDashGame: React.FC = () => {
   const lastPowerUpTimeRef = useRef(0);
   const animFrameRef = useRef(0);
 
-  const obstacleLabels = ["Perfectionism", "Self-Doubt", "Comparison", "Fear"];
+  const obstacleEmojis = ["😰", "😱", "😤", "💀", "😵", "😨"];
 
   // Responsive canvas
   useEffect(() => {
@@ -105,7 +107,7 @@ export const IdeaDashGame: React.FC = () => {
     };
     animId = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(animId);
-  }, [gameOver, isPaused, hasStarted, playerY, playerVelY, objects, hearts, score, speed, ideasCollected, powerUpActive, particles, screenShake, flashColor, bgHue]);
+  }, [gameOver, isPaused, hasStarted, playerY, playerVelY, objects, hearts, score, speed, ideasCollected, powerUpActive, particles, screenShake, flashColor, bgHue, invincible, invincibleTimer]);
 
   function updateGame(elapsedSeconds: number) {
     frameRef.current++;
@@ -117,6 +119,13 @@ export const IdeaDashGame: React.FC = () => {
     if (screenShake > 0) setScreenShake(screenShake - 1);
     if (flashColor) {
       setTimeout(() => setFlashColor(null), 100);
+    }
+
+    // Invincibility timer
+    if (invincible && invincibleTimer > 0) {
+      setInvincibleTimer((t) => t - 0.016);
+    } else if (invincibleTimer <= 0) {
+      setInvincible(false);
     }
 
     // Update player physics
@@ -146,7 +155,7 @@ export const IdeaDashGame: React.FC = () => {
     setPlayerY(newY);
     setPlayerVelY(newVelY);
 
-    // Update parallax
+    // Update parallax and passive score
     const speedFactor = Math.min(speed / 4, 2.5);
     setCloudOffset((o) => (o - 0.5 * speedFactor) % LOGICAL_WIDTH);
     setBuildingOffset((o) => (o - 1 * speedFactor) % LOGICAL_WIDTH);
@@ -155,6 +164,9 @@ export const IdeaDashGame: React.FC = () => {
     // Update background hue based on speed
     const targetHue = 220 - (speedFactor - 1) * 60; // Blue -> Purple -> Red
     setBgHue((h) => h + (targetHue - h) * 0.05);
+
+    // Passive score increase based on speed (faster = more points)
+    setScore((s) => s + speedFactor * 0.01);
 
     // Spawn obstacles and ideas
     const spawnRate = Math.max(60 - Math.floor(elapsedSeconds * 2), 30);
@@ -168,7 +180,7 @@ export const IdeaDashGame: React.FC = () => {
             x: LOGICAL_WIDTH,
             y: GROUND_Y,
             type: "obstacle",
-            label: obstacleLabels[Math.floor(Math.random() * obstacleLabels.length)],
+            label: obstacleEmojis[Math.floor(Math.random() * obstacleEmojis.length)],
             rotation: 0,
           },
         ]);
@@ -235,7 +247,7 @@ export const IdeaDashGame: React.FC = () => {
 
       if (checkCollision(playerHitbox, objHitbox)) {
         if (obj.type === "obstacle") {
-          if (powerUpActive !== "shield") {
+          if (powerUpActive !== "shield" && !invincible) {
             setHearts((h) => {
               const newHearts = h - 1;
               if (newHearts <= 0) {
@@ -247,6 +259,10 @@ export const IdeaDashGame: React.FC = () => {
             setScreenShake(10);
             setFlashColor("rgba(255, 0, 0, 0.3)");
             createParticleBurst(obj.x, obj.y, "#e94560", 15);
+
+            // Grant invincibility for 2 seconds after taking damage
+            setInvincible(true);
+            setInvincibleTimer(2);
           } else {
             createParticleBurst(obj.x, obj.y, "#00ff00", 10);
           }
@@ -442,11 +458,10 @@ export const IdeaDashGame: React.FC = () => {
         ctx.lineWidth = 3 * scaleX;
         ctx.stroke();
 
-        // Label inside
-        ctx.fillStyle = "white";
-        ctx.font = `bold ${9 * Math.min(scaleX, scaleY)}px Arial`;
+        // Emoji inside
+        ctx.font = `${28 * Math.min(scaleX, scaleY)}px Arial`;
         ctx.textAlign = "center";
-        ctx.fillText(obj.label || "", x + w / 2, y + h / 2 + 3 * scaleY);
+        ctx.fillText(obj.label || "😰", x + w / 2, y + h / 2 + 10 * scaleY);
         ctx.textAlign = "left";
 
       } else if (obj.type === "idea") {
@@ -549,21 +564,63 @@ export const IdeaDashGame: React.FC = () => {
       ctx.fill();
     }
 
-    // Player body
-    const playerGradient = ctx.createLinearGradient(
-      -PLAYER_SIZE * scaleX / 2,
-      -PLAYER_SIZE * scaleY / 2,
-      PLAYER_SIZE * scaleX / 2,
-      PLAYER_SIZE * scaleY / 2
-    );
-    playerGradient.addColorStop(0, "#53a8e2");
-    playerGradient.addColorStop(1, "#2d5f8a");
-    ctx.fillStyle = playerGradient;
-    ctx.fillRect(-PLAYER_SIZE * scaleX / 2, -PLAYER_SIZE * scaleY / 2, PLAYER_SIZE * scaleX, PLAYER_SIZE * scaleY);
+    // Invincibility blink effect
+    const blinkVisible = !invincible || Math.floor(animFrameRef.current / 5) % 2 === 0;
 
-    // Player emoji
-    ctx.font = `${30 * Math.min(scaleX, scaleY)}px Arial`;
-    ctx.fillText("🏃", -15 * scaleX, 15 * scaleY);
+    if (blinkVisible) {
+      // Draw pixel art running human
+      const pixelSize = 3 * scaleX;
+      const px = -PLAYER_SIZE * scaleX / 2;
+      const py = -PLAYER_SIZE * scaleY / 2;
+
+      // Simple pixel art human (12x14 grid)
+      const runFrame = Math.floor(animFrameRef.current / 8) % 2;
+
+      // Head
+      ctx.fillStyle = "#ffdbac";
+      ctx.fillRect(px + pixelSize * 4, py + pixelSize * 1, pixelSize * 4, pixelSize * 4);
+
+      // Eyes
+      ctx.fillStyle = "#000";
+      ctx.fillRect(px + pixelSize * 5, py + pixelSize * 2, pixelSize, pixelSize);
+      ctx.fillRect(px + pixelSize * 7, py + pixelSize * 2, pixelSize, pixelSize);
+
+      // Body
+      ctx.fillStyle = "#53a8e2";
+      ctx.fillRect(px + pixelSize * 3, py + pixelSize * 5, pixelSize * 6, pixelSize * 5);
+
+      // Arms (animated)
+      ctx.fillStyle = "#ffdbac";
+      if (runFrame === 0 || isJumping) {
+        // Left arm up, right arm down
+        ctx.fillRect(px + pixelSize * 2, py + pixelSize * 5, pixelSize * 1, pixelSize * 3);
+        ctx.fillRect(px + pixelSize * 9, py + pixelSize * 8, pixelSize * 1, pixelSize * 3);
+      } else {
+        // Right arm up, left arm down
+        ctx.fillRect(px + pixelSize * 2, py + pixelSize * 8, pixelSize * 1, pixelSize * 3);
+        ctx.fillRect(px + pixelSize * 9, py + pixelSize * 5, pixelSize * 1, pixelSize * 3);
+      }
+
+      // Legs (animated)
+      ctx.fillStyle = "#2d5f8a";
+      if (runFrame === 0 && !isJumping) {
+        // Left leg forward, right leg back
+        ctx.fillRect(px + pixelSize * 3, py + pixelSize * 10, pixelSize * 2, pixelSize * 4);
+        ctx.fillRect(px + pixelSize * 7, py + pixelSize * 10, pixelSize * 2, pixelSize * 4);
+      } else if (!isJumping) {
+        // Right leg forward, left leg back
+        ctx.fillRect(px + pixelSize * 4, py + pixelSize * 10, pixelSize * 2, pixelSize * 4);
+        ctx.fillRect(px + pixelSize * 6, py + pixelSize * 10, pixelSize * 2, pixelSize * 4);
+      } else {
+        // Both legs together when jumping
+        ctx.fillRect(px + pixelSize * 4, py + pixelSize * 10, pixelSize * 4, pixelSize * 4);
+      }
+
+      // Shoes
+      ctx.fillStyle = "#000";
+      ctx.fillRect(px + pixelSize * 3, py + pixelSize * 13, pixelSize * 2, pixelSize * 1);
+      ctx.fillRect(px + pixelSize * 7, py + pixelSize * 13, pixelSize * 2, pixelSize * 1);
+    }
     ctx.restore();
 
     // Speed lines effect when going fast
@@ -685,6 +742,8 @@ export const IdeaDashGame: React.FC = () => {
     setIsJumping(false);
     setPowerUpActive(null);
     setPowerUpTimer(0);
+    setInvincible(false);
+    setInvincibleTimer(0);
     setParticles([]);
     setScreenShake(0);
     setFlashColor(null);
