@@ -33,10 +33,11 @@ export const homeCarouselImages = [
   // and add the path here following the pattern above
 ] as const;
 
-// Event galleries - easy to extend with new events
+// Event galleries - year-round events first, then chronological
 export const eventGalleries = {
+  // Year-round recurring events
   studySession_10_09_2024: {
-    title: "study_sessions_title", 
+    title: "study_sessions_title",
     subtitle: "study_sessions_date",
     description: "study_sessions_desc",
     images: [
@@ -44,6 +45,22 @@ export const eventGalleries = {
       '/webapp/assets/images/events/studysession/studysession2.png',
     ],
   },
+  guestLectures_11_14_2025: {
+    title: "guest_lectures_title",
+    subtitle: "guest_lectures_date",
+    description: "guest_lectures_desc",
+    images: [
+      '/webapp/assets/images/events/guestlectures/!COVER.jpeg',
+      '/webapp/assets/images/events/guestlectures/2.jpeg',
+      '/webapp/assets/images/events/guestlectures/3.jpeg',
+      '/webapp/assets/images/events/guestlectures/4.jpeg',
+      '/webapp/assets/images/events/guestlectures/5.jpeg',
+      '/webapp/assets/images/events/guestlectures/7.jpeg',
+      '/webapp/assets/images/events/guestlectures/9.jpeg',
+      '/webapp/assets/images/events/guestlectures/WhatsApp Image 2025-11-14 at 22.10.04.jpeg',
+    ],
+  },
+  // Academic year 2024-2025 specific events (chronological order)
   mexicanDinner_12_09_2025: {
     title: "mexican_dinner_title",
     subtitle: "mexican_dinner_date",
@@ -79,62 +96,6 @@ export const eventGalleries = {
       '/webapp/assets/images/events/mexicandinner/IMG_9580.JPG',
       '/webapp/assets/images/events/mexicandinner/IMG_9582.JPG',
       '/webapp/assets/images/events/mexicandinner/didyoucheckin.jpg',
-    ],
-  },
-  gameNight_11_07_2025: {
-    title: "game_night_title",
-    subtitle: "game_night_date",
-    description: "game_night_desc",
-    images: [
-      '/webapp/assets/images/events/gamenight/1.jpeg',
-      '/webapp/assets/images/events/gamenight/2.jpeg',
-      '/webapp/assets/images/events/gamenight/3.jpeg',
-      '/webapp/assets/images/events/gamenight/4.jpeg',
-      '/webapp/assets/images/events/gamenight/5.jpeg',
-      '/webapp/assets/images/events/gamenight/6.jpeg',
-      '/webapp/assets/images/events/gamenight/7.jpeg',
-      '/webapp/assets/images/events/gamenight/8.jpeg',
-      '/webapp/assets/images/events/gamenight/9.jpeg',
-      '/webapp/assets/images/events/gamenight/10.jpeg',
-      '/webapp/assets/images/events/gamenight/11.jpeg',
-    ],
-  },
-  guestLectures_11_14_2025: {
-    title: "guest_lectures_title",
-    subtitle: "guest_lectures_date",
-    description: "guest_lectures_desc",
-    images: [
-      '/webapp/assets/images/events/guestlectures/!COVER.jpeg',
-      '/webapp/assets/images/events/guestlectures/2.jpeg',
-      '/webapp/assets/images/events/guestlectures/3.jpeg',
-      '/webapp/assets/images/events/guestlectures/4.jpeg',
-      '/webapp/assets/images/events/guestlectures/5.jpeg',
-      '/webapp/assets/images/events/guestlectures/7.jpeg',
-      '/webapp/assets/images/events/guestlectures/9.jpeg',
-      '/webapp/assets/images/events/guestlectures/WhatsApp Image 2025-11-14 at 22.10.04.jpeg',
-    ],
-  },
-  halloweenClub_10_28_2025: {
-    title: "halloween_club_title",
-    subtitle: "halloween_club_date",
-    description: "halloween_club_desc",
-    images: [
-      '/webapp/assets/images/events/halloweenclub/1.jpeg',
-      '/webapp/assets/images/events/halloweenclub/2.jpeg',
-      '/webapp/assets/images/events/halloweenclub/3.jpeg',
-      '/webapp/assets/images/events/halloweenclub/4.jpeg',
-      '/webapp/assets/images/events/halloweenclub/5.jpeg',
-      '/webapp/assets/images/events/halloweenclub/6.jpeg',
-      '/webapp/assets/images/events/halloweenclub/7.jpeg',
-      '/webapp/assets/images/events/halloweenclub/8.jpeg',
-      '/webapp/assets/images/events/halloweenclub/9.jpeg',
-      '/webapp/assets/images/events/halloweenclub/10.jpeg',
-      '/webapp/assets/images/events/halloweenclub/11.jpeg',
-      '/webapp/assets/images/events/halloweenclub/12.jpeg',
-      '/webapp/assets/images/events/halloweenclub/13.jpeg',
-      '/webapp/assets/images/events/halloweenclub/14.jpeg',
-      '/webapp/assets/images/events/halloweenclub/15.jpeg',
-      '/webapp/assets/images/events/halloweenclub/16.jpeg',
     ],
   },
   pumpkinCarving_10_2025: {
@@ -197,6 +158,47 @@ export const eventGalleries = {
       '/webapp/assets/images/events/pumpkincarving/1 (58).jpg',
       '/webapp/assets/images/events/pumpkincarving/1 (59).jpg',
       '/webapp/assets/images/events/pumpkincarving/1 (64).jpg',
+    ],
+  },
+  halloweenClub_10_28_2025: {
+    title: "halloween_club_title",
+    subtitle: "halloween_club_date",
+    description: "halloween_club_desc",
+    images: [
+      '/webapp/assets/images/events/halloweenclub/1.jpeg',
+      '/webapp/assets/images/events/halloweenclub/2.jpeg',
+      '/webapp/assets/images/events/halloweenclub/3.jpeg',
+      '/webapp/assets/images/events/halloweenclub/4.jpeg',
+      '/webapp/assets/images/events/halloweenclub/5.jpeg',
+      '/webapp/assets/images/events/halloweenclub/6.jpeg',
+      '/webapp/assets/images/events/halloweenclub/7.jpeg',
+      '/webapp/assets/images/events/halloweenclub/8.jpeg',
+      '/webapp/assets/images/events/halloweenclub/9.jpeg',
+      '/webapp/assets/images/events/halloweenclub/10.jpeg',
+      '/webapp/assets/images/events/halloweenclub/11.jpeg',
+      '/webapp/assets/images/events/halloweenclub/12.jpeg',
+      '/webapp/assets/images/events/halloweenclub/13.jpeg',
+      '/webapp/assets/images/events/halloweenclub/14.jpeg',
+      '/webapp/assets/images/events/halloweenclub/15.jpeg',
+      '/webapp/assets/images/events/halloweenclub/16.jpeg',
+    ],
+  },
+  gameNight_11_07_2025: {
+    title: "game_night_title",
+    subtitle: "game_night_date",
+    description: "game_night_desc",
+    images: [
+      '/webapp/assets/images/events/gamenight/1.jpeg',
+      '/webapp/assets/images/events/gamenight/2.jpeg',
+      '/webapp/assets/images/events/gamenight/3.jpeg',
+      '/webapp/assets/images/events/gamenight/4.jpeg',
+      '/webapp/assets/images/events/gamenight/5.jpeg',
+      '/webapp/assets/images/events/gamenight/6.jpeg',
+      '/webapp/assets/images/events/gamenight/7.jpeg',
+      '/webapp/assets/images/events/gamenight/8.jpeg',
+      '/webapp/assets/images/events/gamenight/9.jpeg',
+      '/webapp/assets/images/events/gamenight/10.jpeg',
+      '/webapp/assets/images/events/gamenight/11.jpeg',
     ],
   },
   hackathon_11_2025: {
