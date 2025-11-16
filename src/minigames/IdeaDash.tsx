@@ -2,11 +2,20 @@ import React, { useEffect, useRef, useState } from "react";
 import GameOverModal from "../components/minigame page/GameOverModal";
 import PauseButton from "../components/minigame page/PauseButton";
 
+interface Particle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  life: number;
+  color: string;
+}
+
 export const IdeaDashGame: React.FC = () => {
   const LOGICAL_WIDTH = 800;
   const LOGICAL_HEIGHT = 400;
   const GRAVITY = 0.6;
-  const JUMP_FORCE = -12;
+  const JUMP_FORCE = -14; // Increased from -12 for better jump height
   const GROUND_Y = 320;
   const PLAYER_SIZE = 40;
 
@@ -33,21 +42,38 @@ export const IdeaDashGame: React.FC = () => {
   const [playerVelY, setPlayerVelY] = useState(0);
   const [isJumping, setIsJumping] = useState(false);
 
+  // Enhanced jump mechanics
+  const coyoteTimeRef = useRef(0);
+  const jumpBufferRef = useRef(0);
+
   // Game objects
   interface GameObject {
     x: number;
     y: number;
     type: "obstacle" | "idea" | "powerup";
     label?: string;
+    rotation?: number; // For animations
   }
   const [objects, setObjects] = useState<GameObject[]>([]);
 
   const [powerUpActive, setPowerUpActive] = useState<string | null>(null);
   const [powerUpTimer, setPowerUpTimer] = useState(0);
 
+  // Visual effects
+  const [particles, setParticles] = useState<Particle[]>([]);
+  const [screenShake, setScreenShake] = useState(0);
+  const [flashColor, setFlashColor] = useState<string | null>(null);
+  const [bgHue, setBgHue] = useState(220); // Blue starting hue
+
+  // Parallax layers
+  const [cloudOffset, setCloudOffset] = useState(0);
+  const [buildingOffset, setBuildingOffset] = useState(0);
+  const [gridOffset, setGridOffset] = useState(0);
+
   const frameRef = useRef(0);
   const startTimeRef = useRef<number | null>(null);
   const lastPowerUpTimeRef = useRef(0);
+  const animFrameRef = useRef(0);
 
   const obstacleLabels = ["Perfectionism", "Self-Doubt", "Comparison", "Fear"];
 
@@ -62,7 +88,6 @@ export const IdeaDashGame: React.FC = () => {
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
 
   // Game loop
   useEffect(() => {
@@ -80,23 +105,56 @@ export const IdeaDashGame: React.FC = () => {
     };
     animId = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(animId);
-  }, [gameOver, isPaused, hasStarted, playerY, playerVelY, objects, hearts, score, speed, ideasCollected, powerUpActive]);
+  }, [gameOver, isPaused, hasStarted, playerY, playerVelY, objects, hearts, score, speed, ideasCollected, powerUpActive, particles, screenShake, flashColor, bgHue]);
 
   function updateGame(elapsedSeconds: number) {
     frameRef.current++;
+    animFrameRef.current++;
+
+    // Update timers
+    if (coyoteTimeRef.current > 0) coyoteTimeRef.current--;
+    if (jumpBufferRef.current > 0) jumpBufferRef.current--;
+    if (screenShake > 0) setScreenShake(screenShake - 1);
+    if (flashColor) {
+      setTimeout(() => setFlashColor(null), 100);
+    }
 
     // Update player physics
     let newVelY = playerVelY + GRAVITY;
     let newY = playerY + newVelY;
 
+    const wasOnGround = playerY >= GROUND_Y;
+
     if (newY >= GROUND_Y) {
       newY = GROUND_Y;
       newVelY = 0;
       setIsJumping(false);
+      coyoteTimeRef.current = 6; // 6 frames of coyote time (~100ms at 60fps)
+
+      // Jump buffering - if player pressed jump recently, execute it now
+      if (jumpBufferRef.current > 0) {
+        newVelY = JUMP_FORCE;
+        setIsJumping(true);
+        jumpBufferRef.current = 0;
+      }
+    }
+
+    if (wasOnGround && newY < GROUND_Y) {
+      coyoteTimeRef.current = 0; // Left ground, no more coyote time
     }
 
     setPlayerY(newY);
     setPlayerVelY(newVelY);
+
+    // Update parallax
+    const speedFactor = Math.min(speed / 4, 2.5);
+    setCloudOffset((o) => (o - 0.5 * speedFactor) % LOGICAL_WIDTH);
+    setBuildingOffset((o) => (o - 1 * speedFactor) % LOGICAL_WIDTH);
+    setGridOffset((o) => (o - speed) % 50);
+
+    // Update background hue based on speed
+    const targetHue = 220 - (speedFactor - 1) * 60; // Blue -> Purple -> Red
+    setBgHue((h) => h + (targetHue - h) * 0.05);
 
     // Spawn obstacles and ideas
     const spawnRate = Math.max(60 - Math.floor(elapsedSeconds * 2), 30);
@@ -111,39 +169,51 @@ export const IdeaDashGame: React.FC = () => {
             y: GROUND_Y,
             type: "obstacle",
             label: obstacleLabels[Math.floor(Math.random() * obstacleLabels.length)],
+            rotation: 0,
           },
         ]);
       } else if (rand < 0.8) {
-        // Spawn idea (lightbulb)
-        const yPos = GROUND_Y - Math.random() * 150 - 50;
+        // Spawn idea (lightbulb) - FIXED: now always reachable
+        const yPos = GROUND_Y - Math.random() * 80 - 30; // Between 30-110 pixels high
         setObjects((o) => [
           ...o,
           {
             x: LOGICAL_WIDTH,
             y: yPos,
             type: "idea",
+            rotation: 0,
           },
         ]);
       }
     }
 
-    // Spawn power-up every 10 seconds
+    // Spawn power-up every 10 seconds - FIXED: now reachable
     if (elapsedSeconds - lastPowerUpTimeRef.current > 10) {
       lastPowerUpTimeRef.current = elapsedSeconds;
       setObjects((o) => [
         ...o,
         {
           x: LOGICAL_WIDTH,
-          y: GROUND_Y - 100,
+          y: GROUND_Y - 80, // Was 100, now 80 (reachable)
           type: "powerup",
+          rotation: 0,
         },
       ]);
     }
 
-    // Move objects
+    // Update object rotations for animation
+    setObjects((obs) =>
+      obs.map((o) => ({
+        ...o,
+        rotation: (o.rotation || 0) + (o.type === "powerup" ? 0.1 : o.type === "idea" ? 0.05 : 0),
+      }))
+    );
+
+    // Move objects with speed cap
+    const cappedSpeed = Math.min(speed, 4 * 2.5); // Cap at 2.5x base speed
     setObjects((obs) =>
       obs
-        .map((o) => ({ ...o, x: o.x - speed }))
+        .map((o) => ({ ...o, x: o.x - cappedSpeed }))
         .filter((o) => o.x > -50)
     );
 
@@ -173,6 +243,12 @@ export const IdeaDashGame: React.FC = () => {
               }
               return newHearts;
             });
+            // Visual feedback
+            setScreenShake(10);
+            setFlashColor("rgba(255, 0, 0, 0.3)");
+            createParticleBurst(obj.x, obj.y, "#e94560", 15);
+          } else {
+            createParticleBurst(obj.x, obj.y, "#00ff00", 10);
           }
           setObjects((o) => o.filter((item) => item !== obj));
         } else if (obj.type === "idea") {
@@ -180,16 +256,21 @@ export const IdeaDashGame: React.FC = () => {
           setIdeasCollected((i) => {
             const newIdeas = i + 1;
             if (newIdeas % 5 === 0) {
-              setSpeed((s) => s * 1.1);
+              setSpeed((s) => Math.min(s * 1.1, 4 * 2.5)); // Cap speed
+              setFlashColor("rgba(255, 215, 0, 0.2)");
             }
             return newIdeas;
           });
+          // Visual feedback
+          createParticleBurst(obj.x, obj.y, "#ffd700", 12);
           setObjects((o) => o.filter((item) => item !== obj));
         } else if (obj.type === "powerup") {
           const powerups = ["shield", "magnet", "slowmo"];
           const randomPowerup = powerups[Math.floor(Math.random() * powerups.length)];
           setPowerUpActive(randomPowerup);
           setPowerUpTimer(5);
+          setFlashColor("rgba(0, 212, 255, 0.3)");
+          createParticleBurst(obj.x, obj.y, "#00d4ff", 20);
           setObjects((o) => o.filter((item) => item !== obj));
         }
       }
@@ -223,6 +304,36 @@ export const IdeaDashGame: React.FC = () => {
         })
       );
     }
+
+    // Update particles
+    setParticles((p) =>
+      p
+        .map((particle) => ({
+          ...particle,
+          x: particle.x + particle.vx,
+          y: particle.y + particle.vy,
+          vy: particle.vy + 0.2, // Gravity for particles
+          life: particle.life - 1,
+        }))
+        .filter((particle) => particle.life > 0)
+    );
+  }
+
+  function createParticleBurst(x: number, y: number, color: string, count: number) {
+    const newParticles: Particle[] = [];
+    for (let i = 0; i < count; i++) {
+      const angle = (Math.PI * 2 * i) / count;
+      const speed = 2 + Math.random() * 3;
+      newParticles.push({
+        x,
+        y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        life: 30 + Math.random() * 20,
+        color,
+      });
+    }
+    setParticles((p) => [...p, ...newParticles]);
   }
 
   function checkCollision(
@@ -247,75 +358,297 @@ export const IdeaDashGame: React.FC = () => {
     const scaleX = canvasSize.width / LOGICAL_WIDTH;
     const scaleY = canvasSize.height / LOGICAL_HEIGHT;
 
-    // Background
+    // Apply screen shake
+    if (screenShake > 0) {
+      ctx.save();
+      ctx.translate(
+        (Math.random() - 0.5) * screenShake,
+        (Math.random() - 0.5) * screenShake
+      );
+    }
+
+    // Background - Dynamic gradient based on speed
     const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    gradient.addColorStop(0, "#1a1a2e");
-    gradient.addColorStop(1, "#16213e");
+    gradient.addColorStop(0, `hsl(${bgHue}, 40%, 15%)`);
+    gradient.addColorStop(1, `hsl(${bgHue - 20}, 40%, 10%)`);
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Ground
-    ctx.fillStyle = "#0f3460";
+    // Parallax Layer 1: Distant buildings
+    ctx.fillStyle = `hsla(${bgHue}, 30%, 20%, 0.3)`;
+    for (let i = -1; i < 4; i++) {
+      const x = (i * 250 + buildingOffset) * scaleX;
+      const heights = [60, 80, 70, 90];
+      const h = heights[i % heights.length];
+      ctx.fillRect(x, (GROUND_Y - h) * scaleY, 200 * scaleX, h * scaleY);
+    }
+
+    // Parallax Layer 2: Clouds
+    ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
+    for (let i = -1; i < 6; i++) {
+      const x = (i * 150 + cloudOffset) * scaleX;
+      const y = (50 + Math.sin(i) * 30) * scaleY;
+      ctx.beginPath();
+      ctx.ellipse(x, y, 40 * scaleX, 20 * scaleY, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Ground with perspective grid
+    ctx.fillStyle = `hsl(${bgHue - 40}, 50%, 15%)`;
     ctx.fillRect(0, GROUND_Y * scaleY, canvas.width, canvas.height - GROUND_Y * scaleY);
+
+    // Grid lines
+    ctx.strokeStyle = `hsla(${bgHue}, 50%, 30%, 0.3)`;
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 20; i++) {
+      const x = ((i * 50 + gridOffset) * scaleX) % (canvas.width + 50 * scaleX);
+      ctx.beginPath();
+      ctx.moveTo(x, GROUND_Y * scaleY);
+      ctx.lineTo(x, canvas.height);
+      ctx.stroke();
+    }
 
     // Draw objects
     objects.forEach((obj) => {
       if (obj.type === "obstacle") {
-        ctx.fillStyle = "#e94560";
-        ctx.fillRect(obj.x * scaleX, obj.y * scaleY, 40 * scaleX, 40 * scaleY);
+        // Styled thought bubble obstacle
+        const x = obj.x * scaleX;
+        const y = obj.y * scaleY;
+        const w = 40 * scaleX;
+        const h = 40 * scaleY;
+
+        // Shadow
+        ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
+        ctx.fillRect(x + 5 * scaleX, y + 5 * scaleY, w, h);
+
+        // Gradient bubble
+        const obsGradient = ctx.createRadialGradient(
+          x + w / 2,
+          y + h / 2,
+          0,
+          x + w / 2,
+          y + h / 2,
+          w
+        );
+        obsGradient.addColorStop(0, "#e94560");
+        obsGradient.addColorStop(1, "#7a1f3d");
+        ctx.fillStyle = obsGradient;
+        ctx.beginPath();
+        ctx.roundRect(x, y, w, h, 10 * scaleX);
+        ctx.fill();
+
+        // Glow
+        ctx.strokeStyle = "rgba(233, 69, 96, 0.5)";
+        ctx.lineWidth = 3 * scaleX;
+        ctx.stroke();
+
+        // Label inside
         ctx.fillStyle = "white";
-        ctx.font = `${10 * Math.min(scaleX, scaleY)}px Arial`;
-        ctx.fillText(obj.label || "", obj.x * scaleX, (obj.y - 5) * scaleY);
+        ctx.font = `bold ${9 * Math.min(scaleX, scaleY)}px Arial`;
+        ctx.textAlign = "center";
+        ctx.fillText(obj.label || "", x + w / 2, y + h / 2 + 3 * scaleY);
+        ctx.textAlign = "left";
+
       } else if (obj.type === "idea") {
-        // Lightbulb
+        // Enhanced lightbulb with glow and rotation
+        const x = obj.x * scaleX;
+        const y = obj.y * scaleY;
+        const pulse = Math.sin(animFrameRef.current * 0.1) * 0.2 + 1;
+
+        // Outer glow
+        const glowGradient = ctx.createRadialGradient(x, y, 0, x, y, 25 * scaleX * pulse);
+        glowGradient.addColorStop(0, "rgba(255, 215, 0, 0.8)");
+        glowGradient.addColorStop(1, "rgba(255, 215, 0, 0)");
+        ctx.fillStyle = glowGradient;
+        ctx.beginPath();
+        ctx.arc(x, y, 25 * scaleX * pulse, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Lightbulb circle
         ctx.fillStyle = "#ffd700";
         ctx.beginPath();
-        ctx.arc(obj.x * scaleX, obj.y * scaleY, 15 * scaleX, 0, Math.PI * 2);
+        ctx.arc(x, y, 15 * scaleX, 0, Math.PI * 2);
         ctx.fill();
-        ctx.fillStyle = "white";
+
+        // Inner highlight
+        ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+        ctx.beginPath();
+        ctx.arc(x - 5 * scaleX, y - 5 * scaleY, 5 * scaleX, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Emoji
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate((obj.rotation || 0) * 0.3);
         ctx.font = `${20 * Math.min(scaleX, scaleY)}px Arial`;
-        ctx.fillText("💡", (obj.x - 10) * scaleX, (obj.y + 10) * scaleY);
+        ctx.fillText("💡", -10 * scaleX, 10 * scaleY);
+        ctx.restore();
+
       } else if (obj.type === "powerup") {
+        // Rotating power-up with electric effect
+        const x = obj.x * scaleX;
+        const y = obj.y * scaleY;
+
+        // Electric particles
+        for (let i = 0; i < 3; i++) {
+          const angle = (obj.rotation || 0) + (i * Math.PI * 2) / 3;
+          const px = x + Math.cos(angle) * 25 * scaleX;
+          const py = y + Math.sin(angle) * 25 * scaleY;
+          ctx.fillStyle = "rgba(0, 212, 255, 0.5)";
+          ctx.beginPath();
+          ctx.arc(px, py, 3 * scaleX, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Power-up circle
         ctx.fillStyle = "#00d4ff";
         ctx.beginPath();
-        ctx.arc(obj.x * scaleX, obj.y * scaleY, 17.5 * scaleX, 0, Math.PI * 2);
+        ctx.arc(x, y, 17.5 * scaleX, 0, Math.PI * 2);
         ctx.fill();
-        ctx.fillStyle = "white";
+
+        // Glow
+        ctx.strokeStyle = "rgba(0, 212, 255, 0.8)";
+        ctx.lineWidth = 3 * scaleX;
+        ctx.stroke();
+
+        // Rotating emoji
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(obj.rotation || 0);
         ctx.font = `${20 * Math.min(scaleX, scaleY)}px Arial`;
-        ctx.fillText("⚡", (obj.x - 10) * scaleX, (obj.y + 10) * scaleY);
+        ctx.fillText("⚡", -10 * scaleX, 10 * scaleY);
+        ctx.restore();
       }
     });
 
-    // Player
-    ctx.fillStyle = powerUpActive === "shield" ? "#00ff00" : "#53a8e2";
-    ctx.fillRect(50 * scaleX, playerY * scaleY, PLAYER_SIZE * scaleX, PLAYER_SIZE * scaleY);
-    ctx.fillStyle = "white";
-    ctx.font = `${30 * Math.min(scaleX, scaleY)}px Arial`;
-    ctx.fillText("🏃", 50 * scaleX, (playerY + 35) * scaleY);
+    // Draw particles
+    particles.forEach((particle) => {
+      const alpha = particle.life / 50;
+      ctx.fillStyle = particle.color.replace(")", `, ${alpha})`).replace("rgb", "rgba");
+      ctx.beginPath();
+      ctx.arc(particle.x * scaleX, particle.y * scaleY, 3 * scaleX, 0, Math.PI * 2);
+      ctx.fill();
+    });
 
-    // HUD
+    // Player with running animation
+    const runCycle = Math.floor(animFrameRef.current / 10) % 3;
+    const tilt = isJumping ? -0.2 : Math.sin(runCycle * Math.PI) * 0.1;
+
+    ctx.save();
+    ctx.translate(50 * scaleX + PLAYER_SIZE * scaleX / 2, playerY * scaleY + PLAYER_SIZE * scaleY / 2);
+    ctx.rotate(tilt);
+
+    // Shield effect
+    if (powerUpActive === "shield") {
+      const shieldGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, 30 * scaleX);
+      shieldGradient.addColorStop(0, "rgba(0, 255, 0, 0.3)");
+      shieldGradient.addColorStop(1, "rgba(0, 255, 0, 0)");
+      ctx.fillStyle = shieldGradient;
+      ctx.beginPath();
+      ctx.arc(0, 0, 30 * scaleX, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Player body
+    const playerGradient = ctx.createLinearGradient(
+      -PLAYER_SIZE * scaleX / 2,
+      -PLAYER_SIZE * scaleY / 2,
+      PLAYER_SIZE * scaleX / 2,
+      PLAYER_SIZE * scaleY / 2
+    );
+    playerGradient.addColorStop(0, "#53a8e2");
+    playerGradient.addColorStop(1, "#2d5f8a");
+    ctx.fillStyle = playerGradient;
+    ctx.fillRect(-PLAYER_SIZE * scaleX / 2, -PLAYER_SIZE * scaleY / 2, PLAYER_SIZE * scaleX, PLAYER_SIZE * scaleY);
+
+    // Player emoji
+    ctx.font = `${30 * Math.min(scaleX, scaleY)}px Arial`;
+    ctx.fillText("🏃", -15 * scaleX, 15 * scaleY);
+    ctx.restore();
+
+    // Speed lines effect when going fast
+    if (speed > 6) {
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
+      ctx.lineWidth = 2;
+      for (let i = 0; i < 5; i++) {
+        const y = Math.random() * canvas.height;
+        const length = 20 + Math.random() * 40;
+        ctx.beginPath();
+        ctx.moveTo(canvas.width, y);
+        ctx.lineTo(canvas.width - length * scaleX, y);
+        ctx.stroke();
+      }
+    }
+
+    // HUD with semi-transparent background
+    ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+    ctx.fillRect(5, 5, 150 * scaleX, 135 * scaleY);
+
     ctx.fillStyle = "white";
-    ctx.font = `${18 * Math.min(scaleX, scaleY)}px Arial`;
+    ctx.font = `bold ${18 * Math.min(scaleX, scaleY)}px Arial`;
     ctx.fillText(`💡 ${score}`, 10, 30 * scaleY);
-    ctx.fillText(`❤️ ${hearts}`, 10, 55 * scaleY);
+
+    // Animated hearts
+    for (let i = 0; i < 3; i++) {
+      if (i < hearts) {
+        const heartPulse = hearts === 1 ? Math.sin(animFrameRef.current * 0.2) * 0.2 + 1 : 1;
+        ctx.font = `${(18 * heartPulse) * Math.min(scaleX, scaleY)}px Arial`;
+        ctx.fillText("❤️", 10 + i * 25 * scaleX, 55 * scaleY);
+      } else {
+        ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
+        ctx.font = `${18 * Math.min(scaleX, scaleY)}px Arial`;
+        ctx.fillText("🖤", 10 + i * 25 * scaleX, 55 * scaleY);
+        ctx.fillStyle = "white";
+      }
+    }
+
+    ctx.font = `${18 * Math.min(scaleX, scaleY)}px Arial`;
     ctx.fillText(`🏆 ${highScore}`, 10, 80 * scaleY);
     ctx.fillText(`🔥 ${streak}`, 10, 105 * scaleY);
 
     if (powerUpActive) {
-      ctx.fillText(`⚡ ${powerUpActive.toUpperCase()} (${powerUpTimer.toFixed(1)}s)`, 10, 130 * scaleY);
+      const powerUpColor = powerUpActive === "shield" ? "#00ff00" : powerUpActive === "magnet" ? "#ff00ff" : "#00d4ff";
+      ctx.fillStyle = powerUpColor;
+      ctx.fillText(`⚡ ${powerUpActive.toUpperCase()}`, 10, 130 * scaleY);
+
+      // Timer bar
+      const barWidth = (powerUpTimer / 5) * 140 * scaleX;
+      ctx.fillStyle = powerUpColor;
+      ctx.fillRect(10, 135 * scaleY, barWidth, 5 * scaleY);
+    }
+
+    // Flash overlay
+    if (flashColor) {
+      ctx.fillStyle = flashColor;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    if (screenShake > 0) {
+      ctx.restore();
     }
 
     // Start screen overlay
     if (!hasStarted && !gameOver) {
-      ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+      ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+
       ctx.fillStyle = "white";
-      ctx.font = `${32 * Math.min(scaleX, scaleY)}px Arial`;
-      ctx.fillText("IDEA DASH", canvas.width / 2 - 100 * scaleX, canvas.height / 2 - 50 * scaleY);
-      ctx.font = `${20 * Math.min(scaleX, scaleY)}px Arial`;
-      ctx.fillText("TAP or Press SPACE to Start", canvas.width / 2 - 140 * scaleX, canvas.height / 2);
+      ctx.font = `bold ${40 * Math.min(scaleX, scaleY)}px Arial`;
+      ctx.textAlign = "center";
+      ctx.fillText("💡 IDEA DASH", canvas.width / 2, canvas.height / 2 - 60 * scaleY);
+
+      ctx.font = `${22 * Math.min(scaleX, scaleY)}px Arial`;
+      ctx.fillText("TAP or SPACE to Start", canvas.width / 2, canvas.height / 2 - 10 * scaleY);
+
+      ctx.font = `${16 * Math.min(scaleX, scaleY)}px Arial`;
+      ctx.fillStyle = "#ffd700";
+      ctx.fillText("Collect 💡 ideas, dodge obstacles", canvas.width / 2, canvas.height / 2 + 30 * scaleY);
+
+      ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
       ctx.font = `${14 * Math.min(scaleX, scaleY)}px Arial`;
-      ctx.fillText("Collect 💡 ideas, dodge obstacles", canvas.width / 2 - 120 * scaleX, canvas.height / 2 + 30 * scaleY);
+      ctx.fillText("Speed increases every 5 ideas!", canvas.width / 2, canvas.height / 2 + 60 * scaleY);
+
+      ctx.textAlign = "left";
     }
   }
 
@@ -352,9 +685,19 @@ export const IdeaDashGame: React.FC = () => {
     setIsJumping(false);
     setPowerUpActive(null);
     setPowerUpTimer(0);
+    setParticles([]);
+    setScreenShake(0);
+    setFlashColor(null);
+    setBgHue(220);
+    setCloudOffset(0);
+    setBuildingOffset(0);
+    setGridOffset(0);
     frameRef.current = 0;
+    animFrameRef.current = 0;
     startTimeRef.current = null;
     lastPowerUpTimeRef.current = 0;
+    coyoteTimeRef.current = 0;
+    jumpBufferRef.current = 0;
     setHasStarted(false);
   }
 
@@ -367,10 +710,14 @@ export const IdeaDashGame: React.FC = () => {
       return;
     }
 
-    // Jump if on ground
-    if (!isJumping) {
+    // Jump with coyote time
+    if (!isJumping && (playerY >= GROUND_Y || coyoteTimeRef.current > 0)) {
       setPlayerVelY(JUMP_FORCE);
       setIsJumping(true);
+      coyoteTimeRef.current = 0;
+    } else if (isJumping && playerY < GROUND_Y) {
+      // Jump buffering - store the jump input
+      jumpBufferRef.current = 6;
     }
   }
 
@@ -384,7 +731,7 @@ export const IdeaDashGame: React.FC = () => {
     };
     window.addEventListener("keydown", handleSpace);
     return () => window.removeEventListener("keydown", handleSpace);
-  }, [hasStarted, gameOver, isJumping, isPaused]);
+  }, [hasStarted, gameOver, isJumping, isPaused, playerY]);
 
   return (
     <div style={{ textAlign: "center", color: "white" }}>
@@ -404,10 +751,13 @@ export const IdeaDashGame: React.FC = () => {
           borderRadius: "8px",
           cursor: "pointer",
           touchAction: "none",
+          boxShadow: "0 4px 20px rgba(83, 168, 226, 0.3)",
         }}
       />
 
-      <p>Press SPACE or TAP to jump. Collect ideas 💡, dodge obstacles!</p>
+      <p style={{ marginTop: "10px", fontSize: "14px" }}>
+        Press <strong>SPACE</strong> or <strong>TAP</strong> to jump • Collect ideas 💡 • Dodge obstacles!
+      </p>
 
       <PauseButton isPaused={isPaused} onTogglePause={() => setIsPaused(!isPaused)} />
 
