@@ -166,7 +166,10 @@ export const IdeaDashGame: React.FC = () => {
     setBgHue((h) => h + (targetHue - h) * 0.05);
 
     // Passive score increase based on speed (faster = more points)
-    setScore((s) => s + speedFactor * 0.01);
+    // Only increment score every 60 frames (1 second at 60fps)
+    if (frameRef.current % 60 === 0) {
+      setScore((s) => Math.floor(s + speedFactor));
+    }
 
     // Spawn obstacles and ideas
     const spawnRate = Math.max(60 - Math.floor(elapsedSeconds * 2), 30);
@@ -643,7 +646,7 @@ export const IdeaDashGame: React.FC = () => {
 
     ctx.fillStyle = "white";
     ctx.font = `bold ${18 * Math.min(scaleX, scaleY)}px Arial`;
-    ctx.fillText(`💡 ${score}`, 10, 30 * scaleY);
+    ctx.fillText(`💡 ${Math.floor(score)}`, 10, 30 * scaleY);
 
     // Animated hearts
     for (let i = 0; i < 3; i++) {
