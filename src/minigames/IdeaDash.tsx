@@ -45,6 +45,8 @@ export const IdeaDashGame: React.FC = () => {
   // Enhanced jump mechanics
   const coyoteTimeRef = useRef(0);
   const jumpBufferRef = useRef(0);
+  const jumpHoldTimeRef = useRef(0);
+  const isHoldingJumpRef = useRef(false);
 
   // Game objects
   interface GameObject {
@@ -53,6 +55,7 @@ export const IdeaDashGame: React.FC = () => {
     type: "obstacle" | "idea" | "powerup";
     label?: string;
     rotation?: number; // For animations
+    powerupType?: string; // For powerup icons
   }
   const [objects, setObjects] = useState<GameObject[]>([]);
 
@@ -130,6 +133,17 @@ export const IdeaDashGame: React.FC = () => {
 
     // Update player physics
     let newVelY = playerVelY + GRAVITY;
+
+    // Variable jump height - reduce upward velocity if player releases jump button early
+    if (isJumping && newVelY < 0 && !isHoldingJumpRef.current && jumpHoldTimeRef.current < 15) {
+      newVelY *= 0.5; // Cut jump short
+    }
+
+    // Track jump hold time
+    if (isJumping && isHoldingJumpRef.current) {
+      jumpHoldTimeRef.current++;
+    }
+
     let newY = playerY + newVelY;
 
     const wasOnGround = playerY >= GROUND_Y;
@@ -138,6 +152,7 @@ export const IdeaDashGame: React.FC = () => {
       newY = GROUND_Y;
       newVelY = 0;
       setIsJumping(false);
+      jumpHoldTimeRef.current = 0;
       coyoteTimeRef.current = 6; // 6 frames of coyote time (~100ms at 60fps)
 
       // Jump buffering - if player pressed jump recently, execute it now
@@ -206,6 +221,9 @@ export const IdeaDashGame: React.FC = () => {
     // Spawn power-up every 10 seconds - FIXED: now reachable
     if (elapsedSeconds - lastPowerUpTimeRef.current > 10) {
       lastPowerUpTimeRef.current = elapsedSeconds;
+      const powerups = ["shield", "magnet", "2x", "life"];
+      const randomPowerupType = powerups[Math.floor(Math.random() * powerups.length)];
+
       setObjects((o) => [
         ...o,
         {
@@ -213,6 +231,7 @@ export const IdeaDashGame: React.FC = () => {
           y: GROUND_Y - 80, // Was 100, now 80 (reachable)
           type: "powerup",
           rotation: 0,
+          powerupType: randomPowerupType,
         },
       ]);
     }
@@ -288,12 +307,19 @@ export const IdeaDashGame: React.FC = () => {
           createParticleBurst(obj.x, obj.y, particleColor, 12);
           setObjects((o) => o.filter((item) => item !== obj));
         } else if (obj.type === "powerup") {
-          const powerups = ["shield", "magnet", "2x"];
-          const randomPowerup = powerups[Math.floor(Math.random() * powerups.length)];
-          setPowerUpActive(randomPowerup);
-          setPowerUpTimer(5);
-          setFlashColor("rgba(0, 212, 255, 0.3)");
-          createParticleBurst(obj.x, obj.y, "#00d4ff", 20);
+          const powerupType = obj.powerupType || "shield";
+
+          if (powerupType === "life") {
+            // Extra life - add heart immediately
+            setHearts((h) => Math.min(h + 1, 3));
+            setFlashColor("rgba(255, 0, 255, 0.3)");
+            createParticleBurst(obj.x, obj.y, "#ff00ff", 20);
+          } else {
+            setPowerUpActive(powerupType);
+            setPowerUpTimer(5);
+            setFlashColor("rgba(0, 212, 255, 0.3)");
+            createParticleBurst(obj.x, obj.y, "#00d4ff", 20);
+          }
           setObjects((o) => o.filter((item) => item !== obj));
         }
       }
@@ -507,39 +533,58 @@ export const IdeaDashGame: React.FC = () => {
         ctx.restore();
 
       } else if (obj.type === "powerup") {
-        // Rotating power-up with electric effect
+        // Rotating power-up with icon based on type
         const x = obj.x * scaleX;
         const y = obj.y * scaleY;
+        const powerupType = obj.powerupType || "shield";
 
-        // Electric particles
+        // Choose color and icon based on powerup type
+        let powerupColor = "#00d4ff";
+        let powerupIcon = "⚡";
+
+        if (powerupType === "shield") {
+          powerupColor = "#00ff00";
+          powerupIcon = "🛡️";
+        } else if (powerupType === "magnet") {
+          powerupColor = "#ff00ff";
+          powerupIcon = "🧲";
+        } else if (powerupType === "2x") {
+          powerupColor = "#ffd700";
+          powerupIcon = "2️⃣";
+        } else if (powerupType === "life") {
+          powerupColor = "#ff69b4";
+          powerupIcon = "❤️";
+        }
+
+        // Glowing particles around powerup
         for (let i = 0; i < 3; i++) {
           const angle = (obj.rotation || 0) + (i * Math.PI * 2) / 3;
           const px = x + Math.cos(angle) * 25 * scaleX;
           const py = y + Math.sin(angle) * 25 * scaleY;
-          ctx.fillStyle = "rgba(0, 212, 255, 0.5)";
+          ctx.fillStyle = powerupColor.replace(")", ", 0.5)").replace("rgb", "rgba");
           ctx.beginPath();
           ctx.arc(px, py, 3 * scaleX, 0, Math.PI * 2);
           ctx.fill();
         }
 
         // Power-up circle
-        ctx.fillStyle = "#00d4ff";
+        ctx.fillStyle = powerupColor;
         ctx.beginPath();
         ctx.arc(x, y, 17.5 * scaleX, 0, Math.PI * 2);
         ctx.fill();
 
         // Glow
-        ctx.strokeStyle = "rgba(0, 212, 255, 0.8)";
+        ctx.strokeStyle = powerupColor.replace(")", ", 0.8)").replace("rgb", "rgba");
         ctx.lineWidth = 3 * scaleX;
         ctx.stroke();
 
-        // Rotating emoji
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.rotate(obj.rotation || 0);
-        ctx.font = `${20 * Math.min(scaleX, scaleY)}px Arial`;
-        ctx.fillText("⚡", -10 * scaleX, 10 * scaleY);
-        ctx.restore();
+        // Icon (non-rotating for better visibility)
+        ctx.font = `${24 * Math.min(scaleX, scaleY)}px Arial`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(powerupIcon, x, y);
+        ctx.textAlign = "left";
+        ctx.textBaseline = "alphabetic";
       }
     });
 
@@ -795,15 +840,18 @@ export const IdeaDashGame: React.FC = () => {
     lastPowerUpTimeRef.current = 0;
     coyoteTimeRef.current = 0;
     jumpBufferRef.current = 0;
+    jumpHoldTimeRef.current = 0;
+    isHoldingJumpRef.current = false;
     setHasStarted(false);
   }
 
-  function handleJump() {
+  function handleJumpStart() {
     if (gameOver || isPaused) return;
 
     // Start the game if not started
     if (!hasStarted) {
       setHasStarted(true);
+      isHoldingJumpRef.current = true;
       return;
     }
 
@@ -811,6 +859,8 @@ export const IdeaDashGame: React.FC = () => {
     if (!isJumping && (playerY >= GROUND_Y || coyoteTimeRef.current > 0)) {
       setPlayerVelY(JUMP_FORCE);
       setIsJumping(true);
+      isHoldingJumpRef.current = true;
+      jumpHoldTimeRef.current = 0;
       coyoteTimeRef.current = 0;
     } else if (isJumping && playerY < GROUND_Y) {
       // Jump buffering - store the jump input
@@ -818,16 +868,32 @@ export const IdeaDashGame: React.FC = () => {
     }
   }
 
-  // Allow Space or click to start/jump
+  function handleJumpEnd() {
+    isHoldingJumpRef.current = false;
+  }
+
+  // Keyboard controls
   useEffect(() => {
-    const handleSpace = (e: KeyboardEvent) => {
-      if (e.code === "Space") {
-        e.preventDefault(); // Prevent page scroll
-        handleJump();
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.code === "Space" && !e.repeat) {
+        e.preventDefault();
+        handleJumpStart();
       }
     };
-    window.addEventListener("keydown", handleSpace);
-    return () => window.removeEventListener("keydown", handleSpace);
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.code === "Space") {
+        e.preventDefault();
+        handleJumpEnd();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
   }, [hasStarted, gameOver, isJumping, isPaused, playerY]);
 
   return (
@@ -838,10 +904,20 @@ export const IdeaDashGame: React.FC = () => {
         ref={canvasRef}
         width={canvasSize.width}
         height={canvasSize.height}
-        onClick={handleJump}
+        onMouseDown={handleJumpStart}
+        onMouseUp={handleJumpEnd}
+        onMouseLeave={handleJumpEnd}
         onTouchStart={(e) => {
           e.preventDefault();
-          handleJump();
+          handleJumpStart();
+        }}
+        onTouchEnd={(e) => {
+          e.preventDefault();
+          handleJumpEnd();
+        }}
+        onTouchCancel={(e) => {
+          e.preventDefault();
+          handleJumpEnd();
         }}
         style={{
           border: "2px solid #53a8e2",
@@ -853,7 +929,7 @@ export const IdeaDashGame: React.FC = () => {
       />
 
       <p style={{ marginTop: "10px", fontSize: "14px" }}>
-        Press <strong>SPACE</strong> or <strong>TAP</strong> to jump • Collect ideas 💡 • Dodge obstacles!
+        <strong>HOLD</strong> SPACE or <strong>HOLD</strong> TAP for higher jumps • Collect ideas 💡 • Dodge obstacles!
       </p>
 
       <PauseButton isPaused={isPaused} onTogglePause={() => setIsPaused(!isPaused)} />
