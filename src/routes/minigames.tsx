@@ -19,6 +19,7 @@ import Game2048 from "../minigames/2048";
 // import { PinballGame } from "../minigames/PinBallGame";
 import { BallBouncingGame } from "../minigames/Bouncer";
 import WordleGame from "../minigames/Wordle";
+import { IdeaDashGame } from "../minigames/IdeaDash";
 
 export const MinigamesPage: React.FC = () => {
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
@@ -159,6 +160,12 @@ export const MinigamesPage: React.FC = () => {
             >
               🧩 Wordle
             </button>
+            <button
+              onClick={() => handleSelectGame("ideadash")}
+              className="bg-cyan-600 px-4 py-2 rounded hover:bg-cyan-700"
+            >
+              💡 Idea Dash
+            </button>
           </div>
         </FadeIn>
 
@@ -181,6 +188,7 @@ export const MinigamesPage: React.FC = () => {
             {/* {selectedGame === "pinball" && <PinballGame />} */}
             {selectedGame === "bouncer" && <BallBouncingGame />}
             {selectedGame === "wordle" && <WordleGame />}
+            {selectedGame === "ideadash" && <IdeaDashGame />}
           </div>
         </FadeIn>
       </div>
