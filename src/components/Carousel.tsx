@@ -72,7 +72,11 @@ const HomeCarousel: React.FC = () => {
     setCurrentIndex((prev) => prev + 1);
   };
 
-  useEffect(() => {
+
+
+
+  useEffect(() => 
+         {
     resetTimer();
     return () => clearInterval(timerRef.current);
   }, []);

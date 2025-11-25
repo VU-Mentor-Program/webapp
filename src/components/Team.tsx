@@ -20,7 +20,8 @@ interface IMember {
   country?: string;
 }
 
-const Team: React.FC<TeamProps> = ({ title, description, background }) => {
+const Team: React.FC<TeamProps> = ({ title, description, background }) => 
+  {
   const intl = useIntl();
 
   const members: IMember[] = mentorTeam.members ?? [];
