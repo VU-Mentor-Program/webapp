@@ -23,7 +23,7 @@ export const mentorTeam = {
       "name": "Gonçalo",
       "full_name": "Gonçalo Mesquita",
       "photo": teamPhotos.goncalo,
-      "linkedin_github": "https://www.linkedin.com/in/gonçalo-mesquita-72226832b/",
+      "linkedin_github": "https://www.linkedin.com/in/gon%C3%A7alomesquita/",
       "study": "2nd year CS",
       "country": "pt",
     },

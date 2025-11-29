@@ -11,7 +11,7 @@ export default function Events() {
   const t = useTranslations("events");
 
   return (
-      <div className="flex flex-col min-h-screen bg-slate-900 text-white text-center px-5">
+      <div className="flex flex-col min-h-screen text-white text-center px-5">
       <div className="flex-grow flex flex-col items-center justify-start pt-20 pb-10">
         <IntlProvider
           locale={locale}

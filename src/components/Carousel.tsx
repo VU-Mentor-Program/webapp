@@ -25,6 +25,7 @@ const HomeCarousel: React.FC = () => {
   const t = useTranslations("home_carousel");
   const [currentIndex, setCurrentIndex] = useState(1);
   const [modalImage, setModalImage] = useState<string | null>(null);
+  const [modalImageIndex, setModalImageIndex] = useState<number>(0);
   const sliderRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<number>();
   const isAnimatingRef = useRef(false); // Prevent rapid clicks
@@ -183,7 +184,14 @@ const HomeCarousel: React.FC = () => {
                             console.error('Image failed to load:', src);
                             e.currentTarget.style.display = 'none';
                           }}
-                          onClick={() => setModalImage(src)}
+                          onClick={() => {
+                            // Calculate the actual image index (account for infinite scroll)
+                            const actualIndex = index === 0 ? safeRawImages.length - 1 :
+                                              index === safeRawImages.length + 1 ? 0 :
+                                              index - 1;
+                            setModalImageIndex(actualIndex);
+                            setModalImage(src);
+                          }}
                         />
                       </div>
               </div>
@@ -254,6 +262,12 @@ const HomeCarousel: React.FC = () => {
             src={modalImage}
             alt="Full size image"
             onClose={() => setModalImage(null)}
+            images={safeRawImages}
+            currentIndex={modalImageIndex}
+            onNavigate={(newIndex) => {
+              setModalImageIndex(newIndex);
+              setModalImage(safeRawImages[newIndex]);
+            }}
           />
         )}
         </div>

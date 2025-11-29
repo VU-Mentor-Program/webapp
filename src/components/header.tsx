@@ -42,18 +42,18 @@ export const Header: React.FC = () => {
     }
   };
 
-  // Mobile header hide on scroll down, show on scroll up.
+  // Header hide on scroll down, show on scroll up (all devices)
   useEffect(() => {
     const handleScroll = () => {
-      if (window.innerWidth < 768) {
-        const currentScrollPos = window.pageYOffset;
-        if (currentScrollPos > prevScrollPos && currentScrollPos > 50) {
-          setHeaderHidden(true);
-        } else {
-          setHeaderHidden(false);
-        }
-        setPrevScrollPos(currentScrollPos);
+      const currentScrollPos = window.pageYOffset;
+
+      // Only hide if scrolled down past 50px
+      if (currentScrollPos > prevScrollPos && currentScrollPos > 50) {
+        setHeaderHidden(true);
+      } else {
+        setHeaderHidden(false);
       }
+      setPrevScrollPos(currentScrollPos);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -65,9 +65,9 @@ export const Header: React.FC = () => {
       {/* Header */}
       <header
         onClick={() => setHeaderHidden(false)}
-        className={`fixed left-0 right-0 px-4 md:px-16 lg:px-24 py-4 flex items-center z-50 
-          bg-gradient-lava bg-opacity-95 backdrop-blur-sm rounded transition-transform duration-300 shadow-lg
-          ${isHeaderHidden ? "-translate-y-20" : "translate-y-0"} md:translate-y-0`}
+        className={`fixed left-0 right-0 px-4 md:px-16 lg:px-24 py-4 flex items-center z-50
+          bg-gradient-lava bg-opacity-95 backdrop-blur-sm rounded transition-transform duration-300
+          ${isHeaderHidden ? "-translate-y-20" : "translate-y-0"}`}
       >
         {/* Left Section: Logo + Title */}
         <div className="flex items-center space-x-3 flex-1">

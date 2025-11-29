@@ -14,7 +14,7 @@ const locale = "nl";
 export default function Home() {
   const t = useTranslations("team");
   return (
-      <div className="flex flex-col min-h-screen bg-slate-900 text-white text-center px-5">
+      <div className="flex flex-col min-h-screen text-white text-center px-5">
       <div className="flex-grow flex flex-col items-center justify-center">
         <IntlProvider
           locale={locale}
