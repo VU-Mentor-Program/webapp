@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import FadeIn from "./Fadein-Wrapper";
 import { ImageModal } from "./ImageModal";
+import ScrollReveal from "./ScrollReveal";
+import GradualBlur from "./GradualBlur";
 
 interface EventCarouselProps {
   images: readonly string[];
@@ -151,10 +153,18 @@ const EventCarousel: React.FC<EventCarouselProps> = ({
 
   return (
     <FadeIn duration={100} className={`w-full ${className}`}>
-      <div className="text-center mb-8 w-full">
-        <h3 className="text-2xl font-bold text-white mb-3 w-full">{title}</h3>
+      <div className="text-center mb-8 w-full relative">
+        <ScrollReveal
+          containerClassName="mb-4"
+          textClassName="text-white"
+          baseOpacity={0.2}
+          baseRotation={2}
+          blurStrength={3}
+        >
+          {title}
+        </ScrollReveal>
         {subtitle && (
-          <p className="text-lg text-blue-300 font-medium mb-4 w-full">{subtitle}</p>
+          <p className="text-xl md:text-2xl text-blue-300 font-medium mb-4 w-full">{subtitle}</p>
         )}
         <div className="max-w-lg mx-auto px-6 py-3 bg-gray-900/20 rounded-lg border border-gray-700/30" style={{maxWidth: '450px', whiteSpace: 'normal', wordBreak: 'normal', width: 'auto', display: 'block'}}>
           <p className="text-gray-300 leading-relaxed" style={{whiteSpace: 'normal', wordBreak: 'normal', width: 'auto', display: 'block'}}>{description}</p>
@@ -238,7 +248,7 @@ const EventCarousel: React.FC<EventCarouselProps> = ({
         
         {/* Slide indicators - only show if more than one image and showIndicators is true */}
         {images.length > 1 && showIndicators && (
-          <div className="flex justify-center mt-6 space-x-2">
+          <div className="flex justify-center mt-6 mb-12 space-x-2">
             {images.map((_, index) => (
               <button
                 key={index}

@@ -1,5 +1,5 @@
 import React from "react";
-import { Header } from "./header";
+import { AnimatedHeader } from "./AnimatedHeader";
 import Aurora from "./Aurora";
 
 export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -20,7 +20,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
       {/* Content layer - positioned above background */}
       <div className="relative z-10 min-h-screen flex flex-col">
-        <Header />
+        <AnimatedHeader />
         <main className="flex-1 pt-20">
           {children}
         </main>

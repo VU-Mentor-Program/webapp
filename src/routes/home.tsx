@@ -8,6 +8,7 @@ import { useTranslations } from "../contexts/TranslationContext";
 import HomeCarousel from "../components/Carousel"
 import FadeIn from "../components/Fadein-Wrapper";
 import { FormsAccordion } from "../components/FormsAccordion";
+import { MusicButton } from "../components/MusicButton";
 
 const locale = "nl";
 
@@ -42,6 +43,14 @@ export default function Home() {
               {t("minigames")}
             </Link>
           </FadeIn>
+
+          {/* Easter egg music button at bottom */}
+          <div className="mt-12 mb-8 flex flex-col items-center gap-3">
+            <span className="text-pink-300 text-sm font-semibold tracking-wide">
+              Nox's Little Jukebox :)
+            </span>
+            <MusicButton className="bg-gradient-to-r from-blue-900 via-pink-900 to-pink-500 hover:from-blue-800 hover:via-pink-800 hover:to-pink-400 text-white p-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-pink-500/50 hover:scale-110" />
+          </div>
         </IntlProvider>
       </div>
     </div>
