@@ -31,21 +31,15 @@ export function useApiRequest(allParams: URLSearchParams) {
                 });
 
                 if (!response.ok) {
-                    setStatus("error");
-                    // Redirect to error page after a short delay
-                    setTimeout(() => {
-                        window.location.hash = '#/error';
-                    }, 2000);
+                    // Redirect to error page immediately
+                    window.location.hash = '#/error';
                     return;
                 } else {
                     setStatus("success");
                 }
             } catch (error) {
-                setStatus("error");
-                // Redirect to error page
-                setTimeout(() => {
-                    window.location.hash = '#/error';
-                }, 2000);
+                // Redirect to error page immediately
+                window.location.hash = '#/error';
             }
         };
 
