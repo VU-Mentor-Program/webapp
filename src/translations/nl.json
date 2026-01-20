@@ -127,5 +127,9 @@
     "feedback_title": "Feedback over het Mentorprogramma",
     "help_us": "Help ons!",
     "prompt": "We waarderen je feedback en moeten studentenfeedback presenteren aan de VU. Vul alstublieft de onderstaande formulieren in:"
+  },
+  "errorPage": {
+    "message": "Er is iets misgegaan of iemand was niet snel genoeg. Als je plannen zijn veranderd of je je plek voor het evenement wilt annuleren, neem alsjeblieft contact op met een mentor.",
+    "back_home": "Breng me terug alsjeblieft"
   }
 }

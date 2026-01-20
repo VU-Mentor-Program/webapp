@@ -32,14 +32,20 @@ export function useApiRequest(allParams: URLSearchParams) {
 
                 if (!response.ok) {
                     setStatus("error");
-                    alert(`Error: ${response.status} ${response.statusText}. Please try again or contact us through Whatsapp.`);
+                    // Redirect to error page after a short delay
+                    setTimeout(() => {
+                        window.location.hash = '#/error';
+                    }, 2000);
                     return;
                 } else {
                     setStatus("success");
                 }
             } catch (error) {
                 setStatus("error");
-                alert(`Error. Please try again or contact us through Whatsapp.`);
+                // Redirect to error page
+                setTimeout(() => {
+                    window.location.hash = '#/error';
+                }, 2000);
             }
         };
 

@@ -127,5 +127,9 @@
     "feedback_title": "Mentor Program Feedback",
     "help_us": "Help us out!",
     "prompt": "We value your feedback and need to present student feedback to VU. Please fill out the forms below:"
+  },
+  "errorPage": {
+    "message": "Something went wrong or someone didn't chop chop. If you have any changes of plans or want to cancel your spot in the event, please contact a mentor.",
+    "back_home": "Take me back pls"
   }
 }

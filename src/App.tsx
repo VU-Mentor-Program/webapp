@@ -5,6 +5,7 @@ import Accept from './routes/accept';
 import Decline from "./routes/decline";
 import { MinigamesPage } from "./routes/minigames";
 import Events from "./routes/events";
+import ErrorPage from "./routes/error";
 import { TranslationProvider } from "./contexts/TranslationContext";
 import { AudioProvider } from "./contexts/AudioContext";
 import { Layout } from "./components/Layout"
@@ -35,6 +36,14 @@ function App() {
             <Route path="/events" element={
               <Layout>
                 <Events />
+              </Layout>} />
+            <Route path="/error" element={
+              <Layout>
+                <ErrorPage />
+              </Layout>} />
+            <Route path="*" element={
+              <Layout>
+                <ErrorPage />
               </Layout>} />
           </Routes>
         </Router>
