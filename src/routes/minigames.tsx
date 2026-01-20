@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import FadeIn from "../components/Fadein-Wrapper";
+import { PageTransition } from "../components/PageTransition";
 import { OnePersonPong } from "../minigames/BrickBreaker";
 import { SnakeGame } from "../minigames/SnakeGame";
 import { FlappyLogoGame } from "../minigames/FlappyLogoGame";
@@ -46,7 +47,8 @@ export const MinigamesPage: React.FC = () => {
   const seconds = timeSpent % 60;
 
   return (
-    <div className="flex flex-col min-h-screen text-white text-center px-5">
+    <PageTransition>
+      <div className="flex flex-col min-h-screen text-white text-center px-5">
       <div className="flex-grow flex flex-col items-center justify-center">
         <FadeIn duration={100}>
           <Logo />
@@ -191,16 +193,17 @@ export const MinigamesPage: React.FC = () => {
             {selectedGame === "ideadash" && <IdeaDashGame />}
           </div>
         </FadeIn>
-      </div>
 
-      <FadeIn duration={100}>
-        <div className="flex flex-col items-center">
-          <p className="text-base pt-2 pb-2">
-            {t("time_spent")}{" "}
-            {hours}:{minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds}
-          </p>
-        </div>
-      </FadeIn>
-    </div>
+        <FadeIn duration={100}>
+          <div className="flex flex-col items-center">
+            <p className="text-base pt-2 pb-2">
+              {t("time_spent")}{" "}
+              {hours}:{minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+            </p>
+          </div>
+        </FadeIn>
+      </div>
+      </div>
+    </PageTransition>
   );
 };

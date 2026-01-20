@@ -9,12 +9,14 @@ import HomeCarousel from "../components/Carousel"
 import FadeIn from "../components/Fadein-Wrapper";
 import { FormsAccordion } from "../components/FormsAccordion";
 import { MusicButton } from "../components/MusicButton";
+import { PageTransition } from "../components/PageTransition";
 
 const locale = "nl";
 
 export default function Home() {
   const t = useTranslations("team");
   return (
+    <PageTransition>
       <div className="flex flex-col min-h-screen text-white text-center px-5">
       <div className="flex-grow flex flex-col items-center justify-center">
         <IntlProvider
@@ -54,5 +56,6 @@ export default function Home() {
         </IntlProvider>
       </div>
     </div>
+    </PageTransition>
   );
 }

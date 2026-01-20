@@ -2,6 +2,7 @@ import { IntlProvider } from "react-intl";
 import { useTranslations } from "../contexts/TranslationContext";
 import { Logo } from "../components/logo";
 import FadeIn from "../components/Fadein-Wrapper";
+import { PageTransition } from "../components/PageTransition";
 import EventCarousel from "../components/EventCarousel";
 import { eventGalleries } from "../assets/images";
 
@@ -11,6 +12,7 @@ export default function Events() {
   const t = useTranslations("events");
 
   return (
+    <PageTransition>
       <div className="flex flex-col min-h-screen text-white text-center px-5">
       <div className="flex-grow flex flex-col items-center justify-start pt-20 pb-10">
         <IntlProvider
@@ -69,10 +71,11 @@ export default function Events() {
         </IntlProvider>
       </div>
     </div>
+    </PageTransition>
   );
 }
 
-/* 
+/*
   HOW TO ADD NEW EVENT GALLERIES BY GONCALOOOOO (you are welcome bitch):
   
   1 Add images to: public/assets/images/events/[event-type]/

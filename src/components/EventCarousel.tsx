@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import FadeIn from "./Fadein-Wrapper";
 import { ImageModal } from "./ImageModal";
 import ScrollReveal from "./ScrollReveal";
-import GradualBlur from "./GradualBlur";
 
 interface EventCarouselProps {
   images: readonly string[];
