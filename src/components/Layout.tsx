@@ -1,6 +1,7 @@
 import React from "react";
 import { AnimatedHeader } from "./AnimatedHeader";
 import Aurora from "./Aurora";
+import { FloatingStatusButton } from "./StatusChecker/FloatingStatusButton";
 
 export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
@@ -25,6 +26,9 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
           {children}
         </main>
       </div>
+
+      {/* Floating Status Button - positioned above all content */}
+      <FloatingStatusButton />
     </div>
   );
 };

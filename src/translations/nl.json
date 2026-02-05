@@ -131,5 +131,24 @@
   "errorPage": {
     "message": "Er is iets misgegaan of iemand was niet snel genoeg. Als je plannen zijn veranderd of je je plek voor het evenement wilt annuleren, neem alsjeblieft contact op met een mentor.",
     "back_home": "Breng me terug alsjeblieft"
+  },
+  "statusChecker": {
+    "title": "Controleer Evenement Status",
+    "emailLabel": "E-mailadres",
+    "emailPlaceholder": "Voer je e-mailadres in",
+    "invalidEmail": "Voer een geldig e-mailadres in",
+    "eventLabel": "Selecteer Evenement",
+    "selectEvent": "Kies een evenement...",
+    "loadingEvents": "Evenementen laden...",
+    "checkButton": "Status Controleren",
+    "checking": "Bezig met controleren...",
+    "notFound": "E-mailadres niet gevonden voor dit evenement",
+    "status": "Status",
+    "event": "Evenement",
+    "confirmed": "Bevestigd",
+    "attended": "Aanwezig geweest",
+    "pending": "In behandeling",
+    "cancelled": "Geannuleerd",
+    "thankYouMessage": "Bedankt voor het deelnemen aan onze evenementen!"
   }
 }

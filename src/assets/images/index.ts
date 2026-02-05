@@ -237,7 +237,7 @@ export const teamPhotos = {
   nox: '/webapp/assets/images/team/nox.png',
   anastasia: '/webapp/assets/images/team/anastasia.png',
   mariana: '/webapp/assets/images/team/mariana.png',
-  amina: '/webapp/assets/images/team/amina.png',
+  gin: '/webapp/assets/images/team/gin.png',
   defaultPerson: '/webapp/assets/images/team/default person.jpg',
 } as const;
 

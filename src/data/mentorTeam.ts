@@ -52,12 +52,12 @@ export const mentorTeam = {
       "country": "co",
     },
     { 
-      "name": "Amina",
-      "full_name": "Amina Akhmedova",
-      "photo": teamPhotos.amina,
-      "linkedin_github": "http://www.linkedin.com/in/amina-akhmedova-41430b32b",
-      "study": "2nd year AI",
-      "country": "ru",
+      "name": "Gin",
+      "full_name": "Gintarė Rutkutė",
+      "photo": teamPhotos.gin,
+      "linkedin_github": "https://www.linkedin.com/in/gintar%C4%97-rutkut%C4%97-590929272/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      "study": "3rd year AI",
+      "country": "lt",
     }
   ]
 }

@@ -131,5 +131,24 @@
   "errorPage": {
     "message": "Something went wrong or someone didn't chop chop. If you have any changes of plans or want to cancel your spot in the event, please contact a mentor.",
     "back_home": "Take me back pls"
+  },
+  "statusChecker": {
+    "title": "Check Event Status",
+    "emailLabel": "Email Address",
+    "emailPlaceholder": "Enter your email",
+    "invalidEmail": "Please enter a valid email address",
+    "eventLabel": "Select Event",
+    "selectEvent": "Choose an event...",
+    "loadingEvents": "Loading events...",
+    "checkButton": "Check Status",
+    "checking": "Checking...",
+    "notFound": "Email not found for this event",
+    "status": "Status",
+    "event": "Event",
+    "confirmed": "Confirmed",
+    "attended": "Attended",
+    "pending": "Pending",
+    "cancelled": "Cancelled",
+    "thankYouMessage": "Thank you for joining our events!"
   }
 }
