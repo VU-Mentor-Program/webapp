@@ -48,7 +48,7 @@ export const mentorTeam = {
       "full_name": "Mariana Martinez",
       "photo": teamPhotos.mariana,
       "linkedin_github": "https://www.linkedin.com/in/mariana-martinez-vasquez-12197b369/",
-      "study": "2rd year AI",
+      "study": "2nd year AI",
       "country": "co",
     },
     { 
