@@ -134,7 +134,7 @@ const HomeCarousel: React.FC = () => {
         <div className="text-center mb-8 w-full">
           <h2 className="text-3xl font-bold text-white mb-4 w-full">{t("title")}</h2>
           <p className="text-lg text-blue-300 font-medium mb-4 w-full">{t("subtitle")}</p>
-          <div className="max-w-xl mx-auto px-6 py-4 bg-gray-900/20 rounded-lg border border-gray-700/30" style={{maxWidth: '500px', whiteSpace: 'normal', wordBreak: 'normal', width: 'auto', display: 'block'}}>
+          <div className="max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto px-6 py-4 bg-gray-900/20 rounded-lg border border-gray-700/30" style={{whiteSpace: 'normal', wordBreak: 'normal', width: 'auto', display: 'block'}}>
             <p className="text-gray-300 leading-relaxed" style={{whiteSpace: 'normal', wordBreak: 'normal', width: 'auto', display: 'block'}}>{t("description")}</p>
           </div>
         </div>
@@ -151,7 +151,7 @@ const HomeCarousel: React.FC = () => {
       <div className="text-center mb-8 w-full">
         <h2 className="text-3xl font-bold text-white mb-4 w-full">{t("title")}</h2>
         <p className="text-lg text-blue-300 font-medium mb-4 w-full">{t("subtitle")}</p>
-        <div className="max-w-xl mx-auto px-6 py-4 bg-gray-900/20 rounded-lg border border-gray-700/30" style={{maxWidth: '500px', whiteSpace: 'normal', wordBreak: 'normal', width: 'auto', display: 'block'}}>
+        <div className="max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto px-6 py-4 bg-gray-900/20 rounded-lg border border-gray-700/30" style={{whiteSpace: 'normal', wordBreak: 'normal', width: 'auto', display: 'block'}}>
           <p className="text-gray-300 leading-relaxed" style={{whiteSpace: 'normal', wordBreak: 'normal', width: 'auto', display: 'block'}}>{t("description")}</p>
         </div>
       </div>
