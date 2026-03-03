@@ -17,13 +17,7 @@ export const Hero: React.FC = () => {
           <h1 className="text-2xl font-bold w-full">{t("title")}</h1>
           <h2 className="text-xl w-full">{t("subtitle")}</h2>
 
-          <div className="max-w-2xl mx-auto px-6 py-4 bg-gray-900/30 rounded-xl border border-gray-700/50 backdrop-blur-sm" style={{maxWidth: '600px', whiteSpace: 'normal', wordBreak: 'normal', width: 'auto', display: 'block'}}>
-            <p className="text-base leading-relaxed" style={{whiteSpace: 'normal', wordBreak: 'normal', width: 'auto', display: 'block'}}>
-              {t("text")}
-            </p>
-          </div>
-
-          <JoinCommunityButton />
+<JoinCommunityButton />
           <SocialLinks />
         </div>
       </section>
