@@ -3,6 +3,7 @@ import { useEventStatus } from "../../hooks/useEventStatus";
 import { useEvents } from "../../hooks/useEvents";
 import { StatusResult } from "./StatusResult";
 import { useTranslations } from "../../contexts/TranslationContext";
+import { motion } from "motion/react";
 
 interface StatusCheckerModalProps {
     onClose: () => void;
@@ -45,9 +46,12 @@ export const StatusCheckerModal: React.FC<StatusCheckerModalProps> = ({ onClose 
     const canCheck = email && isValidEmail(email) && selectedEvent;
 
     return (
-        <div
+        <motion.div
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
             onClick={handleClose}
+            initial={{ opacity: 0 }}     // START: invisible
+            animate={{ opacity: 1 }}     // END: fully visible
+            transition={{ duration: 0.2 }} // HOW LONG: 0.3 seconds
         >
             <div
                 className="bg-gray-900 border border-gray-700 rounded-xl p-6 w-full mx-4 shadow-2xl"
@@ -131,6 +135,6 @@ export const StatusCheckerModal: React.FC<StatusCheckerModalProps> = ({ onClose 
                 {/* Result Display */}
                 {result && <StatusResult result={result} />}
             </div>
-        </div>
+        </motion.div>
     );
 };
