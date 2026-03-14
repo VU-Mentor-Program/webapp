@@ -4,6 +4,12 @@ import { Link } from "react-router-dom";
 import { GoArrowUpRight } from 'react-icons/go';
 import { logoImages } from "../assets/images";
 import { useTranslations, useSetLanguage, useCurrentLanguage } from "../contexts/TranslationContext";
+import { HiHome, HiUserGroup, HiCalendar, HiPencilSquare } from "react-icons/hi2";
+import { IoGameController } from "react-icons/io5";
+import { MdPhotoLibrary } from "react-icons/md";
+import { HiQuestionMarkCircle } from "react-icons/hi2";
+
+
 
 export const AnimatedHeader: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -25,9 +31,8 @@ export const AnimatedHeader: React.FC = () => {
       bgColor: '#1e3a8a',
       textColor: '#ffffff',
       links: [
-        { name: t("link2"), path: "#team", label: t("link2") },
-        { name: t("link1"), path: "#faq", label: t("link1") },
-        { name: t("link6"), path: "#help-us-out", label: t("link6") },
+        { name: t("link2"), path: "#team", label: t("link2"), icon: HiUserGroup },
+        { name: t("link1"), path: "#faq", label: t("link1"), icon: HiQuestionMarkCircle },
       ]
     },
     {
@@ -35,16 +40,17 @@ export const AnimatedHeader: React.FC = () => {
       bgColor: '#831843',
       textColor: '#ffffff',
       links: [
-        { name: t("link5"), path: "/events", label: t("link5") },
-        { name: t("link3"), path: "#calendar", label: t("link3") },
+        { name: t("link5"), path: "/events", label: t("link5"), icon: MdPhotoLibrary },
+        { name: t("link3"), path: "#calendar", label: t("link3"),icon: HiCalendar },
       ]
     },
     {
-      label: "Games", // Minigames
+      label: "Other",
       bgColor: '#ec4899',
       textColor: '#ffffff',
       links: [
-        { name: t("link4"), path: "/minigames", label: t("link4") },
+        { name: t("link4"), path: "/minigames", label: t("link4"), icon: IoGameController },
+        { name: t("link6"), path: "#help-us-out", label: t("link6"), icon: HiPencilSquare },
       ]
     },
   ];
@@ -236,23 +242,25 @@ export const AnimatedHeader: React.FC = () => {
           {navCategories.map((category, idx) => (
             <div
               key={`${category.label}-${idx}`}
-              className="relative flex flex-col gap-1 p-2 md:p-4 rounded-lg min-w-0 flex-1 h-auto md:h-full"
+              className="relative flex flex-col gap-1 p-1.5 md:p-3 rounded-lg min-w-0 flex-1 h-auto md:h-full"
               ref={setCardRef(idx)}
               style={{ backgroundColor: category.bgColor, color: category.textColor }}
             >
               <div className="font-semibold tracking-tight text-xs md:text-xl">
                 {category.label}
               </div>
-              <div className="mt-auto flex flex-col gap-0.5 md:gap-1">
+              <div className="mt-auto flex flex-col md:flex-row gap-1 md:gap-2 items-center">
                 {category.links.map((link, i) => (
                   <Link
-                    key={`${link.label}-${i}`}
-                    to={link.path.startsWith("/") ? link.path : "#"}
-                    onClick={(e) => handleAnchorClick(e, link.path)}
-                    className="inline-flex items-center gap-1 md:gap-2 no-underline cursor-pointer transition-opacity duration-300 hover:opacity-75 text-[10px] md:text-base"
+                      key={`${link.label}-${i}`}
+                      to={link.path.startsWith("/") ? link.path : "#"}
+                      onClick={(e) => handleAnchorClick(e, link.path)}
+                      className="flex-1 w-full md:w-auto flex items-center justify-center p-1.5 md:p-3
+                      border border-white/40 rounded-lg
+                      no-underline cursor-pointer
+                      transition-all duration-300 hover:bg-white/15 hover:border-white/70"
                   >
-                    <GoArrowUpRight className="shrink-0 text-xs md:text-base" aria-hidden="true" />
-                    {link.label}
+                  <link.icon className="text-xl md:text-2xl" />
                   </Link>
                 ))}
               </div>
