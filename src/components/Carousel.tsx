@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import FadeIn from "./Fadein-Wrapper";
 import { ImageModal } from "./ImageModal";
 
@@ -6,23 +6,17 @@ import { ImageModal } from "./ImageModal";
 import { homeCarouselImages } from '../assets/images';
 import { useTranslations } from '../contexts/TranslationContext';
 
-// Use dedicated home carousel images
-const rawImages = [
-  ...homeCarouselImages
-];
-
-// Handle edge case: ensure we have images
-const safeRawImages = rawImages.filter(Boolean);
-
-// Create infinite loop array only if we have images
-const images = safeRawImages.length > 0 ? [
-  safeRawImages[safeRawImages.length - 1],
-  ...safeRawImages,
-  safeRawImages[0],
-] : [];
-
 const HomeCarousel: React.FC = () => {
   const t = useTranslations("home_carousel");
+
+  // Image data — useMemo so it's only computed once, but lives inside the component
+  const safeRawImages = useMemo(() => [...homeCarouselImages].filter(Boolean), []);
+  const images = useMemo(() =>
+    safeRawImages.length > 0
+      ? [safeRawImages[safeRawImages.length - 1], ...safeRawImages, safeRawImages[0]]
+      : [],
+    [safeRawImages]
+  );
   const [currentIndex, setCurrentIndex] = useState(1);
   const [modalImage, setModalImage] = useState<string | null>(null);
   const [modalImageIndex, setModalImageIndex] = useState<number>(0);
@@ -36,18 +30,13 @@ const HomeCarousel: React.FC = () => {
 
   // Simplified mobile-first approach - no complex calculations needed
 
-  // Handle body scroll lock when modal is open
+  // Pause auto-play when modal is open (scroll lock handled by ImageModal)
   useEffect(() => {
     if (modalImage) {
-      document.body.style.overflow = 'hidden';
+      if (timerRef.current) clearInterval(timerRef.current); // Pause auto-play
     } else {
-      document.body.style.overflow = 'unset';
+      resetTimer(); // Resume auto-play when modal closes
     }
-    
-    // Cleanup on unmount
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
   }, [modalImage]);
 
   const resetTimer = () => {
@@ -76,8 +65,28 @@ const HomeCarousel: React.FC = () => {
 
 
 
-  useEffect(() => 
-         {
+  // Preload all home carousel images on mount (only ~10 images, small after compression)
+  useEffect(() => {
+    safeRawImages.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
+
+  // Pause auto-play when tab is hidden, resume when visible
+  useEffect(() => {
+    const handleVisibility = () => {
+      if (document.hidden) {
+        if (timerRef.current) clearInterval(timerRef.current);
+      } else if (!modalImage) {
+        resetTimer(); // Only resume if modal isn't open
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => document.removeEventListener('visibilitychange', handleVisibility);
+  }, [modalImage]);
+
+  useEffect(() => {
     resetTimer();
     return () => clearInterval(timerRef.current);
   }, []);

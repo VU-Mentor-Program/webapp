@@ -10,6 +10,13 @@ interface ImageModalProps {
   onNavigate?: (newIndex: number) => void;
 }
 
+// Ensure modal-root exists BEFORE any render (runs once when file loads)
+if (!document.getElementById('modal-root')) {
+  const root = document.createElement('div');
+  root.id = 'modal-root';
+  document.body.appendChild(root);
+}
+
 export const ImageModal: React.FC<ImageModalProps> = ({
   src,
   alt,
@@ -21,21 +28,12 @@ export const ImageModal: React.FC<ImageModalProps> = ({
   const [imageLoaded, setImageLoaded] = useState(false);
   const hasMultipleImages = images.length > 1;
 
-  // Create modal root if it doesn't exist
+  // Lock body scroll when modal is open
   useEffect(() => {
-    let modalRoot = document.getElementById('modal-root');
-    if (!modalRoot) {
-      modalRoot = document.createElement('div');
-      modalRoot.id = 'modal-root';
-      document.body.appendChild(modalRoot);
-    }
-
-    // Prevent body scroll when modal is open
-    const originalStyle = window.getComputedStyle(document.body).overflow;
     document.body.style.overflow = 'hidden';
 
     return () => {
-      document.body.style.overflow = originalStyle;
+      document.body.style.overflow = '';
     };
   }, []);
 
@@ -43,6 +41,21 @@ export const ImageModal: React.FC<ImageModalProps> = ({
   useEffect(() => {
     setImageLoaded(false);
   }, [src]);
+
+  // Preload next and previous images for instant navigation
+  useEffect(() => {
+    if (!hasMultipleImages) return;
+
+    const preloadIndexes = [
+      currentIndex === 0 ? images.length - 1 : currentIndex - 1,  // previous
+      currentIndex === images.length - 1 ? 0 : currentIndex + 1,  // next
+    ];
+
+    preloadIndexes.forEach((idx) => {
+      const img = new Image();
+      img.src = images[idx];
+    });
+  }, [currentIndex, images, hasMultipleImages]);
 
   // Close modal on Escape key, navigate with arrow keys
   useEffect(() => {
@@ -95,6 +108,7 @@ export const ImageModal: React.FC<ImageModalProps> = ({
         justifyContent: 'center',
         padding: hasMultipleImages ? '60px 80px' : '40px',
         margin: 0,
+        
       }}
       onClick={(e) => {
         // Only close if clicking the backdrop, not the image

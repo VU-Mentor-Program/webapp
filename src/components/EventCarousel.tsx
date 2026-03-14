@@ -33,18 +33,13 @@ const EventCarousel: React.FC<EventCarouselProps> = ({
   const touchEndXRef = useRef<number>(0);
   const minSwipeDistance = 50;
 
-  // Handle body scroll lock when modal is open
+  // Pause auto-play when modal is open (scroll lock handled by ImageModal)
   useEffect(() => {
     if (modalImage) {
-      document.body.style.overflow = 'hidden';
+      if (timerRef.current) clearInterval(timerRef.current); // Pause auto-play
     } else {
-      document.body.style.overflow = 'unset';
+      resetTimer(); // Resume auto-play when modal closes
     }
-    
-    // Cleanup on unmount
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
   }, [modalImage]);
 
   // Create infinite loop array
@@ -78,6 +73,28 @@ const EventCarousel: React.FC<EventCarouselProps> = ({
     isAnimatingRef.current = true;
     setCurrentIndex((prev) => prev + 1);
   };
+
+  // Preload the first few images when this gallery mounts (not all — just enough for smooth start)
+  useEffect(() => {
+    const preloadCount = Math.min(3, images.length);
+    for (let i = 0; i < preloadCount; i++) {
+      const img = new Image();
+      img.src = images[i];
+    }
+  }, [images]);
+
+  // Pause auto-play when tab is hidden, resume when visible
+  useEffect(() => {
+    const handleVisibility = () => {
+      if (document.hidden) {
+        if (timerRef.current) clearInterval(timerRef.current);
+      } else if (!modalImage) {
+        resetTimer();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => document.removeEventListener('visibilitychange', handleVisibility);
+  }, [modalImage]);
 
   useEffect(() => {
     resetTimer();
