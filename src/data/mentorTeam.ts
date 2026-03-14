@@ -25,7 +25,7 @@ export const mentorTeam = {
       "study": "3rd year AI",
       "country": "nl",
       "description": "hi hiii! I’m Noor, a third-year AI student. You might recognise my name from our announcements :) When I’m not busy organising events or preparing TA sessions, I’m usually reading, hanging out with friends, or listening to music, and you’ll often find me at concerts (maybe a bit too often). Outside of AI, I love learning about Greek mythology and anything language-related. Feel free to message me if you have questions about courses or just want to chat :D see you around! 🫶",
-      "songName": "Devon Again, cherry cola"
+      "songName": "Devon Again, cherry cola",
       "songFile": teamSongs.noorSong,
     },
     { 

@@ -11,6 +11,7 @@ interface TeamProps {
   title: string;
   description?: string | React.ReactNode;
   background?: string;
+  onMemberClick?: (member: IMember) => void;
 }
 
 interface IMember {
@@ -22,7 +23,7 @@ interface IMember {
   country?: string;
 }
 
-const Team: React.FC<TeamProps> = ({ title, description, background }) =>
+const Team: React.FC<TeamProps> = ({ title, description, background, onMemberClick }) =>
   {
   const intl = useIntl();
 
@@ -54,12 +55,9 @@ const Team: React.FC<TeamProps> = ({ title, description, background }) =>
 
     return (
       <div key={m.name} className="w-[220px] md:w-[250px] flex flex-col items-center flex-shrink-0">
-        <a
-          href={m.linkedin_github}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block mb-4"
-        >
+
+          <div onClick={() => onMemberClick?.(m)} className="cursor-pointer block mb-4">
+
           <TiltedCard
             imageSrc={m.photo || teamPhotos.defaultPerson}
             altText={m.full_name}
@@ -74,7 +72,7 @@ const Team: React.FC<TeamProps> = ({ title, description, background }) =>
             overlayContent={overlayContent}
             displayOverlayContent={true}
           />
-        </a>
+        </div>
         <div className="text-center mt-2">
           <p className="text-lg md:text-xl font-bold">{m.full_name}</p>
           <p className="text-sm md:text-base text-gray-300 mt-1">{role}</p>
@@ -108,7 +106,7 @@ const Team: React.FC<TeamProps> = ({ title, description, background }) =>
               {extraMembers.map(toTiltedCard)}
             </div>
           )}
-        </div>
+          </div>
       </section>
     </FadeIn>
   );

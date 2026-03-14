@@ -10,11 +10,14 @@ import FadeIn from "../components/Fadein-Wrapper";
 import { FormsAccordion } from "../components/FormsAccordion";
 import { MusicButton } from "../components/MusicButton";
 import { PageTransition } from "../components/PageTransition";
+import TeamPopup from "../components/TeamPopUp/teamPopup";
+import { useState } from "react";
 
 const locale = "nl";
 
 export default function Home() {
   const t = useTranslations("team");
+  const [selectedMember, setSelectedMember] = useState<any>(null);
   return (
     <PageTransition>
       <div className="flex flex-col min-h-screen text-white text-center px-5">
@@ -33,7 +36,7 @@ export default function Home() {
           <Hero />
           <HomeCarousel />
           <FAQ />
-          <Team title={t("title")} description={t("subtitle")} />
+          <Team title={t("title")} description={t("subtitle")} onMemberClick={setSelectedMember} />
           <FormsAccordion />
           <Calendar />
 
@@ -53,6 +56,16 @@ export default function Home() {
             </span>
             <MusicButton className="bg-gradient-to-r from-blue-900 via-pink-900 to-pink-500 hover:from-blue-800 hover:via-pink-800 hover:to-pink-400 text-white p-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-pink-500/50 hover:scale-110" />
           </div>
+
+
+          {selectedMember && (
+            <TeamPopup
+              member={selectedMember}
+              onClose={() => setSelectedMember(null)}
+            />
+          )}
+
+
         </IntlProvider>
       </div>
     </div>
