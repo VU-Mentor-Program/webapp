@@ -65,10 +65,8 @@ export const eventGalleries = {
     subtitle: "exam_preps_date",
     description: "exam_preps_desc",
     images: [
-      '/webapp/assets/images/events/exampreps/%cover.jpeg',
-      '/webapp/assets/images/events/exampreps/1.jpeg',
-      '/webapp/assets/images/events/exampreps/2.jpeg',
       '/webapp/assets/images/events/exampreps/3.jpeg',
+      '/webapp/assets/images/events/exampreps/2.jpeg',
       '/webapp/assets/images/events/exampreps/4.jpeg',
       '/webapp/assets/images/events/exampreps/5.jpeg',
       '/webapp/assets/images/events/exampreps/6.jpeg',
