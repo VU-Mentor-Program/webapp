@@ -1,10 +1,9 @@
 import React, { useLayoutEffect, useRef, useState, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { Link } from "react-router-dom";
-import { GoArrowUpRight } from 'react-icons/go';
 import { logoImages } from "../assets/images";
 import { useTranslations, useSetLanguage, useCurrentLanguage } from "../contexts/TranslationContext";
-import { HiHome, HiUserGroup, HiCalendar, HiPencilSquare } from "react-icons/hi2";
+import { HiUserGroup, HiCalendar, HiPencilSquare } from "react-icons/hi2";
 import { IoGameController } from "react-icons/io5";
 import { MdPhotoLibrary } from "react-icons/md";
 import { HiQuestionMarkCircle } from "react-icons/hi2";
