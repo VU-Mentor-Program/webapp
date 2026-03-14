@@ -363,6 +363,16 @@ export const teamPhotos = {
   defaultPerson: '/webapp/assets/images/team/default person.jpg',
 } as const;
 
+export const teamSongs = {
+  vitorSong: '/webapp/assets/images/team/vitorSong.mp3',
+  noorSong: '/webapp/assets/images/team/noorSong.mp3',
+  goncaloSong: '/webapp/assets/images/team/goncaloSong.mp3',
+  noxSong: '/webapp/assets/images/team/noxSong.mp3',
+  anastasiaSong: '/webapp/assets/images/team/anastasiaSong.mp3',
+  marianaSong: '/webapp/assets/images/team/marianaSong.mp3',
+  ginSong: '/webapp/assets/images/team/ginSong.mp3',
+} as const;
+
 // Asset organization paths - now implemented!
 export const ASSET_PATHS = {
   images: {

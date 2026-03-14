@@ -42,7 +42,7 @@ export const StatusResult: React.FC<StatusResultProps> = ({ result }) => {
         Pending: "bg-yellow-900/30 border-yellow-500/50",
         Cancelled: "bg-red-900/30 border-red-500/50"
     };
-
+    
     return (
         <>
             {showConfetti && (

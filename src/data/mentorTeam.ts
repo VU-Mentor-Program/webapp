@@ -1,5 +1,6 @@
 // Import organized team photo paths
 import { teamPhotos } from '../assets/images';
+import { teamSongs } from '../assets/images';
 
 export const mentorTeam = {
   "members": [
@@ -8,56 +9,85 @@ export const mentorTeam = {
       "full_name": "Vitor Castro",
       "photo": teamPhotos.vitor,
       "linkedin_github": "https://www.linkedin.com/in/vitor-castro-24584a220/",
+      "instagramLink": "https://www.instagram.com/vf.castro/",
       "study": "3rd year CS",
       "country": "br",
+      "description": "Hey! I am Vitor, a third-year CS student born and raised in Brazil. I come from a city that we call a big farm; 6 million people and no one ever heard of it. This is my second year being a mentor and I love every part of it! Outside of university, I am a big sports guy. As a good Brazilian, I was born playing football (quite literally) and slowly migrated to volleyball, that I play since 2017. Just recently, I decided to humble myself with JiuJitsu and most of the times I go to get beaten up. Besides that, I love coding and I started doing it because I wanted to make Minecraft plugins mods! If you have any questions about uni-life, want to geek about coding or just want to chat a little bit, feel free to reach out :)",
+      "songName": "Tim Maia, O Descubrir Dos Sete Mares",
+      "songFile": teamSongs.vitorSong,
     },
     { 
       "name": "Noor",
       "full_name": "Noor Dooper",
       "photo": teamPhotos.noor,
       "linkedin_github": "https://www.linkedin.com/in/noor-dooper-aab77b29b/",
+      "instagramLink": "https://www.instagram.com/noor.sterre/",
       "study": "3rd year AI",
       "country": "nl",
+      "description": "hi hiii! I’m Noor, a third-year AI student. You might recognise my name from our announcements :) When I’m not busy organising events or preparing TA sessions, I’m usually reading, hanging out with friends, or listening to music, and you’ll often find me at concerts (maybe a bit too often). Outside of AI, I love learning about Greek mythology and anything language-related. Feel free to message me if you have questions about courses or just want to chat :D see you around! 🫶",
+      "songName": "Devon Again, cherry cola"
+      "songFile": teamSongs.noorSong,
     },
     { 
       "name": "Gonçalo",
       "full_name": "Gonçalo Mesquita",
       "photo": teamPhotos.goncalo,
       "linkedin_github": "https://www.linkedin.com/in/gon%C3%A7alomesquita/",
+      "instagramLink": "https://www.instagram.com/gm.mesquitaa/",
       "study": "2nd year CS",
       "country": "pt",
+      "description":"Olá! I’m Gonçalo, a second-year CS student from Setúbal, Portugal. I’m big into health and fitness and though less into running , we’re working on it. Between my severe sugar tooth and the fact that I identify with 808s era Kanye more than I’d like to admit, I’m also keeping the mentors website updated if you’ve ever visited it (https://vu-mentor-program.github.io/webapp/#/) wink wink ,now its your chance, Other than that I’m always down to chat. Reach out if you’re stuck on an assignment, lost in uni life, or just want to catch up!",
+      "songName":"Napa, Deslocado",
+      "songFile": teamSongs.goncaloSong,
+
     },
     { 
       "name": "Nox",
       "full_name": "Ugne Nox Ubartaite",
       "photo": teamPhotos.nox,
       "linkedin_github": "http://www.linkedin.com/in/ugne-ubartaite-aa5103263/",
+      "instagramLink": "https://www.instagram.com/ugne.ubartaite/",
       "study": "3rd year CS",
       "country": "lt",
+      "description":"Happy New Year, everyone!!! My name is Ugne, though a lot of you might also know me as Nox. I’m a Lithuanian CS Bachelors student with a budding passion for hacking and cybersecurity. It’s at the point where my brother gifted me a soldering iron this holiday season. Hide your microchips, because I’m still learning👀. Outside of university you can find me doing almost anything. I love to cook, exercise, bake, clean, watch films, listen to music, paint, travel, sew, etc., etc. You name it, I’ve probably tried it. You can also recognize me by the distinct amount of cat hair on my usually black attire, as I have two cats named Maple and Leaf who also love to code (tap-dance on my laptop mid-assignment). I love meeting people and making new friends, so whenever you see me out and about, come say hi! I’m looking forward to what this new year will bring, and I wish all of you a very exciting and fulfilling 2026! Nuoširdūs linkėjimai!",
+      "songName":"ORAI, Trupa",
+      "songFile": teamSongs.noxSong,
     },
     { 
       "name": "Anastasia",
       "full_name": "Anastasia Panayotova",
       "photo": teamPhotos.anastasia,
       "linkedin_github": "http://www.linkedin.com/in/anastasia-panayotova-826a76204/",
+      "instagramLink": "https://www.instagram.com/anastasiaa584/",
       "study": "3rd year CS",
       "country": "bg",
+      "description": "Hi! I’m Anastasia, a 3rd year CS student with a passion for creating and solving challenges, whether that is coding, puzzles, or craft projects. Music is a big part of my life: I play the piano since I was 8, and there’s almost always music playing in the background when I’m doing something. Growing up between Bulgaria and Cyprus introduced me not only to great food, but also to my love for trying new things and meeting new people. From ballet and salsa classes, to painting ceramics and vlogging, I like to follow my curiosity and I rarely say no to learning something new (currently trying to learn crocheting without getting my fingers in a knot). I also help create our Instagram posts (hope you’re following us), and I’m having too much fun exploring Canva Premium. I like staying busy, making the most out of my time, and meeting new people along the way. If you see me around, don’t hesitate, come say hi:)",
+      "songName": "Lenny Kravitz, Stillness Of Heart",
+      "songFile": teamSongs.anastasiaSong,
     },
     { 
       "name": "Mariana",
       "full_name": "Mariana Martinez",
       "photo": teamPhotos.mariana,
       "linkedin_github": "https://www.linkedin.com/in/mariana-martinez-vasquez-12197b369/",
+      "instagramLink": "https://www.instagram.com/mimmi.mp3/",
       "study": "2nd year AI",
       "country": "co",
+      "description": "Hello there… I’m Mariana, a 2nd year AI student from Colombia who loves painting, cooking, and sharing an excessive amount of cat shitposts as if my life depended on it. You’ll often catch me listening to all sorts of music, learning the stories behind songs, watching interviews, and creating (too) many playlists on Spotify. Besides that I’m deeply passionate about art and I often visit museums whenever I’m free or go to random places to draw. I hope you guys have enjoyed all of the events we’ve organized so far and join the next ones :)",
+      "songName": "Fleetwood Mac, Little Lies (2013 Remaster)",
+      "songFile": teamSongs.marianaSong,
     },
     { 
       "name": "Gin",
       "full_name": "Gintarė Rutkutė",
       "photo": teamPhotos.gin,
       "linkedin_github": "https://www.linkedin.com/in/gintar%C4%97-rutkut%C4%97-590929272/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      "instagramLink": "https://www.instagram.com/gintare.rut/",
       "study": "3rd year AI",
       "country": "lt",
+      "description": "Heyo! My name is Gintarė, I’m a third-year Artificial Intelligence student and the newest addition to this year’s mentor team. When I’m not at university, I like to keep myself busy with things that help me relax, such as reading, gaming, watching all kinds of stupid YouTube videos, or going out to enjoy some nature. I’m really looking forward to the rest of the year and meeting everyone at the upcoming events!",
+      "songName": "Aklì, Per saldu",
+      "songFile": teamSongs.ginSong,
     }
   ]
 }
