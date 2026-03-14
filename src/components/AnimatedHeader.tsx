@@ -113,7 +113,7 @@ export const AnimatedHeader: React.FC = () => {
       // Very compact height for mobile - just enough for the cards
       return 180;
     }
-    return 280;
+    return 200;
   };
 
   const createTimeline = () => {
@@ -241,25 +241,25 @@ export const AnimatedHeader: React.FC = () => {
           {navCategories.map((category, idx) => (
             <div
               key={`${category.label}-${idx}`}
-              className="relative flex flex-col gap-1 p-1.5 md:p-3 rounded-lg min-w-0 flex-1 h-auto md:h-full"
+              className="relative flex flex-col gap-1.5 p-1.5 md:p-2.5 rounded-xl min-w-0 flex-1 h-auto md:h-full shadow-lg"
               ref={setCardRef(idx)}
               style={{ backgroundColor: category.bgColor, color: category.textColor }}
             >
-              <div className="font-semibold tracking-tight text-xs md:text-xl">
+              <div className="font-semibold tracking-tight text-xs md:text-sm">
                 {category.label}
               </div>
-              <div className="mt-auto flex flex-col md:flex-row gap-1 md:gap-2 items-center">
+              <div className="mt-auto flex flex-col md:flex-row gap-1 md:gap-2 items-stretch flex-1">
                 {category.links.map((link, i) => (
                   <Link
                       key={`${link.label}-${i}`}
                       to={link.path.startsWith("/") ? link.path : "#"}
                       onClick={(e) => handleAnchorClick(e, link.path)}
-                      className="flex-1 w-full md:w-auto flex items-center justify-center p-1.5 md:p-3
-                      border border-white/40 rounded-lg
+                      className="flex-1 w-full flex items-center justify-center p-1.5 md:py-3 md:px-3
+                      bg-white/10 border border-white/20 rounded-lg
                       no-underline cursor-pointer
-                      transition-all duration-300 hover:bg-white/15 hover:border-white/70"
+                      transition-all duration-300 hover:bg-white/25 hover:border-white/50 hover:scale-105"
                   >
-                  <link.icon className="text-xl md:text-2xl" />
+                  <link.icon className="text-xl md:text-2xl text-white drop-shadow-sm" />
                   </Link>
                 ))}
               </div>
