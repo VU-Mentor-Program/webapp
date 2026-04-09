@@ -1,10 +1,10 @@
 import { IntlProvider } from "react-intl";
 import { useTranslations } from "../contexts/TranslationContext";
-import { Logo } from "../components/logo";
 import FadeIn from "../components/Fadein-Wrapper";
 import { PageTransition } from "../components/PageTransition";
 import EventCarousel from "../components/EventCarousel";
 import { eventGalleries } from "../assets/images";
+import SectionWrapper from "../components/SectionWrapper";
 
 const locale = "nl";
 
@@ -13,8 +13,7 @@ export default function Events() {
 
   return (
     <PageTransition>
-      <div className="flex flex-col min-h-screen text-white text-center px-5">
-      <div className="flex-grow flex flex-col items-center justify-start pt-20 pb-10">
+      <div className="min-h-screen text-white" style={{ display: 'block', width: '100%', textAlign: 'center' }}>
         <IntlProvider
           locale={locale}
           defaultLocale="en"
@@ -25,52 +24,69 @@ export default function Events() {
             throw err;
           }}
         >
-          {/* Header Section */}
-          <FadeIn duration={100}>
-            <Logo />
-          </FadeIn>
-
-          <FadeIn duration={100}>
-            <div className="text-center mb-12 w-full">
-              <h1 className="text-4xl font-bold mb-4 w-full">{t("title")}</h1>
-              <div className="max-w-2xl mx-auto px-6 py-4 bg-gray-900/20 rounded-lg border border-gray-700/30" style={{maxWidth: '600px', whiteSpace: 'normal', wordBreak: 'normal', width: 'auto', display: 'block'}}>
-                <p className="text-xl text-gray-300 leading-relaxed" style={{whiteSpace: 'normal', wordBreak: 'normal', width: 'auto', display: 'block'}}>
+          {/* Hero-like intro */}
+          <div style={{ display: 'block', width: '100%', paddingTop: '6rem', paddingBottom: '2rem', paddingLeft: '1rem', paddingRight: '1rem' }}>
+            <FadeIn duration={100} className="w-full">
+              <div style={{ display: 'block', width: '100%', maxWidth: '42rem', margin: '0 auto', textAlign: 'center' }}>
+                <h1 className="text-4xl md:text-5xl font-bold" style={{ display: 'block', width: '100%', marginBottom: '1rem' }}>
+                  {t("title")}
+                </h1>
+                <p className="text-lg text-gray-300 leading-relaxed" style={{ display: 'block', width: '100%' }}>
                   {t("subtitle")}
                 </p>
               </div>
-            </div>
-          </FadeIn>
-
-          {/* Event Galleries */}
-          <div className="w-full max-w-6xl mx-auto space-y-16">
-            {Object.entries(eventGalleries).map(([key, gallery]) => (
-              <EventCarousel
-                key={key}
-                images={gallery.images}
-                title={t(gallery.title)}
-                subtitle={gallery.subtitle ? t(gallery.subtitle) : undefined}
-                description={t(gallery.description)}
-                autoPlay={true}
-                showIndicators={true}
-                className="mb-16"
-              />
-            ))}
+            </FadeIn>
           </div>
 
-          {/* Easy to add new events section */}
-          <FadeIn duration={100}>
-            <div className="mt-16 p-8 bg-gray-900/50 rounded-xl border border-gray-700/50 max-w-4xl mx-auto">
-              <h2 className="text-2xl font-semibold mb-4 text-blue-400">More Events Coming Soon!</h2>
-              <p className="text-gray-400 leading-relaxed">
-                We're constantly organizing events for you guys. 
+          {/* Event Galleries */}
+          <SectionWrapper label="Event Galleries" divider={true}>
+            <div style={{ display: 'block', width: '100%' }}>
+              {Object.entries(eventGalleries).map(([key, gallery]) => (
+                <div key={key} style={{ marginBottom: '4rem' }}>
+                  <EventCarousel
+                    images={gallery.images}
+                    title={t(gallery.title)}
+                    subtitle={gallery.subtitle ? t(gallery.subtitle) : undefined}
+                    description={t(gallery.description)}
+                    autoPlay={true}
+                    showIndicators={true}
+                  />
+                </div>
+              ))}
+            </div>
+          </SectionWrapper>
+
+          {/* More Events Coming Soon */}
+          <SectionWrapper label="Stay Tuned" divider={true} glass={true}>
+            <div style={{ display: 'block', width: '100%', textAlign: 'center' }}>
+              <h2 className="text-2xl font-semibold text-blue-400" style={{ display: 'block', width: '100%', marginBottom: '1rem' }}>
+                More Events Coming Soon!
+              </h2>
+              <p className="text-gray-400 leading-relaxed" style={{ display: 'block', width: '100%', maxWidth: '36rem', margin: '0 auto' }}>
+                We're constantly organizing events for you guys.
                 New photo galleries will be added here as we capture more memories together!
                 Keep showing up and you might appear in the next gallery. ;p
               </p>
             </div>
-          </FadeIn>
+          </SectionWrapper>
+
+          {/* Footer */}
+          <footer className="border-t border-white/10" style={{ marginTop: '2rem', paddingTop: '2rem', paddingBottom: '3rem', paddingLeft: '1rem', paddingRight: '1rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+              <button
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="text-gray-500 hover:text-white transition-colors text-sm cursor-pointer"
+                style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                </svg>
+                Back to top
+              </button>
+            </div>
+          </footer>
         </IntlProvider>
       </div>
-    </div>
     </PageTransition>
   );
 }

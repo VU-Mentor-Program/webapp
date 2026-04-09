@@ -11,8 +11,7 @@ export const FloatingStatusButton: React.FC = () => {
             <button
                 onClick={() => setIsOpen(true)}
                 className="fixed bottom-6 right-6 z-40
-                         bg-gradient-to-r from-pink-500 to-blue-500
-                         hover:from-pink-600 hover:to-blue-600
+                         bg-gradient-lava
                          text-white p-4 rounded-full shadow-2xl
                          hover:scale-110 transition-all duration-300"
                 aria-label="Check Event Status"

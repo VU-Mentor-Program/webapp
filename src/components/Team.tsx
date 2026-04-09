@@ -5,6 +5,7 @@ import { CircleFlag } from 'react-circle-flags';
 import { mentorTeam } from "../data/mentorTeam";
 import { useIntl } from "react-intl";
 import FadeIn from "./Fadein-Wrapper";
+import ScrollReveal from "./ScrollReveal";
 import { teamPhotos } from '../assets/images';
 
 interface TeamProps {
@@ -61,7 +62,7 @@ const Team: React.FC<TeamProps> = ({ title, description, background, onMemberCli
           <TiltedCard
             imageSrc={m.photo || teamPhotos.defaultPerson}
             altText={m.full_name}
-            captionText={`Connect with ${m.full_name}`}
+            captionText={`Meet ${m.full_name}`}
             containerHeight="250px"
             containerWidth="220px"
             imageHeight="250px"
@@ -83,10 +84,16 @@ const Team: React.FC<TeamProps> = ({ title, description, background, onMemberCli
 
   return (
     <FadeIn duration={100} className="mt-6">
-      <section id="team" className={clsx(background || "")}>
+      <section className={clsx(background || "")}>
         <div className={clsx("text-center", description && "mb-4")}>
-          <h2 className="text-3xl sm:text-4xl py-4 lg:py-8">{title}</h2>
-          {description && <p>{description}</p>}
+          <ScrollReveal
+            baseRotation={0}
+            containerClassName="py-4 lg:py-8"
+            textClassName="text-3xl sm:text-4xl"
+          >
+            {title}
+          </ScrollReveal>
+          {description && <p className="text-gray-300">{description}</p>}
         </div>
 
         <div className="max-w-7xl mx-auto px-4">

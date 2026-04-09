@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import FadeIn from "./Fadein-Wrapper";
 import { ImageModal } from "./ImageModal";
+import ScrollReveal from "./ScrollReveal";
 
 // Import organized image constants
 import { homeCarouselImages } from '../assets/images';
@@ -154,10 +155,14 @@ const HomeCarousel: React.FC = () => {
   return (
     <FadeIn duration={100}>
       {/* Header Section */}
-      <div className="text-center mb-8 w-full">
-        <h2 className="text-3xl font-bold text-white mb-4 w-full">{t("title")}</h2>
-        <p className="text-lg text-blue-300 font-medium mb-4 w-full">{t("subtitle")}</p>
-      </div>
+      <ScrollReveal
+        baseRotation={0}
+        containerClassName="text-center mb-2"
+        textClassName="text-3xl font-bold text-white"
+      >
+        {t("title")}
+      </ScrollReveal>
+      <p className="text-lg text-blue-300 font-medium mb-8 text-center">{t("subtitle")}</p>
 
           {/* Simple reliable carousel with side preview */}
           <div className="relative w-full pb-16 overflow-hidden">

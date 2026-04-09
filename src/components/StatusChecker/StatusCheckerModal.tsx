@@ -104,7 +104,7 @@ export const StatusCheckerModal: React.FC<StatusCheckerModalProps> = ({ onClose 
                         <option value="">
                             {eventsLoading ? t("loadingEvents") : t("selectEvent")}
                         </option>
-                        {events.slice(0, 5).map((event) => (
+                        {events.slice(0, 3).map((event) => (
                             <option key={event} value={event}>
                                 {event}
                             </option>
@@ -116,8 +116,7 @@ export const StatusCheckerModal: React.FC<StatusCheckerModalProps> = ({ onClose 
                 <button
                     onClick={handleCheck}
                     disabled={!canCheck || loading}
-                    className="w-full py-3 bg-gradient-to-r from-pink-500 to-blue-500
-                             hover:from-pink-600 hover:to-blue-600
+                    className="w-full py-3 bg-pink-500 hover:bg-pink-600
                              rounded-lg font-semibold text-white transition-all duration-300
                              disabled:opacity-50 disabled:cursor-not-allowed
                              shadow-lg hover:shadow-xl transform hover:scale-105"

@@ -74,7 +74,7 @@ export const Header: React.FC = () => {
           <img src={logoImages.primary} alt="Logo" className="h-10 w-10" />
           <Link
             to="/"
-            className="text-white text-lg font-bold hover:text-pink-200 transition"
+            className="text-white text-lg hover:text-pink-200 transition font-bold"
           >
             {t("title")}
           </Link>
@@ -87,7 +87,7 @@ export const Header: React.FC = () => {
               key={link.path}
               to={link.path.startsWith("/") ? link.path : "#"}
               onClick={(e) => handleAnchorClick(e, link.path)}
-              className="text-white hover:text-pink-200 transition whitespace-nowrap text-sm lg:text-base"
+              className="text-white hover:text-pink-200 transition whitespace-nowrap text-sm lg:text-base font-bold"
             >
               {link.name}
             </Link>
@@ -158,7 +158,7 @@ export const Header: React.FC = () => {
               key={link.path}
               to={link.path.startsWith("/") ? link.path : "#"}
               onClick={(e) => handleAnchorClick(e, link.path)}
-              className="text-white hover:text-pink-200 transition"
+              className="text-white hover:text-pink-200 transition font-bold"
             >
               {link.name}
             </Link>

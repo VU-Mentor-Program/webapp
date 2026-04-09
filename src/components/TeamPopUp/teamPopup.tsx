@@ -51,8 +51,8 @@ const TeamPopup: React.FC<MentorInfo> = ({ member, onClose }) => {
 
     // BACKDROP — covers full screen, dark overlay, centers the popup
     <motion.div
-        initial={{ opacity: 0 }}     // START: invisible
-        animate={{ opacity: 1 }}     // END: fully visible
+        initial={{ opacity: 0 }}       // START: invisible
+        animate={{ opacity: 1 }}       // END: fully visible
         transition={{ duration: 0.2 }} // HOW LONG: 0.3 seconds
         className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
         onClick={onClose}

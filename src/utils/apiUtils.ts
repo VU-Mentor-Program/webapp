@@ -25,5 +25,4 @@ export const API_URL = "https://mentorprogramme.app.n8n.cloud/webhook/1eee38da-b
 
 // Event Status Checker - Google Sheets ID
 export const EVENT_SHEETS_ID = "1mKkCRF5P9JsOMV0pn6HfzzFh-acpcPCL4xCYWk61Ij0";
-// TODO: Replace with your Google Apps Script Web App URL once deployed
-export const EVENT_STATUS_API_URL = "https://script.google.com/macros/s/AKfycbwxtw6RY-Z0cC8x9mLK9LNQjuQyGwBJiMzbynZj3wXfJWW1X4rJw1lExEsyBJRSRLBF/exec";
+export const EVENT_STATUS_API_URL = "https://script.google.com/macros/s/AKfycbw1UvDcfjWGSUbghUGWE-44Qpb6HzhP5RyPXJXGXPWtPtgD0P-xtm5a2jXFd0ZSeoTS/exec";

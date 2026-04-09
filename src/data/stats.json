@@ -1,0 +1,18 @@
+{
+  "stats": [
+    { "key": "eventSignups", "value": 1210, "suffix": "" },
+    { "key": "eventsHosted", "value": 20, "suffix": "" },
+    { "key": "whatsappMembers", "value": 306, "suffix": "" },
+    { "key": "activeMembers", "value": 434, "suffix": "" }
+  ],
+  "topEvents": [
+    { "name": "Mexican Dinner", "signups": 155 },
+    { "name": "Halloween Club", "signups": 147 },
+    { "name": "Movie Night", "signups": 113 }
+  ],
+  "recentEvents": [
+    { "name": "HoAI Movie Night", "signups": 17 },
+    { "name": "Escape Room", "signups": 59 },
+    { "name": "Tote Bag Painting", "signups": 27 }
+  ]
+}

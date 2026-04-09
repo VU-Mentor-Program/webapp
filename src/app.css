@@ -5,7 +5,7 @@
 html,
 body {
   @apply text-white;
-  background: transparent;
+  background: #0f172a;
   font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   word-break: normal;
   white-space: normal;
@@ -108,6 +108,7 @@ p, h1, h2, h3, h4, h5, h6 {
   min-width: 300px !important;
 }
 
+
 .faq-content {
   max-height: 0;
   overflow: hidden;
@@ -126,4 +127,48 @@ p, h1, h2, h3, h4, h5, h6 {
 
 .faq-icon.open {
   transform: rotate(45deg);
+}
+
+/* Stats event lists - side by side on desktop */
+@media (min-width: 768px) {
+  .stats-event-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+
+/* Floating hero images */
+.hero-float {
+  opacity: 0;
+  animation-name: hero-float-drift;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes hero-float-drift {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(0deg) scale(0.95);
+  }
+  15% {
+    opacity: 0.12;
+  }
+  50% {
+    opacity: 0.1;
+    transform: translate(var(--float-drift-x), var(--float-drift-y)) rotate(var(--float-rotate)) scale(1.05);
+  }
+  85% {
+    opacity: 0.12;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(0deg) scale(0.95);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-float {
+    animation: none;
+    opacity: 0.06;
+  }
 }
