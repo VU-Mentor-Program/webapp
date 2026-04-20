@@ -64,8 +64,7 @@ export const FormsAccordion: React.FC = () => {
   const t = useTranslations("forms");
 
   const forms: FormItem[] = [
-    { link: "https://forms.gle/WWzUVcNN1hpVgkuY7", title: t("exam_title") },
-    { link: "https://forms.gle/NDtvPasTzUwHpeBT7", title: t("feedback_title") },
+    { link: "https://forms.gle/Ei4C5JTAwhEAMM4o6", title: t("feedback_title") },
   ];
 
   return (
