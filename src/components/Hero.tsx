@@ -4,6 +4,7 @@ import { SocialLinks } from "./social-link";
 import JoinCommunityButton from "./JoinCommunityButton";
 import FadeIn from "./Fadein-Wrapper";
 import FloatingImages from "./FloatingImages";
+import { seagullImages } from "../assets/images";
 
 export const Hero: React.FC = () => {
   return (
@@ -31,6 +32,12 @@ export const Hero: React.FC = () => {
           </div>
 
           <SocialLinks />
+
+          <img 
+            src={seagullImages.chipInMouth} 
+            alt="Seagull mascot" 
+            className="w-20 h-20 md:w-24 md:h-24 object-contain opacity-80 hover:opacity-100 transition-opacity mt-4"
+          />
         </div>
       </FadeIn>
 

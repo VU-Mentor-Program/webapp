@@ -3,6 +3,7 @@ import { Logo } from "./logo";
 import { LoadingAnimation } from "./LoadingAnimation";
 import { useTranslations } from "../contexts/TranslationContext";
 import Confetti from "react-confetti";
+import { seagullImages } from "../assets/images";
 
 interface StatusMessageProps {
     status: "loading" | "error" | "success" | "idle";
@@ -49,7 +50,12 @@ export const StatusMessage: React.FC<StatusMessageProps> = ({
         return (
             <div className="flex flex-col items-center justify-center h-screen text-white text-center px-5">
                 <Logo />
-                <div className="mb-8 text-6xl animate-pulse">❌</div>
+                <img 
+                    src={seagullImages.sad} 
+                    alt="Sad seagull" 
+                    className="w-32 h-32 md:w-40 md:h-40 mb-8 object-contain"
+                    style={{ animation: 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite' }}
+                />
                 <h1 className="text-3xl">{t("error")}</h1>
                 <p className="text-xl">{errorMessage}</p>
                 <p className="text-xl"> {t("suggestion")} </p>
@@ -79,7 +85,14 @@ export const StatusMessage: React.FC<StatusMessageProps> = ({
                 )}
                 <div className="flex flex-col items-center justify-center h-screen text-white text-center px-5">
                     <Logo />
-                    {isAccept && <div className="mb-8 text-6xl animate-bounce">✅</div>}
+                    {isAccept && (
+                        <img 
+                            src={seagullImages.starEyes} 
+                            alt="Excited seagull" 
+                            className="w-32 h-32 md:w-40 md:h-40 mb-8 object-contain"
+                            style={{ animation: 'bounce 2s infinite' }}
+                        />
+                    )}
 
                     <h1 className={`text-3xl ${textColorClass} pb-3`}>{title}</h1>
                     <p className="text-xl">{message}</p>

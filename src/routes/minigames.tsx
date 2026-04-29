@@ -1,208 +1,109 @@
-import React, { useState, useEffect } from "react";
-import FadeIn from "../components/Fadein-Wrapper";
+import React from "react";
 import { PageTransition } from "../components/PageTransition";
-import { OnePersonPong } from "../minigames/BrickBreaker";
-import { SnakeGame } from "../minigames/SnakeGame";
-import { FlappyLogoGame } from "../minigames/FlappyLogoGame";
-import { LogoRacerGame } from "../minigames/LogoRacer";
-import { LogoStackGame } from "../minigames/LogoTowerBuilder";
-import { LogoSpaceShooterGame } from "../minigames/LogoSpaceShooter";
-// import { LogoCatchGame } from "../minigames/LogoCatch";
-import { LogoDodgeGame } from "../minigames/LogoDodge";
-import { Logo } from "../components/logo";
 import { useTranslations } from "../contexts/TranslationContext";
-import PlinkoGame from "../minigames/Plinko";
-import MinesweeperGame from "../minigames/MineSweeper";
-import TypingGame from "../minigames/FastType";
-// import PacManGame from "../minigames/PacMan";
-import SimonSaysGame from "../minigames/SimonSays";
-import Game2048 from "../minigames/2048";
-// import { PinballGame } from "../minigames/PinBallGame";
-import { BallBouncingGame } from "../minigames/Bouncer";
-import WordleGame from "../minigames/Wordle";
-import { IdeaDashGame } from "../minigames/IdeaDash";
+import { seagullImages } from "../assets/images";
 
 export const MinigamesPage: React.FC = () => {
-  const [selectedGame, setSelectedGame] = useState<string | null>(null);
-
-  const handleSelectGame = (game: string) => {
-    setSelectedGame(game);
-  };
-
-
   const t = useTranslations("minigames");
-
-  // --- Time Counter State ---
-  const [timeSpent, setTimeSpent] = useState(0);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeSpent((prev) => prev + 1);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Convert timeSpent (in seconds) to hours, minutes, and seconds.
-  const hours = Math.floor(timeSpent / 3600);
-  const minutes = Math.floor((timeSpent % 3600) / 60);
-  const seconds = timeSpent % 60;
 
   return (
     <PageTransition>
-      <div className="flex flex-col min-h-screen text-white text-center px-5">
-      <div className="flex-grow flex flex-col items-center justify-center">
-        <FadeIn duration={100}>
-          <Logo />
-        </FadeIn>
+      <div
+        className="min-h-screen text-white"
+        style={{
+          display: 'block',
+          width: '100%',
+          textAlign: 'center',
+          paddingTop: '6rem',
+          paddingBottom: '4rem',
+          paddingLeft: '1rem',
+          paddingRight: '1rem',
+        }}
+      >
+        <div
+          style={{
+            display: 'block',
+            width: '100%',
+            maxWidth: '42rem',
+            margin: '0 auto',
+          }}
+        >
+          <img
+            src={seagullImages.confused}
+            alt="Confused seagull"
+            className="w-32 h-32 md:w-44 md:h-44 mb-8 object-contain"
+            style={{
+              display: 'block',
+              margin: '0 auto 2rem auto',
+            }}
+          />
 
-        <FadeIn duration={100}>
-          <h1 className="text-2xl font-bold pt-1">{t("title")}</h1>
-          <p className="text-base pt-1 pb-3">{t("game_choice")}</p>
-        </FadeIn>
+          <div
+            className="bg-gray-900/40 border border-pink-500/30 rounded-2xl p-6 md:p-10 backdrop-blur-sm shadow-lg"
+            style={{ display: 'block', width: '100%' }}
+          >
+            <h1
+              className="text-3xl md:text-5xl font-bold mb-4 text-white"
+              style={{ display: 'block', width: '100%' }}
+            >
+              {t("under_construction_title")}
+            </h1>
 
-        <FadeIn duration={100}>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-5 p-2">
-            <button
-              onClick={() => handleSelectGame("brickBreaker")}
-              className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
+            <p
+              className="text-base md:text-lg text-gray-200 leading-relaxed"
+              style={{
+                display: 'block',
+                width: '100%',
+                wordBreak: 'normal',
+                overflowWrap: 'break-word',
+              }}
             >
-              🔨 Brick Breaker
-            </button>
-            <button
-              onClick={() => handleSelectGame("snake")}
-              className="bg-green-600 px-4 py-2 rounded hover:bg-green-700"
-            >
-              🐍 Snake
-            </button>
-            <button
-              onClick={() => handleSelectGame("flappy")}
-              className="bg-purple-600 px-4 py-2 rounded hover:bg-purple-700"
-            >
-              🪂 Flappy Logo
-            </button>
-            <button
-              onClick={() => handleSelectGame("logoDodge")}
-              className="bg-gray-600 px-4 py-2 rounded hover:bg-gray-700"
-            >
-              🚗 Logo Dodge
-            </button>
-            <button
-              onClick={() => handleSelectGame("logoRacer")}
-              className="bg-yellow-600 px-4 py-2 rounded hover:bg-yellow-700"
-            >
-              🏎️ Logo Racer
-            </button>
-            <button
-              onClick={() => handleSelectGame("towerBuilder")}
-              className="bg-red-600 px-4 py-2 rounded hover:bg-red-700"
-            >
-              🏗️ Tower Builder
-            </button>
-            <button
-              onClick={() => handleSelectGame("spaceShooter")}
-              className="bg-indigo-600 px-4 py-2 rounded hover:bg-indigo-700"
-            >
-              🚀 Space Shooter
-            </button>
-            {/* <button
-              onClick={() => handleSelectGame("logoCatch")}
-              className="bg-pink-600 px-4 py-2 rounded hover:bg-pink-700"
-            >
-              🧺 Logo Catch
-            </button> */}
-            <button
-              onClick={() => handleSelectGame("plinko")}
-              className="bg-orange-500 px-4 py-2 rounded hover:bg-orange-600"
-            >
-              🔴 Plinko
-            </button>
-            <button
-              onClick={() => handleSelectGame("minesweeper")}
-              className="bg-teal-500 px-4 py-2 rounded hover:bg-teal-600"
-            >
-              💣 MineSweeper
-            </button>
-            <button
-              onClick={() => handleSelectGame("fasttype")}
-              className="bg-green-800 px-4 py-2 rounded hover:bg-green-900"
-            >
-              🤓 FastType
-            </button>
-            {/* <button
-              onClick={() => handleSelectGame("pacman")}
-              className="bg-green-800 px-4 py-2 rounded hover:bg-green-900"
-            >
-              PacMan
-            </button> */}
-            <button
-              onClick={() => handleSelectGame("simonsays")}
-              className="bg-purple-600 px-4 py-2 rounded hover:bg-purple-700"
-            >
-              🎵 SimonSays
-            </button>
-            <button
-              onClick={() => handleSelectGame("2048")}
-              className="bg-orange-600 px-4 py-2 rounded hover:bg-orange-700"
-            >
-              🔢 2048
-            </button>
-            {/* <button
-              onClick={() => handleSelectGame("pinball")}
-              className="bg-orange-600 px-4 py-2 rounded hover:bg-orange-700"
-            >
-              pinball
-            </button> */}
-            <button
-              onClick={() => handleSelectGame("bouncer")}
-              className="bg-yellow-400 px-4 py-2 rounded hover:bg-orange-700"
-            > 🪩Bouncer
-            </button>
-            <button
-              onClick={() => handleSelectGame("wordle")}
-              className="bg-gray-600 px-4 py-2 rounded hover:bg-gray-700"
-            >
-              🧩 Wordle
-            </button>
-            <button
-              onClick={() => handleSelectGame("ideadash")}
-              className="bg-cyan-600 px-4 py-2 rounded hover:bg-cyan-700"
-            >
-              💡 Idea Dash
-            </button>
-          </div>
-        </FadeIn>
-
-        <FadeIn duration={100}>
-          <div className="w-full max-w-4xl">
-            {selectedGame === "brickBreaker" && <OnePersonPong />}
-            {selectedGame === "snake" && <SnakeGame />}
-            {selectedGame === "flappy" && <FlappyLogoGame />}
-            {selectedGame === "logoRacer" && <LogoRacerGame />}
-            {selectedGame === "towerBuilder" && <LogoStackGame />}
-            {selectedGame === "spaceShooter" && <LogoSpaceShooterGame />}
-            {/* {selectedGame === "logoCatch" && <LogoCatchGame />} */}
-            {selectedGame === "logoDodge" && <LogoDodgeGame />}
-            {selectedGame === "plinko" && <PlinkoGame />}
-            {selectedGame === "minesweeper" && <MinesweeperGame />}
-            {selectedGame === "fasttype" && <TypingGame />}
-            {/* {selectedGame === "pacman" && <PacManGame />} */}
-            {selectedGame === "simonsays" && <SimonSaysGame />}
-            {selectedGame === "2048" && <Game2048 />}
-            {/* {selectedGame === "pinball" && <PinballGame />} */}
-            {selectedGame === "bouncer" && <BallBouncingGame />}
-            {selectedGame === "wordle" && <WordleGame />}
-            {selectedGame === "ideadash" && <IdeaDashGame />}
-          </div>
-        </FadeIn>
-
-        <FadeIn duration={100}>
-          <div className="flex flex-col items-center">
-            <p className="text-base pt-2 pb-2">
-              {t("time_spent")}{" "}
-              {hours}:{minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+              {t("under_construction_desc")}
             </p>
+
+            <div
+              className="text-yellow-400"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.75rem',
+                marginTop: '2rem',
+              }}
+            >
+              <svg
+                className="w-5 h-5 md:w-6 md:h-6 animate-spin"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                />
+              </svg>
+              <span className="text-base md:text-lg font-semibold tracking-wide">
+                {t("coming_soon")}
+              </span>
+            </div>
           </div>
-        </FadeIn>
-      </div>
+
+          <a
+            href="#/"
+            className="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 no-underline"
+            style={{ display: 'inline-block', marginTop: '2.5rem' }}
+          >
+            {t("back_home")}
+          </a>
+        </div>
       </div>
     </PageTransition>
   );

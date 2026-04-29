@@ -7,6 +7,7 @@ import { HiUserGroup, HiCalendar, HiPencilSquare } from "react-icons/hi2";
 import { IoGameController } from "react-icons/io5";
 import { MdPhotoLibrary } from "react-icons/md";
 import { HiQuestionMarkCircle } from "react-icons/hi2";
+import { MenuToggleIcon } from "./MenuToggleIcon";
 
 
 
@@ -167,24 +168,18 @@ export const AnimatedHeader: React.FC = () => {
         {/* Top Bar */}
         <div className="absolute inset-x-0 top-0 h-[60px] flex items-center justify-between px-4 md:px-6 z-[2]">
           {/* Hamburger Menu */}
-          <div
-            className={`group h-full flex flex-col items-center justify-center cursor-pointer gap-[6px] md:order-none`}
+          <button
+            type="button"
+            className="group h-full flex items-center justify-center cursor-pointer bg-transparent border-none p-0 md:order-none text-white hover:opacity-75 transition-opacity"
             onClick={toggleMenu}
-            role="button"
             aria-label={isExpanded ? 'Close menu' : 'Open menu'}
-            tabIndex={0}
+            aria-expanded={isExpanded}
           >
-            <div
-              className={`w-[30px] h-[2px] bg-white transition-transform duration-300 ${
-                isExpanded ? 'translate-y-[4px] rotate-45' : ''
-              } group-hover:opacity-75`}
+            <MenuToggleIcon
+              open={isExpanded}
+              className="w-7 h-7 md:w-8 md:h-8"
             />
-            <div
-              className={`w-[30px] h-[2px] bg-white transition-transform duration-300 ${
-                isExpanded ? '-translate-y-[4px] -rotate-45' : ''
-              } group-hover:opacity-75`}
-            />
-          </div>
+          </button>
 
           {/* Logo (Centered) */}
           <Link

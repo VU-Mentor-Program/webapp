@@ -13,7 +13,7 @@ import TeamPopup from "../components/TeamPopUp/teamPopup";
 import SectionWrapper from "../components/SectionWrapper";
 import Stats from "../components/Stats";
 import { SocialLinks } from "../components/social-link";
-import { logoImages } from "../assets/images";
+import { logoImages, seagullImages } from "../assets/images";
 import { useState } from "react";
 
 const locale = "nl";
@@ -94,6 +94,12 @@ export default function Home() {
                   <MusicButton className="text-white hover:text-pink-400 transition-colors" />
                 </div>
               </div>
+
+              <img 
+                src={seagullImages.normal} 
+                alt="Seagull mascot" 
+                className="w-24 h-24 md:w-28 md:h-28 object-contain opacity-60 hover:opacity-100 transition-opacity mt-4"
+              />
 
               <SocialLinks />
 
