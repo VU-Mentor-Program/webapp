@@ -6,21 +6,18 @@ import FAQ from "../components/FAQ"
 import Hero from "../components/Hero"
 import { useTranslations } from "../contexts/TranslationContext";
 import HomeCarousel from "../components/Carousel"
-import { FormsAccordion } from "../components/FormsAccordion";
+// import { FormsAccordion } from "../components/FormsAccordion"; // hidden with the feedback section below
 import { MusicButton } from "../components/MusicButton";
 import { PageTransition } from "../components/PageTransition";
-import TeamPopup from "../components/TeamPopUp/teamPopup";
 import SectionWrapper from "../components/SectionWrapper";
-import Stats from "../components/Stats";
+// import Stats from "../components/Stats"; // hidden with the stats section below
 import { SocialLinks } from "../components/social-link";
 import { logoImages, seagullImages } from "../assets/images";
-import { useState } from "react";
 
 const locale = "nl";
 
 export default function Home() {
   const t = useTranslations("team");
-  const [selectedMember, setSelectedMember] = useState<any>(null);
   return (
     <PageTransition>
       <div className="flex flex-col min-h-screen text-white text-center">
@@ -42,13 +39,14 @@ export default function Home() {
             <HomeCarousel />
           </SectionWrapper>
 
-          {/* Impact Stats */}
+          {/* Impact Stats — hidden until 2026-27 stats exist; uncomment (and the Stats import) to bring back
           <SectionWrapper id="impact" label="Event Stats This Year" divider={true} glass={true}>
             <p className="text-gray-500 text-xs italic" style={{ textAlign: "center", marginTop: "-4px", marginBottom: "16px" }}>
               Excluding non-signup events such as study sessions and exam preps
             </p>
             <Stats />
           </SectionWrapper>
+          */}
 
           {/* FAQ */}
           <SectionWrapper id="faq" label="FAQ" divider={true} glass={true}>
@@ -57,13 +55,14 @@ export default function Home() {
 
           {/* Team */}
           <SectionWrapper id="team" label="Team" divider={true}>
-            <Team title="Meet the 2025-2026 Team" onMemberClick={setSelectedMember} />
+            <Team title="Meet the 2026-2027 Team" />
           </SectionWrapper>
 
-          {/* Feedback Forms */}
+          {/* Feedback Forms — hidden for now; uncomment (and the FormsAccordion import) to bring back
           <SectionWrapper id="help-us-out" label="Feedback" divider={true} glass={true}>
             <FormsAccordion />
           </SectionWrapper>
+          */}
 
           {/* Calendar */}
           <SectionWrapper id="calendar" label="Schedule" divider={true}>
@@ -74,8 +73,8 @@ export default function Home() {
           <footer className="mt-8 border-t border-white/10 pt-12 pb-8 px-4">
             <div className="max-w-4xl mx-auto flex flex-col items-center gap-8">
               <img
-                className="w-16 h-16 rounded-full bg-white"
-                src={logoImages.black}
+                className="w-16 h-16 rounded-full bg-gradient-to-b from-emerald-600 via-teal-700 to-blue-900"
+                src={logoImages.white}
                 alt="Mentor Program Logo"
               />
               <p className="text-gray-400 text-sm -mt-4">
@@ -85,13 +84,13 @@ export default function Home() {
               <div className="flex flex-wrap justify-center gap-4">
                 <Link
                   to="/minigames"
-                  className="bg-white/5 backdrop-blur-sm border border-white/10 px-5 py-2.5 rounded-full text-white hover:bg-white/10 transition-all duration-300 hover:border-pink-500/30 no-underline"
+                  className="bg-white/5 backdrop-blur-sm border border-white/10 px-5 py-2.5 rounded-full text-white hover:bg-white/10 transition-all duration-300 hover:border-emerald-500/30 no-underline"
                 >
                   {t("minigames")}
                 </Link>
                 <div className="flex items-center gap-2 bg-white/5 backdrop-blur-sm border border-white/10 px-5 py-2.5 rounded-full">
-                  <span className="text-pink-300 text-sm font-semibold">Nox's Jukebox</span>
-                  <MusicButton className="text-white hover:text-pink-400 transition-colors" />
+                  <span className="text-emerald-300 text-sm font-semibold">Nox's Jukebox</span>
+                  <MusicButton className="text-white hover:text-emerald-400 transition-colors" />
                 </div>
               </div>
 
@@ -117,12 +116,6 @@ export default function Home() {
             </div>
           </footer>
 
-          {selectedMember && (
-            <TeamPopup
-              member={selectedMember}
-              onClose={() => setSelectedMember(null)}
-            />
-          )}
         </IntlProvider>
       </div>
     </PageTransition>

@@ -20,10 +20,10 @@ const SectionWrapper: React.FC<SectionWrapperProps> = ({
   return (
     <section id={id} className={`py-16 md:py-20 px-4 ${className}`}>
       {divider && (
-        <div className="h-px bg-gradient-to-r from-transparent via-pink-500/40 to-transparent max-w-2xl mx-auto mb-12" />
+        <div className="h-px bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent max-w-2xl mx-auto mb-12" />
       )}
       {label && (
-        <p className="text-center uppercase tracking-[0.25em] text-xs text-pink-400/80 font-medium mb-4">
+        <p className="text-center uppercase tracking-[0.25em] text-xs text-emerald-400/80 font-medium mb-4">
           {label}
         </p>
       )}

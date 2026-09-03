@@ -17,11 +17,11 @@ body {
 
 /* Smooth lava lamp gradient - no glitches */
 .bg-gradient-lava {
-  background: linear-gradient(135deg, 
-    #1e3a8a 0%, 
-    #1e293b 25%, 
-    #831843 50%, 
-    #ec4899 75%, 
+  background: linear-gradient(135deg,
+    #1e3a8a 0%,
+    #1e293b 25%,
+    #115e59 50%,
+    #10b981 75%,
     #1e3a8a 100%
   );
   background-size: 300% 300%;
@@ -29,11 +29,11 @@ body {
 }
 
 .bg-gradient-lava-vertical {
-  background: linear-gradient(180deg, 
-    #1e3a8a 0%, 
-    #1e293b 25%, 
-    #831843 50%, 
-    #ec4899 75%, 
+  background: linear-gradient(180deg,
+    #1e3a8a 0%,
+    #1e293b 25%,
+    #115e59 50%,
+    #10b981 75%,
     #1e3a8a 100%
   );
   background-size: 300% 300%;

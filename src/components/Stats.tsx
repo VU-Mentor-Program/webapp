@@ -82,7 +82,7 @@ export default function Stats() {
             key={stat.key}
             className="flex flex-col items-center gap-3 py-4"
           >
-            <div className="text-pink-400/60">
+            <div className="text-emerald-400/60">
               {iconMap[stat.key]}
             </div>
 

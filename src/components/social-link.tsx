@@ -17,7 +17,7 @@ export const SocialLinks = () => {
       <SocialIcon href="https://www.instagram.com/vumentorprogram/">
         <FaInstagram />
       </SocialIcon>
-      <SocialIcon href="https://chat.whatsapp.com/DtzNHL2mZo1LNTlYruM0Sx">
+      <SocialIcon href="https://chat.whatsapp.com/FwlVVsDaq418675c9ehFW7">
         <FaWhatsapp />
       </SocialIcon>
       <SocialIcon href="https://drive.google.com/drive/folders/1YgNYf9C_y3bb67LvPOQ0go6TVHH0JlDR">

@@ -12,7 +12,7 @@
 //   3. Redeploy the web app
 
 const API_URL =
-  "https://script.google.com/macros/s/AKfycbw1UvDcfjWGSUbghUGWE-44Qpb6HzhP5RyPXJXGXPWtPtgD0P-xtm5a2jXFd0ZSeoTS/exec";
+  "https://script.google.com/macros/s/AKfycbxme42_Tw8h_60qjvGNAGqmqfAOlv8Mj2T8Er83EDxzcGr8eQm0gtTgD7foo7V4_0RO/exec";
 
 async function main() {
   console.log("\n  Fetching signup stats...\n");

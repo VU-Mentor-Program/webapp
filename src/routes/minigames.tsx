@@ -39,7 +39,7 @@ export const MinigamesPage: React.FC = () => {
           />
 
           <div
-            className="bg-gray-900/40 border border-pink-500/30 rounded-2xl p-6 md:p-10 backdrop-blur-sm shadow-lg"
+            className="bg-gray-900/40 border border-emerald-500/30 rounded-2xl p-6 md:p-10 backdrop-blur-sm shadow-lg"
             style={{ display: 'block', width: '100%' }}
           >
             <h1
@@ -98,7 +98,7 @@ export const MinigamesPage: React.FC = () => {
 
           <a
             href="#/"
-            className="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 no-underline"
+            className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 no-underline"
             style={{ display: 'inline-block', marginTop: '2.5rem' }}
           >
             {t("back_home")}

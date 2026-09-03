@@ -22,6 +22,10 @@ function doGet(e) {
       return getSignupStats();
     }
 
+    if (action === "getTopEmails") {
+      return getTopEmails();
+    }
+
     var email = e.parameter.email;
     var eventName = e.parameter.eventName;
 
@@ -180,6 +184,78 @@ function getSignupStats() {
       totalSignups: 0,
       uniqueMembers: 0,
       events: [],
+      error: error.toString()
+    });
+  }
+}
+
+function getTopEmails() {
+  try {
+    var spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheets = spreadsheet.getSheets();
+    var emailCounts = {};
+    var emailEvents = {};
+
+    for (var i = 0; i < sheets.length; i++) {
+      var sheet = sheets[i];
+      if (sheet.isSheetHidden()) continue;
+
+      var name = sheet.getName();
+      if (name.startsWith('_') || name === "Config" || name === "Template" || name === "README" || name === "Sheet1") continue;
+
+      var lastRow = sheet.getLastRow();
+      if (lastRow <= 1) continue;
+
+      var data = sheet.getDataRange().getValues();
+      var headers = data[0];
+      var emailCol = -1;
+
+      for (var c = 0; c < headers.length; c++) {
+        if (headers[c].toString().trim().toLowerCase() === HEADER_NAMES.EMAIL.toLowerCase()) {
+          emailCol = c;
+          break;
+        }
+      }
+
+      if (emailCol === -1) continue;
+
+      for (var r = 1; r < data.length; r++) {
+        var email = data[r][emailCol];
+        if (email) {
+          var normalizedEmail = email.toString().toLowerCase().trim();
+          if (!emailCounts[normalizedEmail]) {
+            emailCounts[normalizedEmail] = 0;
+            emailEvents[normalizedEmail] = [];
+          }
+          emailCounts[normalizedEmail]++;
+          emailEvents[normalizedEmail].push(name);
+        }
+      }
+    }
+
+    var emailList = Object.keys(emailCounts).map(function(email) {
+      return {
+        email: email,
+        count: emailCounts[email],
+        events: emailEvents[email]
+      };
+    });
+
+    emailList.sort(function(a, b) { return b.count - a.count; });
+
+    var top50 = emailList.slice(0, 50);
+    var multiEventCount = emailList.filter(function(e) { return e.count > 1; }).length;
+
+    return createResponse({
+      topEmails: top50,
+      totalUniqueEmails: emailList.length,
+      multiEventSignups: multiEventCount
+    });
+  } catch (error) {
+    return createResponse({
+      topEmails: [],
+      totalUniqueEmails: 0,
+      multiEventSignups: 0,
       error: error.toString()
     });
   }

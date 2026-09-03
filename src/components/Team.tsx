@@ -29,9 +29,9 @@ const Team: React.FC<TeamProps> = ({ title, description, background, onMemberCli
   const intl = useIntl();
 
   const members: IMember[] = mentorTeam.members ?? [];
-  const topThree = members.slice(0, 3);
-  const bottomFour = members.slice(3, 7);
-  const extraMembers = members.slice(7);
+  const headMentors = members.slice(0, 2);
+  const bottomFour = members.slice(2, 6);
+  const extraMembers = members.slice(6);
 
   const toTiltedCard = (m: IMember) => {
     const role = intl.formatMessage({
@@ -57,7 +57,10 @@ const Team: React.FC<TeamProps> = ({ title, description, background, onMemberCli
     return (
       <div key={m.name} className="w-[220px] md:w-[250px] flex flex-col items-center flex-shrink-0">
 
-          <div onClick={() => onMemberClick?.(m)} className="cursor-pointer block mb-4">
+          <div
+            onClick={onMemberClick ? () => onMemberClick(m) : undefined}
+            className={clsx("block mb-4", onMemberClick && "cursor-pointer")}
+          >
 
           <TiltedCard
             imageSrc={m.photo || teamPhotos.defaultPerson}
@@ -97,9 +100,9 @@ const Team: React.FC<TeamProps> = ({ title, description, background, onMemberCli
         </div>
 
         <div className="max-w-7xl mx-auto px-4">
-          {/* Top row: exactly 3, centered */}
+          {/* Top row: head mentors, centered */}
           <div className="flex flex-wrap justify-center gap-x-8 md:gap-x-12 lg:gap-x-16 gap-y-16 mb-16 max-w-5xl mx-auto">
-            {topThree.map(toTiltedCard)}
+            {headMentors.map(toTiltedCard)}
           </div>
 
           {/* Bottom row: exactly 4 members, centered */}

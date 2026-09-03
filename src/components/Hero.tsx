@@ -14,12 +14,23 @@ export const Hero: React.FC = () => {
         <div className="flex flex-col items-center text-center space-y-6 w-full mx-auto" style={{ maxWidth: '48rem' }}>
           <Logo />
 
+          <video
+            className="w-full max-w-[36rem] rounded-2xl border border-white/10 shadow-lg"
+            src="/webapp/assets/images/videos/mentor_program_intro.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            controls
+            preload="metadata"
+          />
+
           <div className="w-full">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
               Mentor Program
             </h1>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mt-2 bg-gradient-to-r from-pink-400 to-blue-400 bg-clip-text text-transparent leading-tight">
-              2025-2026
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mt-2 bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent leading-tight">
+              2026-2027
             </h2>
           </div>
 

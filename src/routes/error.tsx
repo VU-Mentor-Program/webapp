@@ -31,7 +31,7 @@ export const ErrorPage: React.FC = () => {
             {/* Back to Home Button */}
             <a
                 href="#/"
-                className="inline-block bg-pink-500 hover:bg-pink-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                className="inline-block bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
             >
                 {t("back_home")}
             </a>

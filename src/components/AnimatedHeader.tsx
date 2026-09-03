@@ -3,7 +3,7 @@ import { gsap } from 'gsap';
 import { Link } from "react-router-dom";
 import { logoImages } from "../assets/images";
 import { useTranslations, useSetLanguage, useCurrentLanguage } from "../contexts/TranslationContext";
-import { HiUserGroup, HiCalendar, HiPencilSquare } from "react-icons/hi2";
+import { HiUserGroup, HiCalendar } from "react-icons/hi2"; // re-add HiPencilSquare when the feedback link returns
 import { IoGameController } from "react-icons/io5";
 import { MdPhotoLibrary } from "react-icons/md";
 import { HiQuestionMarkCircle } from "react-icons/hi2";
@@ -37,7 +37,7 @@ export const AnimatedHeader: React.FC = () => {
     },
     {
       label: "Events", // Events & Calendar
-      bgColor: '#831843',
+      bgColor: '#115e59',
       textColor: '#ffffff',
       links: [
         { name: t("link5"), path: "/events", label: t("link5"), icon: MdPhotoLibrary },
@@ -46,11 +46,12 @@ export const AnimatedHeader: React.FC = () => {
     },
     {
       label: "Other",
-      bgColor: '#ec4899',
+      bgColor: '#10b981',
       textColor: '#ffffff',
       links: [
         { name: t("link4"), path: "/minigames", label: t("link4"), icon: IoGameController },
-        { name: t("link6"), path: "#help-us-out", label: t("link6"), icon: HiPencilSquare },
+        // Feedback section is hidden for now — restore this link together with the section in home.tsx
+        // { name: t("link6"), path: "#help-us-out", label: t("link6"), icon: HiPencilSquare },
       ]
     },
   ];
@@ -186,8 +187,8 @@ export const AnimatedHeader: React.FC = () => {
             to="/"
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-2"
           >
-            <img src={logoImages.primary} alt="Logo" className="h-8 w-8 hidden md:block" />
-            <span className="text-white text-sm md:text-lg font-bold hover:text-pink-200 transition">
+            <img src={logoImages.white} alt="Logo" className="h-8 w-8 hidden md:block" />
+            <span className="text-white text-sm md:text-lg font-bold hover:text-emerald-200 transition">
               {t("title")}
             </span>
           </Link>

@@ -94,7 +94,7 @@ const TeamPopup: React.FC<MentorInfo> = ({ member, onClose }) => {
           </p>
 
           {/* Song */}
-          <div className="mt-2 sm:mt-4 text-[10px] sm:text-xs text-pink-300">
+          <div className="mt-2 sm:mt-4 text-[10px] sm:text-xs text-emerald-300">
             <span className="text-gray-400">Song Choice: </span>
             {member.songName}
           </div>

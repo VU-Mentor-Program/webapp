@@ -18,7 +18,7 @@ const FAQItem: React.FC<FAQItemProps> = ({ question, answer, index }) => {
       <div
         className={`rounded-lg mb-3 transition-all duration-300 ${
           isOpen
-            ? "bg-white/10 backdrop-blur-md border border-white/15 border-l-2 border-l-pink-500 shadow-lg shadow-pink-500/5"
+            ? "bg-white/10 backdrop-blur-md border border-white/15 border-l-2 border-l-emerald-500 shadow-lg shadow-emerald-500/5"
             : "bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/8"
         }`}
       >

@@ -9,7 +9,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       {/* Aurora background layer - fixed position, full screen */}
       <div className="fixed inset-0 z-0">
         <Aurora
-          colorStops={['#1e3a8a', '#831843', '#ec4899']}
+          colorStops={['#1e3a8a', '#0d9488', '#34d399']}
           amplitude={1.2}
           blend={0.6}
           speed={0.1}

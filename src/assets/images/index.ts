@@ -483,7 +483,11 @@ export const teamPhotos = {
   anastasia: '/webapp/assets/images/team/anastasia.png',
   mariana: '/webapp/assets/images/team/mariana.png',
   gin: '/webapp/assets/images/team/gin.png',
+  johanna:'/webapp/assets/images/team/johanna.png',
   defaultPerson: '/webapp/assets/images/team/default person.jpg',
+  ewout:'/webapp/assets/images/team/ewout.jpg',
+  kevin:'/webapp/assets/images/team/kevin.jpg',
+  mina:'/webapp/assets/images/team/martyna.jpg',
 } as const;
 
 export const teamSongs = {
@@ -512,6 +516,7 @@ export const ASSET_PATHS = {
 export const logoImages = {
   primary: '/webapp/assets/images/logos/mp_logo-CIRCLE.png',
   black: '/webapp/assets/images/logos/black_logo.png',
+  white: '/webapp/assets/images/logos/2026-2027.png',
 } as const;
 
 // Seagull mascot images
