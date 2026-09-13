@@ -19,7 +19,7 @@ export const eventImages = {
 // All images from: public/assets/images/events/homecaroussel/
 // Just drop new JPG/PNG files in the folder and they'll appear automatically!
 export const homeCarouselImages = [
-  '/webapp/assets/images/events/homecaroussel/!home (6).jpg',
+  '/webapp/assets/images/events/homecaroussel/!home (6).JPG',
   '/webapp/assets/images/events/homecaroussel/home (1).jpeg',
   '/webapp/assets/images/events/homecaroussel/home (1).JPG',
   '/webapp/assets/images/events/homecaroussel/home (2).JPG',
