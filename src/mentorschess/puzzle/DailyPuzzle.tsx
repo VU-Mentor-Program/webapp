@@ -223,7 +223,7 @@ export const DailyPuzzle: React.FC = () => {
         shake={shake}
       />
 
-      <div className="w-full max-w-[24rem] mx-auto lg:mx-0 text-center lg:text-left space-y-5">
+      <div className="w-full max-w-[24rem] mx-auto lg:mx-0 text-center lg:text-left flex flex-col gap-5 lg:h-[640px]">
         <div>
           <p className="text-emerald-400/80 uppercase tracking-[0.2em] text-xs font-medium">{t("puzzle_of")}</p>
           <h2 className="text-2xl font-bold capitalize">{dateLabel}</h2>

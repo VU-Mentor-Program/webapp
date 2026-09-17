@@ -172,7 +172,7 @@ export const ChessBoard: React.FC<ChessBoardProps> = ({
   const squareSize = boardRef.current ? boardRef.current.getBoundingClientRect().width / 8 : 64;
 
   return (
-    <div className={`relative select-none ${shake ? "chess-shake" : ""}`} style={{ width: "min(100%, 560px)" }}>
+    <div className={`relative select-none ${shake ? "chess-shake" : ""}`} style={{ width: "min(100%, 640px)" }}>
       <div
         ref={boardRef}
         className="grid grid-cols-8 rounded-lg overflow-hidden shadow-2xl border border-white/10"

@@ -53,7 +53,7 @@ export const ChessPage: React.FC = () => {
             />
           </div>
 
-          <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-3 sm:p-5 md:p-8 shadow-lg overflow-hidden">
+          <div className="px-1 sm:px-2">
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={mode}

@@ -183,7 +183,7 @@ export const ChessGame: React.FC = () => {
 
   return (
     <div className="flex flex-col lg:flex-row items-center lg:items-start justify-center gap-6 lg:gap-12">
-      <div className="relative" style={{ width: "min(100%, 560px)" }}>
+      <div className="relative" style={{ width: "min(100%, 640px)" }}>
         <ChessBoard
           fen={fen}
           orientation={orientation}
@@ -214,7 +214,7 @@ export const ChessGame: React.FC = () => {
         </AnimatePresence>
       </div>
 
-      <div className="w-full max-w-[24rem] mx-auto lg:mx-0 text-center lg:text-left space-y-4">
+      <div className="w-full max-w-[24rem] mx-auto lg:mx-0 text-center lg:text-left flex flex-col gap-4 lg:h-[640px]">
         <ModeSwitcher<GameMode>
           size="sm"
           full
@@ -306,9 +306,9 @@ export const ChessGame: React.FC = () => {
           </ChessButton>
         </div>
 
-        <div className="text-left">
+        <div className="text-left flex-1 min-h-0 flex flex-col">
           <p className="text-emerald-400/80 uppercase tracking-[0.2em] text-xs font-medium mb-2 text-center lg:text-left">{t("moves")}</p>
-          <div ref={moveListRef} className="max-h-40 lg:max-h-48 overflow-y-auto rounded-xl bg-white/5 border border-white/10 p-3 font-mono text-sm">
+          <div ref={moveListRef} className="max-h-40 lg:max-h-none lg:flex-1 min-h-0 overflow-y-auto rounded-xl bg-white/5 border border-white/10 p-3 font-mono text-sm">
             {movePairs.length === 0 && <p className="text-gray-500 font-sans text-center lg:text-left">{t("no_moves_yet")}</p>}
             {movePairs.map((p) => (
               <div key={p.n} className="grid grid-cols-[2.5rem_1fr_1fr] gap-2 py-0.5">
