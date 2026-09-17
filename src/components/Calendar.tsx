@@ -16,7 +16,7 @@ export const Calendar: React.FC = () => {
         <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 md:p-6 max-w-5xl mx-auto overflow-hidden">
           <iframe
             title="Mentor Program Agenda"
-            src="https://calendar.google.com/calendar/u/0/embed?src=c_ac81bc7a0a4f7a062a5623f650e0086ae298a507bf3af92e6df7083d1f1a3b20@group.calendar.google.com&ctz=Europe/Brussels"
+            src="https://calendar.google.com/calendar/u/0/embed?src=c_8587df64148f09cdec693c7348104a948c95a65d02ca3f579b41fab013b9ab73@group.calendar.google.com&ctz=Europe/Brussels"
             className="w-full rounded-xl"
             style={{ border: 0 }}
             height="700"

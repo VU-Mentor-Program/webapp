@@ -172,3 +172,34 @@ p, h1, h2, h3, h4, h5, h6 {
     opacity: 0.06;
   }
 }
+
+/* Mentors Chess - wrong-move shake */
+.chess-shake {
+  animation: chess-shake 0.4s ease-in-out;
+}
+
+@keyframes chess-shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+/* Mentors Chess - piece glides from its origin square (set via --dx/--dy) */
+.chess-slide {
+  animation: chess-slide 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes chess-slide {
+  from { transform: translate(var(--dx), var(--dy)); }
+  to { transform: translate(0, 0); }
+}
+
+/* Mentors Chess - soft pop for result cards */
+.chess-pop {
+  animation: chess-pop 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes chess-pop {
+  from { opacity: 0; transform: scale(0.92) translateY(6px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}

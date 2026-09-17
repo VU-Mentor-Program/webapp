@@ -10,10 +10,12 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "puzzles": "node scripts/build-chess-puzzles.mjs"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "chess.js": "^1.4.0",
     "clsx": "^2.1.1",
     "framer-motion": "^12.3.1",
     "gsap": "^3.13.0",
@@ -41,6 +43,7 @@
     "eslint": "^9.17.0",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.16",
+    "fzstd": "^0.1.1",
     "gh-pages": "^6.3.0",
     "globals": "^15.14.0",
     "next-intl": "^3.26.3",

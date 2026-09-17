@@ -13,6 +13,7 @@ import SectionWrapper from "../components/SectionWrapper";
 // import Stats from "../components/Stats"; // hidden with the stats section below
 import { SocialLinks } from "../components/social-link";
 import { logoImages, seagullImages } from "../assets/images";
+import { FaChessKnight } from "react-icons/fa";
 
 const locale = "nl";
 
@@ -83,10 +84,10 @@ export default function Home() {
 
               <div className="flex flex-wrap justify-center gap-4">
                 <Link
-                  to="/minigames"
-                  className="bg-white/5 backdrop-blur-sm border border-white/10 px-5 py-2.5 rounded-full text-white hover:bg-white/10 transition-all duration-300 hover:border-emerald-500/30 no-underline"
+                  to="/chess"
+                  className="flex items-center gap-2 bg-white/5 backdrop-blur-sm border border-white/10 px-5 py-2.5 rounded-full text-white hover:bg-white/10 transition-all duration-300 hover:border-emerald-500/30 no-underline"
                 >
-                  {t("minigames")}
+                  <FaChessKnight /> {t("chess")}
                 </Link>
                 <div className="flex items-center gap-2 bg-white/5 backdrop-blur-sm border border-white/10 px-5 py-2.5 rounded-full">
                   <span className="text-emerald-300 text-sm font-semibold">Nox's Jukebox</span>

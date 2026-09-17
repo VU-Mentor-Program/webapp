@@ -8,6 +8,7 @@ export default defineConfig({
   base: '/webapp',
   plugins: [react(), tailwindcss()],
   assetsInclude: ["**/*.JPG", "**/*.jpg"],
+  worker: { format: 'es' },
   server: {
     open: true,
   }

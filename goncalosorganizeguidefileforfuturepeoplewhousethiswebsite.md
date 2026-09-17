@@ -7,8 +7,9 @@ hey future people who will work on this website. this is goncalo and i organized
 ```
 src/
 ├── components/     all the ui pieces
-├── routes/         pages (home, events, minigames, etc)
-├── assets/         logos and sounds 
+├── routes/         pages (home, events, chess, etc)
+├── mentorschess/   the chess page: daily puzzle, offline game, bot engine
+├── assets/         logos and images 
 ├── translations/   english and dutch text
 ├── data/           team info and stuff
 └── utils/          random helper functions
@@ -56,11 +57,15 @@ all text is in `src/translations/en.json` and `src/translations/nl.json`
 
 never hardcode text in components. always use the translation system so dutch people can read it too
 
-## minigames 
+## mentors chess (the old minigames page)
 
-dont touch the minigames unless you really know what youre doing. they work and thats enough
+`#/chess` lives in `src/mentorschess/`. everything runs in the browser, no servers, no apis:
 
-if you want to add new ones look at existing ones in `src/minigames/` and copy the pattern
+- `puzzle/` daily puzzle. the puzzles are bundled in `puzzle/puzzles.json` (7 difficulty buckets, monday easy -> sunday hard). to refresh the set run `npm run puzzles` (downloads the free lichess puzzle database once, ~300mb, then picks new puzzles)
+- `game/` offline game. `engine.worker.ts` is our own little bot (alpha-beta search), the difficulty slider maps to levels 1-10 in there
+- `board/` the chessboard component + piece svgs
+
+streak and in-progress games are saved in localStorage only. the old minigames were deleted in 2026 (check git history if you ever want them back)
 
 ## css and styling
 

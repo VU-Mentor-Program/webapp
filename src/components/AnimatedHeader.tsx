@@ -3,10 +3,9 @@ import { gsap } from 'gsap';
 import { Link } from "react-router-dom";
 import { logoImages } from "../assets/images";
 import { useTranslations, useSetLanguage, useCurrentLanguage } from "../contexts/TranslationContext";
-import { HiUserGroup, HiCalendar } from "react-icons/hi2"; // re-add HiPencilSquare when the feedback link returns
-import { IoGameController } from "react-icons/io5";
+import { HiHome } from "react-icons/hi2";
+import { FaChessKnight } from "react-icons/fa";
 import { MdPhotoLibrary } from "react-icons/md";
-import { HiQuestionMarkCircle } from "react-icons/hi2";
 import { MenuToggleIcon } from "./MenuToggleIcon";
 
 
@@ -24,37 +23,37 @@ export const AnimatedHeader: React.FC = () => {
   const setLanguage = useSetLanguage();
   const currentLanguage = useCurrentLanguage();
 
-  // Navigation links grouped into categories
+  // Navigation dropdown: three tabs, one button each
   const navCategories = [
     {
-      label: "About", // Team & FAQ
+      id: "home",
+      label: t("nav_home"),
       bgColor: '#1e3a8a',
       textColor: '#ffffff',
       links: [
-        { name: t("link2"), path: "#team", label: t("link2"), icon: HiUserGroup },
-        { name: t("link1"), path: "#faq", label: t("link1"), icon: HiQuestionMarkCircle },
+        { name: t("nav_home"), path: "/", label: t("nav_home"), icon: HiHome },
       ]
     },
     {
-      label: "Events", // Events & Calendar
+      id: "events",
+      label: t("link5"),
       bgColor: '#115e59',
       textColor: '#ffffff',
       links: [
         { name: t("link5"), path: "/events", label: t("link5"), icon: MdPhotoLibrary },
-        { name: t("link3"), path: "#calendar", label: t("link3"),icon: HiCalendar },
       ]
     },
     {
-      label: "Other",
+      id: "other",
+      label: t("nav_other"),
       bgColor: '#10b981',
       textColor: '#ffffff',
       links: [
-        { name: t("link4"), path: "/minigames", label: t("link4"), icon: IoGameController },
-        // Feedback section is hidden for now — restore this link together with the section in home.tsx
-        // { name: t("link6"), path: "#help-us-out", label: t("link6"), icon: HiPencilSquare },
+        { name: t("link4"), path: "/chess", label: t("link4"), icon: FaChessKnight },
       ]
     },
   ];
+
 
   const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
     // Close menu with animation
@@ -159,7 +158,7 @@ export const AnimatedHeader: React.FC = () => {
   };
 
   return (
-    <div className={`fixed left-1/2 -translate-x-1/2 w-[95%] max-w-[900px] z-50 top-4 transition-transform duration-300 ${
+    <div className={`fixed left-1/2 -translate-x-1/2 w-[95%] max-w-[600px] z-50 top-4 transition-transform duration-300 ${
       isHeaderHidden ? '-translate-y-32' : 'translate-y-0'
     }`}>
       <nav
@@ -236,7 +235,7 @@ export const AnimatedHeader: React.FC = () => {
         >
           {navCategories.map((category, idx) => (
             <div
-              key={`${category.label}-${idx}`}
+              key={category.id}
               className="relative flex flex-col gap-1.5 p-1.5 md:p-2.5 rounded-xl min-w-0 flex-1 h-auto md:h-full shadow-lg"
               ref={setCardRef(idx)}
               style={{ backgroundColor: category.bgColor, color: category.textColor }}

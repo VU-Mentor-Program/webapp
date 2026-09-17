@@ -1,14 +1,6 @@
 // Centralized image path constants for better organization and maintenance
 // This file acts as an index for all image paths used throughout the application
 
-// Import existing logos from src/assets (parent directory)
-import mpLogoPrimary from '../mp_logo.png';
-import mpLogoCircle from '../mp_logo-CIRCLE.png';
-import blackLogo from '../black_logo.png';
-
-// Export the logo imports
-export { mpLogoPrimary, mpLogoCircle, blackLogo };
-
 // Event Images - now properly organized in events folder
 export const eventImages = {
   studySession1: '/webapp/assets/images/events/studysession/studysession1.png',
@@ -506,9 +498,6 @@ export const ASSET_PATHS = {
     events: '/webapp/assets/images/events/',
     team: '/webapp/assets/images/team/',
     logos: '/webapp/assets/images/logos/',
-  },
-  sounds: {
-    games: '/webapp/assets/sounds/games/',
   },
 } as const;
 
