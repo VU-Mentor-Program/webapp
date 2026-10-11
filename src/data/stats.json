@@ -1,18 +1,52 @@
 {
   "stats": [
-    { "key": "eventSignups", "value": 1225, "suffix": "" },
-    { "key": "eventsHosted", "value": 20, "suffix": "" },
-    { "key": "whatsappMembers", "value": 310, "suffix": "" },
-    { "key": "activeMembers", "value": 439, "suffix": "" }
+    {
+      "key": "eventSignups",
+      "value": 220,
+      "suffix": "+"
+    },
+    {
+      "key": "eventsHosted",
+      "value": 5,
+      "suffix": ""
+    },
+    {
+      "key": "whatsappMembers",
+      "value": 230,
+      "suffix": ""
+    },
+    {
+      "key": "activeMembers",
+      "value": 130,
+      "suffix": "+"
+    }
   ],
   "topEvents": [
-    { "name": "Mexican Dinner", "signups": 155 },
-    { "name": "Halloween Club", "signups": 147 },
-    { "name": "Movie Night", "signups": 113 }
+    {
+      "name": "Mexican Dinner",
+      "signups": 105
+    },
+    {
+      "name": "Game Night",
+      "signups": 47
+    },
+    {
+      "name": "Equinix Data Centre Tour",
+      "signups": 44
+    }
   ],
   "recentEvents": [
-    { "name": "HoAI Movie Night", "signups": 31 },
-    { "name": "Escape Room", "signups": 60 },
-    { "name": "Tote Bag Painting", "signups": 27 }
+    {
+      "name": "Pumpkin Carving",
+      "signups": 30
+    },
+    {
+      "name": "Game Night",
+      "signups": 47
+    },
+    {
+      "name": "Mexican Dinner",
+      "signups": 105
+    }
   ]
 }

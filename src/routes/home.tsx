@@ -10,7 +10,7 @@ import HomeCarousel from "../components/Carousel"
 import { MusicButton } from "../components/MusicButton";
 import { PageTransition } from "../components/PageTransition";
 import SectionWrapper from "../components/SectionWrapper";
-// import Stats from "../components/Stats"; // hidden with the stats section below
+import Stats from "../components/Stats";
 import { SocialLinks } from "../components/social-link";
 import { logoImages, seagullImages } from "../assets/images";
 import { FaChessKnight } from "react-icons/fa";
@@ -40,14 +40,13 @@ export default function Home() {
             <HomeCarousel />
           </SectionWrapper>
 
-          {/* Impact Stats — hidden until 2026-27 stats exist; uncomment (and the Stats import) to bring back
+          {/* Impact Stats — sign-ups/events/members refresh weekly (npm run stats); WhatsApp + event lists are edited by hand in data/stats.json */}
           <SectionWrapper id="impact" label="Event Stats This Year" divider={true} glass={true}>
             <p className="text-gray-500 text-xs italic" style={{ textAlign: "center", marginTop: "-4px", marginBottom: "16px" }}>
-              Excluding non-signup events such as study sessions and exam preps
+              Sign-ups only count events with a sign-up form · updated weekly
             </p>
             <Stats />
           </SectionWrapper>
-          */}
 
           {/* FAQ */}
           <SectionWrapper id="faq" label="FAQ" divider={true} glass={true}>

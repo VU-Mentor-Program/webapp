@@ -9,10 +9,11 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "predeploy": "npm run calendar && npm run build",
+    "predeploy": "npm run calendar && npm run stats && npm run build",
     "deploy": "gh-pages -d dist",
     "puzzles": "node scripts/build-chess-puzzles.mjs",
-    "calendar": "node scripts/build-calendar-snapshot.mjs"
+    "calendar": "node scripts/build-calendar-snapshot.mjs",
+    "stats": "node scripts/update-stats.mjs"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",

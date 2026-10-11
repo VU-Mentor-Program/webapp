@@ -1,4 +1,4 @@
-# Rebuilds the site with a fresh calendar snapshot and publishes it to GitHub Pages.
+# Rebuilds the site with a fresh calendar snapshot and event stats, and publishes it to GitHub Pages.
 # Runs every Monday at 06:00 UTC (08:00 Amsterdam) and whenever triggered manually from the Actions tab.
 # Manual `npm run deploy` from a laptop keeps working exactly as before.
 name: Deploy site
@@ -31,6 +31,9 @@ jobs:
       - name: Refresh calendar snapshot
         run: npm run calendar
 
+      - name: Refresh event stats
+        run: npm run stats
+
       - name: Build
         run: npm run build
 
@@ -40,4 +43,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
           force_orphan: true
-          commit_message: "Scheduled deploy (fresh calendar) from ${{ github.sha }}"
+          commit_message: "Scheduled deploy (fresh calendar + stats) from ${{ github.sha }}"
