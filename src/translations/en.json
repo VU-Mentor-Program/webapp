@@ -217,5 +217,16 @@
     "pending": "Pending",
     "cancelled": "Cancelled",
     "thankYouMessage": "Thank you for joining our events!"
+  },
+  "calendar": {
+    "title": "What's coming up",
+    "next_up": "Next up",
+    "all_day": "All day",
+    "add_to_calendar": "Add to your calendar",
+    "subscribe": "Subscribe to our calendar",
+    "open_full_calendar": "Open full calendar",
+    "show_month_view": "Show month view",
+    "hide_month_view": "Hide month view",
+    "no_events": "Nothing scheduled yet — check back soon!"
   }
 }

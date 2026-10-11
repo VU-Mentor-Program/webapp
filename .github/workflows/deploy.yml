@@ -1,0 +1,43 @@
+# Rebuilds the site with a fresh calendar snapshot and publishes it to GitHub Pages.
+# Runs every Monday at 06:00 UTC (08:00 Amsterdam) and whenever triggered manually from the Actions tab.
+# Manual `npm run deploy` from a laptop keeps working exactly as before.
+name: Deploy site
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Refresh calendar snapshot
+        run: npm run calendar
+
+      - name: Build
+        run: npm run build
+
+      - name: Publish to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          force_orphan: true
+          commit_message: "Scheduled deploy (fresh calendar) from ${{ github.sha }}"

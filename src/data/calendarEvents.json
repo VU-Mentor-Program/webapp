@@ -1,0 +1,70 @@
+{
+  "generated": "2026-10-11T18:53:53.181Z",
+  "calendarId": "c_8587df64148f09cdec693c7348104a948c95a65d02ca3f579b41fab013b9ab73@group.calendar.google.com",
+  "events": [
+    {
+      "id": "4mfg5k5n0nq6km6cf7ukl3tnru@google.com",
+      "title": "Mexican Dinner!",
+      "start": "2026-09-11T16:00:00.000Z",
+      "end": "2026-09-11T19:30:00.000Z",
+      "allDay": false,
+      "location": "Laan van Kronenburg 7a, 1183 DE Amstelveen, Netherlands"
+    },
+    {
+      "id": "01vi6nnjhfa0h28a0225c6c58l@google.com",
+      "title": "Git Workshop",
+      "start": "2026-09-16T09:30:00.000Z",
+      "end": "2026-09-16T10:30:00.000Z",
+      "allDay": false
+    },
+    {
+      "id": "6e1hot95c1kffgc4e63bs0a6v5@google.com",
+      "title": "Midterm Study Session",
+      "start": "2026-09-18T15:30:00.000Z",
+      "end": "2026-09-18T16:30:00.000Z",
+      "allDay": false
+    },
+    {
+      "id": "6qul5takbcg4bvgbc3a6peis8m@google.com",
+      "title": "Game night!",
+      "start": "2026-09-30T15:30:00.000Z",
+      "end": "2026-09-30T17:30:00.000Z",
+      "allDay": false
+    },
+    {
+      "id": "3pnlbpubeiu14hjevbustlojed@google.com",
+      "title": "Pumpkin Carving",
+      "start": "2026-10-07T15:30:00.000Z",
+      "end": "2026-10-07T17:30:00.000Z",
+      "allDay": false
+    },
+    {
+      "id": "5veevtm9e57r0425d5t5513at9@google.com",
+      "title": "Intro to Psychology Exam Prep",
+      "start": "2026-10-13T11:30:00.000Z",
+      "end": "2026-10-13T13:30:00.000Z",
+      "allDay": false
+    },
+    {
+      "id": "62q3tmpl041lmvqc2ua73f0jo3@google.com",
+      "title": "C++ Hackathon",
+      "start": "2026-10-16T13:30:00.000Z",
+      "end": "2026-10-16T15:30:00.000Z",
+      "allDay": false
+    },
+    {
+      "id": "1hvfsf91s5drrj4e29i2ilopft@google.com",
+      "title": "Equinix Data Centre Tour",
+      "start": "2026-10-26T08:00:00.000Z",
+      "end": "2026-10-26T11:00:00.000Z",
+      "allDay": false
+    },
+    {
+      "id": "58bk6papm86fqgoqau1rv2dk5c@google.com",
+      "title": "Halloween Party!",
+      "start": "2026-10-30T18:00:00.000Z",
+      "end": "2026-10-30T22:00:00.000Z",
+      "allDay": false
+    }
+  ]
+}

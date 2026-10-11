@@ -67,6 +67,10 @@ never hardcode text in components. always use the translation system so dutch pe
 
 streak and in-progress games are saved in localStorage only. the old minigames were deleted in 2026 (check git history if you ever want them back)
 
+## calendar on the homepage
+
+the "what's coming up" list reads our public google calendar. the browser can't fetch the feed directly, so `npm run calendar` snapshots it into `src/data/calendarEvents.json`. it runs automatically before `npm run deploy`, and a github action (`.github/workflows/deploy.yml`) rebuilds + republishes the site every monday morning so the list never goes stale. you can also trigger it by hand in the actions tab ("deploy site" -> run workflow)
+
 ## css and styling
 
 we use tailwind. if you dont know tailwind learn it first

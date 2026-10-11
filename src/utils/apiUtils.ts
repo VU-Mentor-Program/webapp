@@ -22,3 +22,9 @@ export const API_URL = "https://mentorprogramme.app.n8n.cloud/webhook/1eee38da-b
 // Event Status Checker - Google Sheets ID
 export const EVENT_SHEETS_ID = "1mKkCRF5P9JsOMV0pn6HfzzFh-acpcPCL4xCYWk61Ij0";
 export const EVENT_STATUS_API_URL = "https://script.google.com/macros/s/AKfycbw1UvDcfjWGSUbghUGWE-44Qpb6HzhP5RyPXJXGXPWtPtgD0P-xtm5a2jXFd0ZSeoTS/exec";
+
+// Homepage "upcoming events" list. The public feed is snapshotted into src/data/calendarEvents.json
+// by `npm run calendar` (runs before every deploy). Set CALENDAR_API_KEY (Google Calendar API, read-only,
+// restricted to this site's domain) to show live events straight from Google instead.
+export const CALENDAR_ID = "c_8587df64148f09cdec693c7348104a948c95a65d02ca3f579b41fab013b9ab73@group.calendar.google.com";
+export const CALENDAR_API_KEY = "";

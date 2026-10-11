@@ -210,5 +210,16 @@
     "pending": "In behandeling",
     "cancelled": "Geannuleerd",
     "thankYouMessage": "Bedankt voor het deelnemen aan onze evenementen!"
+  },
+  "calendar": {
+    "title": "Dit staat op de planning",
+    "next_up": "Volgende",
+    "all_day": "Hele dag",
+    "add_to_calendar": "Zet in je agenda",
+    "subscribe": "Abonneer op onze agenda",
+    "open_full_calendar": "Open volledige agenda",
+    "show_month_view": "Toon maandoverzicht",
+    "hide_month_view": "Verberg maandoverzicht",
+    "no_events": "Nog niets gepland — kom snel terug!"
   }
 }

@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import FadeIn from "./Fadein-Wrapper";
 import ScrollReveal from "./ScrollReveal";
+import { UpcomingEvents } from "./UpcomingEvents";
+import { CALENDAR_ID } from "../utils/apiUtils";
+import { useTranslations } from "../contexts/TranslationContext";
 
 export const Calendar: React.FC = () => {
+  const t = useTranslations("calendar");
+  const [showMonth, setShowMonth] = useState(false);
+
   return (
     <>
       <ScrollReveal
@@ -10,19 +16,33 @@ export const Calendar: React.FC = () => {
         containerClassName="text-center mb-8"
         textClassName="text-3xl sm:text-4xl text-white"
       >
-        Look what we have planned for this month!
+        {t("title")}
       </ScrollReveal>
       <FadeIn duration={100}>
-        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 md:p-6 max-w-5xl mx-auto overflow-hidden">
-          <iframe
-            title="Mentor Program Agenda"
-            src="https://calendar.google.com/calendar/u/0/embed?src=c_8587df64148f09cdec693c7348104a948c95a65d02ca3f579b41fab013b9ab73@group.calendar.google.com&ctz=Europe/Brussels"
-            className="w-full rounded-xl"
-            style={{ border: 0 }}
-            height="700"
-            frameBorder="0"
-            scrolling="no"
-          />
+        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 sm:p-6 md:p-8 max-w-5xl mx-auto">
+          <UpcomingEvents />
+
+          <div className="text-center mt-8">
+            <button
+              type="button"
+              onClick={() => setShowMonth((v) => !v)}
+              className="text-gray-500 hover:text-white transition-colors text-sm cursor-pointer"
+            >
+              {showMonth ? t("hide_month_view") : t("show_month_view")}
+            </button>
+          </div>
+
+          {showMonth && (
+            <div className="mt-4 rounded-xl overflow-hidden">
+              <iframe
+                title="Mentor Program Agenda"
+                src={`https://calendar.google.com/calendar/u/0/embed?src=${encodeURIComponent(CALENDAR_ID)}&ctz=Europe/Amsterdam&showTitle=0&showPrint=0&showCalendars=0&showTz=0`}
+                className="w-full"
+                style={{ border: 0 }}
+                height="600"
+              />
+            </div>
+          )}
         </div>
       </FadeIn>
     </>
