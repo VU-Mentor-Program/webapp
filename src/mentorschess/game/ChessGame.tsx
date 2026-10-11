@@ -12,13 +12,9 @@ import { opposite, type Color } from "../theme";
 
 type ColorChoice = Color | "random";
 
-const levelNameKey = (level: number) => {
-  if (level <= 2) return "level_beginner";
-  if (level <= 4) return "level_casual";
-  if (level <= 6) return "level_club";
-  if (level <= 8) return "level_strong";
-  return "level_expert";
-};
+// One opponent per level, weakest to strongest. Names are proper nouns, so they are not translated.
+const BOT_NAMES = ["Seagull", "Tamagotchi", "Roomba", "Siri", "Vitor", "HAL 9000", "Kasparov", "Deep Blue", "Alan Turing", "Andrew Tanenbaum"] as const;
+const botNameFor = (level: number) => BOT_NAMES[Math.min(BOT_NAMES.length, Math.max(1, level)) - 1];
 
 const kingSquare = (chess: Chess, color: Color): Square | null => {
   for (const row of chess.board()) {
@@ -61,6 +57,7 @@ export const ChessGame: React.FC = () => {
   const chess = chessRef.current;
   const turn = chess.turn();
   const gameOver = resigned !== null || chess.isGameOver();
+  const botName = botNameFor(level);
   const history = chess.history();
 
   const persist = useCallback(
@@ -164,7 +161,7 @@ export const ChessGame: React.FC = () => {
     if (chess.isThreefoldRepetition()) return t("draw_repetition");
     if (chess.isInsufficientMaterial()) return t("draw_material");
     if (chess.isDrawByFiftyMoves()) return t("draw_fifty");
-    if (mode === "bot" && engine.thinking) return t("thinking");
+    if (mode === "bot" && engine.thinking) return `${botName} ${t("thinking")}`;
     const base = turn === "w" ? t("white_to_move") : t("black_to_move");
     return chess.inCheck() ? `${base} · ${t("check")}` : base;
   })();
@@ -242,7 +239,7 @@ export const ChessGame: React.FC = () => {
                   <div className="flex justify-between text-sm mb-2">
                     <span className="text-gray-300">{t("level")}</span>
                     <span className="font-semibold text-emerald-400">
-                      {level} · {t(levelNameKey(level))}
+                      {level} · {botName}
                     </span>
                   </div>
                   <input

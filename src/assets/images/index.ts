@@ -25,8 +25,8 @@ export const homeCarouselImages = [
   // and add the path here following the pattern above
 ] as const;
 
-// Event galleries - year-round events first, then chronological
-export const eventGalleries = {
+// 2025-2026 season (archived, shown on #/events/2025-2026)
+export const eventGalleries2025_2026 = {
   // Year-round recurring events
   studySession_10_09_2024: {
     title: "study_sessions_title",
@@ -464,6 +464,92 @@ export const eventGalleries = {
   //     '/webapp/assets/images/events/workshops/workshop1.png',
   //   ],
   // },
+} as const;
+
+// Current season 2026-2027 - year-round first, then chronological (shown on #/events)
+export const eventGalleries = {
+  studySessions_2026: {
+    title: "study_sessions_title",
+    subtitle: "study_sessions_2026_date",
+    description: "study_sessions_desc",
+    images: [
+      '/webapp/assets/images/events/2026-2027/study-sessions/study-sessions-01.jpg',
+      '/webapp/assets/images/events/2026-2027/study-sessions/study-sessions-02.jpg',
+    ],
+  },
+  mexicanDinner_09_11_2026: {
+    title: "mexican_dinner_title",
+    subtitle: "mexican_dinner_2026_date",
+    description: "mexican_dinner_2026_desc",
+    images: [
+      '/webapp/assets/images/events/2026-2027/mexican-dinner/mexican-dinner-01.jpg',
+      '/webapp/assets/images/events/2026-2027/mexican-dinner/mexican-dinner-02.jpg',
+      '/webapp/assets/images/events/2026-2027/mexican-dinner/mexican-dinner-03.jpg',
+      '/webapp/assets/images/events/2026-2027/mexican-dinner/mexican-dinner-04.jpg',
+      '/webapp/assets/images/events/2026-2027/mexican-dinner/mexican-dinner-05.jpg',
+      '/webapp/assets/images/events/2026-2027/mexican-dinner/mexican-dinner-06.jpg',
+      '/webapp/assets/images/events/2026-2027/mexican-dinner/mexican-dinner-07.jpg',
+      '/webapp/assets/images/events/2026-2027/mexican-dinner/mexican-dinner-08.jpg',
+      '/webapp/assets/images/events/2026-2027/mexican-dinner/mexican-dinner-09.jpg',
+      '/webapp/assets/images/events/2026-2027/mexican-dinner/mexican-dinner-10.jpg',
+      '/webapp/assets/images/events/2026-2027/mexican-dinner/mexican-dinner-11.jpg',
+      '/webapp/assets/images/events/2026-2027/mexican-dinner/mexican-dinner-12.jpg',
+      '/webapp/assets/images/events/2026-2027/mexican-dinner/mexican-dinner-13.jpg',
+      '/webapp/assets/images/events/2026-2027/mexican-dinner/mexican-dinner-14.jpg',
+      '/webapp/assets/images/events/2026-2027/mexican-dinner/mexican-dinner-15.jpg',
+      '/webapp/assets/images/events/2026-2027/mexican-dinner/mexican-dinner-16.jpg',
+    ],
+  },
+  gitWorkshop_09_16_2026: {
+    title: "git_workshop_title",
+    subtitle: "git_workshop_date",
+    description: "git_workshop_desc",
+    images: [
+      '/webapp/assets/images/events/2026-2027/git-workshop/git-workshop-01.jpg',
+      '/webapp/assets/images/events/2026-2027/git-workshop/git-workshop-02.jpg',
+      '/webapp/assets/images/events/2026-2027/git-workshop/git-workshop-03.jpg',
+      '/webapp/assets/images/events/2026-2027/git-workshop/git-workshop-04.jpg',
+      '/webapp/assets/images/events/2026-2027/git-workshop/git-workshop-05.jpg',
+      '/webapp/assets/images/events/2026-2027/git-workshop/git-workshop-06.jpg',
+      '/webapp/assets/images/events/2026-2027/git-workshop/git-workshop-07.jpg',
+      '/webapp/assets/images/events/2026-2027/git-workshop/git-workshop-08.jpg',
+      '/webapp/assets/images/events/2026-2027/git-workshop/git-workshop-09.jpg',
+      '/webapp/assets/images/events/2026-2027/git-workshop/git-workshop-10.jpg',
+      '/webapp/assets/images/events/2026-2027/git-workshop/git-workshop-11.jpg',
+      '/webapp/assets/images/events/2026-2027/git-workshop/git-workshop-12.jpg',
+    ],
+  },
+  gameNight_09_30_2026: {
+    title: "game_night_title",
+    subtitle: "game_night_2026_date",
+    description: "game_night_2026_desc",
+    images: [
+      '/webapp/assets/images/events/2026-2027/game-night/game-night-01.jpg',
+      '/webapp/assets/images/events/2026-2027/game-night/game-night-02.jpg',
+      '/webapp/assets/images/events/2026-2027/game-night/game-night-03.jpg',
+      '/webapp/assets/images/events/2026-2027/game-night/game-night-04.jpg',
+      '/webapp/assets/images/events/2026-2027/game-night/game-night-05.jpg',
+      '/webapp/assets/images/events/2026-2027/game-night/game-night-06.jpg',
+      '/webapp/assets/images/events/2026-2027/game-night/game-night-07.jpg',
+      '/webapp/assets/images/events/2026-2027/game-night/game-night-08.jpg',
+      '/webapp/assets/images/events/2026-2027/game-night/game-night-09.jpg',
+      '/webapp/assets/images/events/2026-2027/game-night/game-night-10.jpg',
+      '/webapp/assets/images/events/2026-2027/game-night/game-night-11.jpg',
+      '/webapp/assets/images/events/2026-2027/game-night/game-night-12.jpg',
+      '/webapp/assets/images/events/2026-2027/game-night/game-night-13.jpg',
+      '/webapp/assets/images/events/2026-2027/game-night/game-night-14.jpg',
+      '/webapp/assets/images/events/2026-2027/game-night/game-night-15.jpg',
+      '/webapp/assets/images/events/2026-2027/game-night/game-night-16.jpg',
+      '/webapp/assets/images/events/2026-2027/game-night/game-night-17.jpg',
+      '/webapp/assets/images/events/2026-2027/game-night/game-night-18.jpg',
+      '/webapp/assets/images/events/2026-2027/game-night/game-night-19.jpg',
+      '/webapp/assets/images/events/2026-2027/game-night/game-night-20.jpg',
+      '/webapp/assets/images/events/2026-2027/game-night/game-night-21.jpg',
+      '/webapp/assets/images/events/2026-2027/game-night/game-night-22.jpg',
+      '/webapp/assets/images/events/2026-2027/game-night/game-night-23.jpg',
+      '/webapp/assets/images/events/2026-2027/game-night/game-night-24.jpg',
+    ],
+  },
 } as const;
 
 // Team Photos - now properly organized in team folder

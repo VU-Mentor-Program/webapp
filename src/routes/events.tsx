@@ -3,13 +3,16 @@ import { useTranslations } from "../contexts/TranslationContext";
 import FadeIn from "../components/Fadein-Wrapper";
 import { PageTransition } from "../components/PageTransition";
 import EventCarousel from "../components/EventCarousel";
-import { eventGalleries } from "../assets/images";
+import { Link } from "react-router-dom";
+import { eventGalleries, eventGalleries2025_2026 } from "../assets/images";
 import SectionWrapper from "../components/SectionWrapper";
 
 const locale = "nl";
 
-export default function Events() {
+export default function Events({ season = "current" }: { season?: "current" | "2025-2026" }) {
   const t = useTranslations("events");
+  const archived = season === "2025-2026";
+  const galleries = archived ? eventGalleries2025_2026 : eventGalleries;
 
   return (
     <PageTransition>
@@ -29,10 +32,10 @@ export default function Events() {
             <FadeIn duration={100} className="w-full">
               <div style={{ display: 'block', width: '100%', maxWidth: '42rem', margin: '0 auto', textAlign: 'center' }}>
                 <h1 className="text-4xl md:text-5xl font-bold" style={{ display: 'block', width: '100%', marginBottom: '1rem' }}>
-                  {t("title")}
+                  {archived ? t("archive_title") : t("title")}
                 </h1>
                 <p className="text-lg text-gray-300 leading-relaxed" style={{ display: 'block', width: '100%' }}>
-                  {t("subtitle")}
+                  {archived ? t("archive_subtitle") : t("subtitle")}
                 </p>
               </div>
             </FadeIn>
@@ -41,7 +44,7 @@ export default function Events() {
           {/* Event Galleries */}
           <SectionWrapper label="Event Galleries" divider={true}>
             <div style={{ display: 'block', width: '100%' }}>
-              {Object.entries(eventGalleries).map(([key, gallery]) => (
+              {Object.entries(galleries).map(([key, gallery]) => (
                 <div key={key} style={{ marginBottom: '4rem' }}>
                   <EventCarousel
                     images={gallery.images}
@@ -57,9 +60,10 @@ export default function Events() {
           </SectionWrapper>
 
           {/* More Events Coming Soon */}
+          {!archived && (
           <SectionWrapper label="Stay Tuned" divider={true} glass={true}>
             <div style={{ display: 'block', width: '100%', textAlign: 'center' }}>
-              <h2 className="text-2xl font-semibold text-blue-400" style={{ display: 'block', width: '100%', marginBottom: '1rem' }}>
+              <h2 className="text-2xl font-semibold text-emerald-400" style={{ display: 'block', width: '100%', marginBottom: '1rem' }}>
                 More Events Coming Soon!
               </h2>
               <p className="text-gray-400 leading-relaxed" style={{ display: 'block', width: '100%', maxWidth: '36rem', margin: '0 auto' }}>
@@ -69,10 +73,17 @@ export default function Events() {
               </p>
             </div>
           </SectionWrapper>
+          )}
 
           {/* Footer */}
           <footer className="border-t border-white/10" style={{ marginTop: '2rem', paddingTop: '2rem', paddingBottom: '3rem', paddingLeft: '1rem', paddingRight: '1rem' }}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+              <Link
+                to={archived ? "/events" : "/events/2025-2026"}
+                className="text-gray-500 hover:text-emerald-300 transition-colors text-sm no-underline"
+              >
+                {archived ? t("archive_back") : t("archive_link")}
+              </Link>
               <button
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                 className="text-gray-500 hover:text-white transition-colors text-sm cursor-pointer"

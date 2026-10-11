@@ -43,6 +43,10 @@ function App() {
               <Layout>
                 <Events />
               </Layout>} />
+            <Route path="/events/2025-2026" element={
+              <Layout>
+                <Events season="2025-2026" />
+              </Layout>} />
             <Route path="/error" element={
               <Layout>
                 <ErrorPage />
