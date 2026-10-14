@@ -221,5 +221,9 @@
     "show_month_view": "Toon maandoverzicht",
     "hide_month_view": "Verberg maandoverzicht",
     "no_events": "Nog niets gepland — kom snel terug!"
+  },
+  "partners": {
+    "speakers_heading": "Onze gastsprekers werkten bij",
+    "tours_heading": "We bezochten de kantoren van"
   }
 }

@@ -10,6 +10,7 @@ import HomeCarousel from "../components/Carousel"
 import { MusicButton } from "../components/MusicButton";
 import { PageTransition } from "../components/PageTransition";
 import SectionWrapper from "../components/SectionWrapper";
+import PartnerLogos from "../components/PartnerLogos";
 import Stats from "../components/Stats";
 import { SocialLinks } from "../components/social-link";
 import { logoImages, seagullImages } from "../assets/images";
@@ -34,6 +35,11 @@ export default function Home() {
         >
           {/* Hero — full viewport landing */}
           <Hero />
+
+          {/* Industry connections */}
+          <SectionWrapper id="industry" divider={true} className="!py-14 md:!py-20">
+            <PartnerLogos />
+          </SectionWrapper>
 
           {/* Gallery */}
           <SectionWrapper label="Gallery" divider={true}>

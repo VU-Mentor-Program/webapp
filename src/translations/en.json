@@ -228,5 +228,9 @@
     "show_month_view": "Show month view",
     "hide_month_view": "Hide month view",
     "no_events": "Nothing scheduled yet — check back soon!"
+  },
+  "partners": {
+    "speakers_heading": "Our guest speakers have worked at",
+    "tours_heading": "We've toured the offices of"
   }
 }
