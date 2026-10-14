@@ -3,7 +3,7 @@ import { Logo } from "./logo";
 import { SocialLinks } from "./social-link";
 import JoinCommunityButton from "./JoinCommunityButton";
 import FadeIn from "./Fadein-Wrapper";
-import FloatingImages from "./FloatingImages";
+import HeroPhotoColumns from "./HeroPhotoColumns";
 import { seagullImages } from "../assets/images";
 
 export const Hero: React.FC = () => {
@@ -18,7 +18,7 @@ export const Hero: React.FC = () => {
 
   return (
     <section className="min-h-[85vh] flex flex-col items-center justify-center text-white py-20 px-4 relative">
-      <FloatingImages />
+      <HeroPhotoColumns />
       <FadeIn delay={100} className="w-full relative z-10">
         <div className="flex flex-col items-center text-center space-y-6 w-full mx-auto" style={{ maxWidth: '48rem' }}>
           <Logo />

@@ -143,40 +143,33 @@ p, h1, h2, h3, h4, h5, h6 {
   opacity: 0.14;
 }
 
-/* Floating hero images */
-.hero-float {
-  opacity: 0;
-  animation-name: hero-float-drift;
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
-  will-change: transform, opacity;
+/* Hero photo wall (HeroPhotoColumns). Each column holds its photos twice and slides by one copy
+   (50% plus half the 1rem gap), so the loop is seamless. */
+.hero-drift-y {
+  animation: hero-drift-y linear infinite;
+  will-change: transform;
 }
 
-@keyframes hero-float-drift {
-  0% {
-    opacity: 0;
-    transform: translate(0, 0) rotate(0deg) scale(0.95);
-  }
-  15% {
-    opacity: 0.12;
-  }
-  50% {
-    opacity: 0.1;
-    transform: translate(var(--float-drift-x), var(--float-drift-y)) rotate(var(--float-rotate)) scale(1.05);
-  }
-  85% {
-    opacity: 0.12;
-  }
-  100% {
-    opacity: 0;
-    transform: translate(0, 0) rotate(0deg) scale(0.95);
-  }
+@keyframes hero-drift-y {
+  to { transform: translateY(calc(-50% - 0.5rem)); }
+}
+
+/* Spotlight: the wall is quiet behind the centred content (logo, video, title) and clearer toward the edges,
+   and fades out at the top and bottom so the hero blends into the header and the next section. */
+.hero-photo-wall {
+  -webkit-mask-image:
+    radial-gradient(ellipse 42% 48% at 50% 45%, rgb(0 0 0 / 0.2) 0%, rgb(0 0 0 / 0.2) 45%, #000 100%),
+    linear-gradient(to bottom, transparent, #000 5%, #000 45%, rgb(0 0 0 / 0.55) 68%, rgb(0 0 0 / 0.2) 86%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    radial-gradient(ellipse 42% 48% at 50% 45%, rgb(0 0 0 / 0.2) 0%, rgb(0 0 0 / 0.2) 45%, #000 100%),
+    linear-gradient(to bottom, transparent, #000 5%, #000 45%, rgb(0 0 0 / 0.55) 68%, rgb(0 0 0 / 0.2) 86%, transparent);
+  mask-composite: intersect;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-float {
+  .hero-drift-y {
     animation: none;
-    opacity: 0.06;
   }
 }
 
