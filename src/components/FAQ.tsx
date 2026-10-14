@@ -14,7 +14,7 @@ const FAQItem: React.FC<FAQItemProps> = ({ question, answer, index }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <FadeIn duration={index * 80}>
+    <FadeIn delay={Math.min(index, 4) * 60}>
       <div
         className={`rounded-lg mb-3 transition-all duration-300 ${
           isOpen
@@ -58,7 +58,6 @@ const FAQ: React.FC = () => {
   return (
     <>
       <ScrollReveal
-        baseRotation={0}
         containerClassName="text-center mb-8"
         textClassName="text-3xl sm:text-4xl text-white"
       >

@@ -1,6 +1,6 @@
 import React, { useLayoutEffect, useRef, useState, useEffect } from 'react';
 import { gsap } from 'gsap';
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { logoImages } from "../assets/images";
 import { useTranslations, useSetLanguage, useCurrentLanguage } from "../contexts/TranslationContext";
 import { HiHome } from "react-icons/hi2";
@@ -8,12 +8,18 @@ import { FaChessKnight } from "react-icons/fa";
 import { MdPhotoLibrary } from "react-icons/md";
 import { MenuToggleIcon } from "./MenuToggleIcon";
 
+const SCROLL_THRESHOLD_PX = 8;
+
 
 
 export const AnimatedHeader: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isHeaderHidden, setHeaderHidden] = useState(false);
-  const [prevScrollPos, setPrevScrollPos] = useState(0);
+  const lastScrollY = useRef(0);
+  const isExpandedRef = useRef(isExpanded);
+  isExpandedRef.current = isExpanded;
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const navRef = useRef<HTMLDivElement | null>(null);
   const cardsRef = useRef<HTMLDivElement[]>([]);
@@ -63,27 +69,33 @@ export const AnimatedHeader: React.FC = () => {
       tl.reverse();
     }
 
+    // "#section" links: scroll there on the homepage, or open the homepage at that section (see ScrollManager)
     if (path.startsWith("#")) {
       e.preventDefault();
-      if (window.location.hash.startsWith("#/")) {
-        window.location.href = "/webapp";
+      const elementId = path.substring(1);
+      if (location.pathname === "/") {
+        document.getElementById(elementId)?.scrollIntoView({ behavior: "smooth" });
       } else {
-        const elementId = path.substring(1);
-        const element = document.getElementById(elementId);
-        if (element) {
-          element.scrollIntoView({ behavior: "smooth" });
-        }
+        navigate("/", { state: { scrollTo: elementId } });
       }
     }
   };
 
-  // Header hide on scroll down, show on scroll up, always close menu on scroll
+  // Header hides on scroll down and shows on scroll up; any real scroll closes the menu.
+  // Movements under SCROLL_THRESHOLD_PX are ignored so trackpad jitter doesn't flicker the header.
   useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollPos = window.pageYOffset;
+    let ticking = false;
 
-      // Close menu on any scroll with animation
-      if (isExpanded) {
+    const update = () => {
+      ticking = false;
+      const y = window.scrollY;
+      const delta = y - lastScrollY.current;
+      if (Math.abs(delta) < SCROLL_THRESHOLD_PX) {
+        if (y <= 50) setHeaderHidden(false);
+        return;
+      }
+
+      if (isExpandedRef.current) {
         const tl = tlRef.current;
         if (tl) {
           tl.eventCallback('onReverseComplete', () => setIsExpanded(false));
@@ -93,17 +105,19 @@ export const AnimatedHeader: React.FC = () => {
         }
       }
 
-      if (currentScrollPos > prevScrollPos && currentScrollPos > 50) {
-        setHeaderHidden(true);
-      } else {
-        setHeaderHidden(false);
-      }
-      setPrevScrollPos(currentScrollPos);
+      setHeaderHidden(delta > 0 && y > 50);
+      lastScrollY.current = y;
     };
 
-    window.addEventListener("scroll", handleScroll);
+    const handleScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [prevScrollPos, isExpanded]);
+  }, []);
 
   const calculateHeight = () => {
     const navEl = navRef.current;

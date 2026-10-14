@@ -14,7 +14,7 @@ export const PageTransition: React.FC<PageTransitionProps> = ({ children }) => {
       initial={splashRemoved ? { opacity: 0 } : { opacity: 1 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: splashRemoved ? 1.3 : 0 }}
+      transition={{ duration: splashRemoved ? 0.35 : 0 }}
     >
       {children}
     </motion.div>

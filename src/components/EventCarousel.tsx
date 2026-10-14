@@ -168,14 +168,11 @@ const EventCarousel: React.FC<EventCarouselProps> = ({
   }
 
   return (
-    <FadeIn duration={100} className={`w-full ${className}`}>
+    <FadeIn className={`w-full ${className}`}>
       <div className="text-center mb-8 w-full relative">
         <ScrollReveal
           containerClassName="mb-4"
           textClassName="text-white"
-          baseOpacity={0.2}
-          baseRotation={2}
-          blurStrength={3}
         >
           {title}
         </ScrollReveal>

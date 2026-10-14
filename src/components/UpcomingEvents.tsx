@@ -131,10 +131,10 @@ export const UpcomingEvents: React.FC = () => {
               return (
                 <motion.li
                   key={e.id}
-                  initial={{ opacity: 0, y: 12 }}
+                  initial={{ opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-40px" }}
-                  transition={{ duration: 0.3, delay: Math.min(i, 5) * 0.05 }}
+                  viewport={{ once: true, margin: "0px 0px -60px 0px" }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: Math.min(i, 4) * 0.06 }}
                   className={`flex items-stretch gap-4 rounded-2xl border p-3 sm:p-4 transition-colors ${
                     isNext ? "bg-emerald-500/10 border-emerald-400/40" : "bg-white/5 border-white/10 hover:border-white/20"
                   }`}

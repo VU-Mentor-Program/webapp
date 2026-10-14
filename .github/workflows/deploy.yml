@@ -1,9 +1,11 @@
 # Rebuilds the site with a fresh calendar snapshot and event stats, and publishes it to GitHub Pages.
-# Runs every Monday at 06:00 UTC (08:00 Amsterdam) and whenever triggered manually from the Actions tab.
-# Manual `npm run deploy` from a laptop keeps working exactly as before.
+# Runs on every push to main, every Monday at 06:00 UTC (08:00 Amsterdam), and whenever triggered manually
+# from the Actions tab. Manual `npm run deploy` from a laptop keeps working too (its predeploy refreshes both).
 name: Deploy site
 
 on:
+  push:
+    branches: [main]
   schedule:
     - cron: "0 6 * * 1"
   workflow_dispatch:

@@ -18,7 +18,7 @@ const FormAccordionItem: React.FC<FormAccordionItemProps> = ({ link, title, inde
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <FadeIn duration={index * 100}>
+    <FadeIn delay={Math.min(index, 4) * 60}>
       <div
         className={`rounded-lg overflow-hidden mb-4 transition-all duration-300 ${
           isOpen
@@ -70,7 +70,6 @@ export const FormsAccordion: React.FC = () => {
   return (
     <>
       <ScrollReveal
-        baseRotation={0}
         containerClassName="text-center mb-4"
         textClassName="text-3xl sm:text-4xl text-white"
       >

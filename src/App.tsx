@@ -10,6 +10,8 @@ import { TranslationProvider } from "./contexts/TranslationContext";
 import { AudioProvider } from "./contexts/AudioContext";
 import { Layout } from "./components/Layout"
 import { LoadingAnimation } from "./components/LoadingAnimation";
+import { ScrollManager } from "./components/ScrollManager";
+import { MotionConfig } from "framer-motion";
 
 const ChessPage = lazy(() => import("./routes/chess"));
 
@@ -18,7 +20,10 @@ function App() {
   return (
     <TranslationProvider>
       <AudioProvider volume={0.1}>
+        {/* framer-motion animations drop their movement for visitors who prefer reduced motion */}
+        <MotionConfig reducedMotion="user">
         <Router>
+          <ScrollManager />
           <Routes>
             <Route path="/" element={
               <Layout>
@@ -57,6 +62,7 @@ function App() {
               </Layout>} />
           </Routes>
         </Router>
+        </MotionConfig>
       </AudioProvider>
     </TranslationProvider>
   )

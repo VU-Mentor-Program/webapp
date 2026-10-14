@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Logo } from "./logo";
 import { SocialLinks } from "./social-link";
 import JoinCommunityButton from "./JoinCommunityButton";
@@ -7,10 +7,19 @@ import FloatingImages from "./FloatingImages";
 import { seagullImages } from "../assets/images";
 
 export const Hero: React.FC = () => {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <section className="min-h-[85vh] flex flex-col items-center justify-center text-white py-20 px-4 relative">
       <FloatingImages />
-      <FadeIn duration={100} className="w-full relative z-10">
+      <FadeIn delay={100} className="w-full relative z-10">
         <div className="flex flex-col items-center text-center space-y-6 w-full mx-auto" style={{ maxWidth: '48rem' }}>
           <Logo />
 
@@ -52,10 +61,18 @@ export const Hero: React.FC = () => {
         </div>
       </FadeIn>
 
-      {/* Scroll down indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+      {/* Scroll down indicator — jumps to the next section, fades out once the visitor scrolls */}
+      <button
+        type="button"
+        onClick={() => document.getElementById("industry")?.scrollIntoView({ behavior: "smooth" })}
+        aria-label="Scroll to the next section"
+        tabIndex={scrolled ? -1 : 0}
+        className={`absolute bottom-8 left-1/2 -translate-x-1/2 p-2 cursor-pointer bg-transparent border-none transition-opacity duration-300 ${
+          scrolled ? "opacity-0 pointer-events-none" : "opacity-100"
+        }`}
+      >
         <svg
-          className="w-6 h-6 text-white/50"
+          className="w-6 h-6 text-white/50 hover:text-white transition-colors animate-bounce motion-reduce:animate-none"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -67,7 +84,7 @@ export const Hero: React.FC = () => {
             d="M19 14l-7 7m0 0l-7-7m7 7V3"
           />
         </svg>
-      </div>
+      </button>
     </section>
   );
 };

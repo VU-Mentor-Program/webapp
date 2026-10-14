@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import FadeIn from "./Fadein-Wrapper";
 import ScrollReveal from "./ScrollReveal";
 import { UpcomingEvents } from "./UpcomingEvents";
 import { CALENDAR_ID } from "../utils/apiUtils";
@@ -12,13 +11,12 @@ export const Calendar: React.FC = () => {
   return (
     <>
       <ScrollReveal
-        baseRotation={0}
         containerClassName="text-center mb-8"
         textClassName="text-3xl sm:text-4xl text-white"
       >
         {t("title")}
       </ScrollReveal>
-      <FadeIn duration={100}>
+      <div>
         <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 sm:p-6 md:p-8 max-w-5xl mx-auto">
           <UpcomingEvents />
 
@@ -44,7 +42,7 @@ export const Calendar: React.FC = () => {
             </div>
           )}
         </div>
-      </FadeIn>
+      </div>
     </>
   );
 };

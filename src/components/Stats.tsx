@@ -2,6 +2,7 @@ import { Users, CalendarDays, MessageCircle, UserCheck, Trophy, Clock } from "lu
 import { NumberTicker } from "./NumberTicker";
 import statsData from "../data/stats.json";
 import { useTranslations } from "../contexts/TranslationContext";
+import FadeIn from "./Fadein-Wrapper";
 
 const iconMap: Record<string, React.ReactNode> = {
   eventSignups: <Users className="w-7 h-7" />,
@@ -78,8 +79,9 @@ export default function Stats() {
     <div className="space-y-10">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
         {statsData.stats.map((stat, i) => (
-          <div
+          <FadeIn
             key={stat.key}
+            delay={i * 60}
             className="flex flex-col items-center gap-3 py-4"
           >
             <div className="text-emerald-400/60">
@@ -98,7 +100,7 @@ export default function Stats() {
             <p className="text-sm text-gray-400 uppercase tracking-wider">
               {t(stat.key)}
             </p>
-          </div>
+          </FadeIn>
         ))}
       </div>
 

@@ -29,7 +29,7 @@ export default function Events({ season = "current" }: { season?: "current" | "2
         >
           {/* Hero-like intro */}
           <div style={{ display: 'block', width: '100%', paddingTop: '6rem', paddingBottom: '2rem', paddingLeft: '1rem', paddingRight: '1rem' }}>
-            <FadeIn duration={100} className="w-full">
+            <FadeIn delay={100} className="w-full">
               <div style={{ display: 'block', width: '100%', maxWidth: '42rem', margin: '0 auto', textAlign: 'center' }}>
                 <h1 className="text-4xl md:text-5xl font-bold" style={{ display: 'block', width: '100%', marginBottom: '1rem' }}>
                   {archived ? t("archive_title") : t("title")}

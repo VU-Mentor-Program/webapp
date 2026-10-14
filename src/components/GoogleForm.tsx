@@ -8,7 +8,7 @@ interface GoogleFormProps {
 
 export const GoogleForm: React.FC<GoogleFormProps> = ({ link, title }) => {
   return (
-    <FadeIn duration={100} className="flex justify-center items-center w-full mt-5 mb-6">
+    <FadeIn delay={100} className="flex justify-center items-center w-full mt-5 mb-6">
       <div className="flex justify-center items-center w-full mt-5">
         <iframe
           title={title}

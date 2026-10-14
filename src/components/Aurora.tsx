@@ -93,7 +93,12 @@ void main() {
   vec3 rampColor;
   COLOR_RAMP(colors, uv.x, rampColor);
 
-  float height = snoise(vec2(uv.x * 2.0 + uTime * 0.1, uTime * 0.25)) * 0.5 * uAmplitude;
+  // Like background-size: cover. On screens narrower than 16:9 (phones), show the middle of a 16:9 aurora
+  // instead of squeezing the whole wave into the width, which stretches it into vertical streaks.
+  float aspect = uResolution.x / uResolution.y;
+  float waveX = 0.5 + (uv.x - 0.5) * min(aspect / (16.0 / 9.0), 1.0);
+
+  float height = snoise(vec2(waveX * 2.0 + uTime * 0.1, uTime * 0.25)) * 0.5 * uAmplitude;
   height = exp(height);
   height = (uv.y * 2.0 - height + 0.2);
   float intensity = 0.6 * height;

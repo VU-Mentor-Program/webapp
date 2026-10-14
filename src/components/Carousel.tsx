@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import FadeIn from "./Fadein-Wrapper";
 import { ImageModal } from "./ImageModal";
 import ScrollReveal from "./ScrollReveal";
 
@@ -140,7 +139,7 @@ const HomeCarousel: React.FC = () => {
   // Handle empty state
   if (!images.length) {
     return (
-      <FadeIn duration={100}>
+      <>
         <div className="text-center mb-8 w-full">
           <h2 className="text-3xl font-bold text-white mb-4 w-full">{t("title")}</h2>
           <p className="text-lg text-blue-300 font-medium mb-4 w-full">{t("subtitle")}</p>
@@ -148,15 +147,14 @@ const HomeCarousel: React.FC = () => {
         <div className="text-center py-12 w-full">
           <p className="text-gray-500 w-full">No images available yet</p>
         </div>
-      </FadeIn>
+      </>
     );
   }
 
   return (
-    <FadeIn duration={100}>
+    <>
       {/* Header Section */}
       <ScrollReveal
-        baseRotation={0}
         containerClassName="text-center mb-2"
         textClassName="text-3xl font-bold text-white"
       >
@@ -280,7 +278,7 @@ const HomeCarousel: React.FC = () => {
         )}
         </div>
       </div>
-    </FadeIn>
+    </>
   );
 };
 

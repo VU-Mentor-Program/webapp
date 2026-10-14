@@ -33,7 +33,7 @@ const Team: React.FC<TeamProps> = ({ title, description, background, onMemberCli
   const bottomFour = members.slice(2, 6);
   const extraMembers = members.slice(6);
 
-  const toTiltedCard = (m: IMember) => {
+  const toTiltedCard = (m: IMember, i: number) => {
     const role = intl.formatMessage({
       id: `roles.${m.study?.toLowerCase() ?? "defaultRole"}`,
       defaultMessage: m.study ?? "Member",
@@ -55,7 +55,7 @@ const Team: React.FC<TeamProps> = ({ title, description, background, onMemberCli
     );
 
     return (
-      <div key={m.name} className="w-[220px] md:w-[250px] flex flex-col items-center flex-shrink-0">
+      <FadeIn key={m.name} delay={i * 60} className="w-[220px] md:w-[250px] flex flex-col items-center flex-shrink-0">
 
           <div
             onClick={onMemberClick ? () => onMemberClick(m) : undefined}
@@ -81,16 +81,15 @@ const Team: React.FC<TeamProps> = ({ title, description, background, onMemberCli
           <p className="text-lg md:text-xl font-bold">{m.full_name}</p>
           <p className="text-sm md:text-base text-gray-300 mt-1">{role}</p>
         </div>
-      </div>
+      </FadeIn>
     );
   };
 
   return (
-    <FadeIn duration={100} className="mt-6">
+    <div className="mt-6">
       <section className={clsx(background || "")}>
         <div className={clsx("text-center", description && "mb-4")}>
           <ScrollReveal
-            baseRotation={0}
             containerClassName="py-4 lg:py-8"
             textClassName="text-3xl sm:text-4xl"
           >
@@ -118,7 +117,7 @@ const Team: React.FC<TeamProps> = ({ title, description, background, onMemberCli
           )}
           </div>
       </section>
-    </FadeIn>
+    </div>
   );
 };
 
