@@ -47,7 +47,7 @@ export default function Home() {
           </SectionWrapper>
 
           {/* Impact Stats — sign-ups/events/members refresh weekly (npm run stats); WhatsApp + event lists are edited by hand in data/stats.json */}
-          <SectionWrapper id="impact" label="Event Stats This Year" divider={true} glass={true}>
+          <SectionWrapper id="impact" label="Event Stats This Year" divider={true}>
             <p className="text-gray-500 text-xs italic" style={{ textAlign: "center", marginTop: "-4px", marginBottom: "16px" }}>
               Sign-ups only count events with a sign-up form · updated weekly
             </p>
@@ -55,7 +55,7 @@ export default function Home() {
           </SectionWrapper>
 
           {/* FAQ */}
-          <SectionWrapper id="faq" label="FAQ" divider={true} glass={true}>
+          <SectionWrapper id="faq" label="FAQ" divider={true}>
             <FAQ />
           </SectionWrapper>
 
@@ -65,7 +65,7 @@ export default function Home() {
           </SectionWrapper>
 
           {/* Feedback Forms — hidden for now; uncomment (and the FormsAccordion import) to bring back
-          <SectionWrapper id="help-us-out" label="Feedback" divider={true} glass={true}>
+          <SectionWrapper id="help-us-out" label="Feedback" divider={true}>
             <FormsAccordion />
           </SectionWrapper>
           */}

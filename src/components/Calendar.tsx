@@ -17,7 +17,7 @@ export const Calendar: React.FC = () => {
         {t("title")}
       </ScrollReveal>
       <div>
-        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 sm:p-6 md:p-8 max-w-5xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <UpcomingEvents />
 
           <div className="text-center mt-8">
