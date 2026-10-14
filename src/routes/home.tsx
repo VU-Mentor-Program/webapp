@@ -12,6 +12,7 @@ import { PageTransition } from "../components/PageTransition";
 import SectionWrapper from "../components/SectionWrapper";
 import PartnerLogos from "../components/PartnerLogos";
 import Stats from "../components/Stats";
+import ScrollReveal from "../components/ScrollReveal";
 import { SocialLinks } from "../components/social-link";
 import { logoImages, seagullImages } from "../assets/images";
 import { FaChessKnight } from "react-icons/fa";
@@ -37,17 +38,20 @@ export default function Home() {
           <Hero />
 
           {/* Industry connections */}
-          <SectionWrapper id="industry" divider={true} className="!py-14 md:!py-20">
+          <SectionWrapper id="industry" className="!py-14 md:!py-20">
             <PartnerLogos />
           </SectionWrapper>
 
           {/* Gallery */}
-          <SectionWrapper label="Gallery" divider={true}>
+          <SectionWrapper>
             <HomeCarousel />
           </SectionWrapper>
 
           {/* Impact Stats — sign-ups/events/members refresh weekly (npm run stats); WhatsApp + event lists are edited by hand in data/stats.json */}
-          <SectionWrapper id="impact" label="Event Stats This Year" divider={true}>
+          <SectionWrapper id="impact">
+            <ScrollReveal containerClassName="text-center mb-2" textClassName="text-3xl sm:text-4xl text-white">
+              Event Stats This Year
+            </ScrollReveal>
             <p className="text-gray-500 text-xs italic" style={{ textAlign: "center", marginTop: "-4px", marginBottom: "16px" }}>
               Sign-ups only count events with a sign-up form · updated weekly
             </p>
@@ -55,23 +59,23 @@ export default function Home() {
           </SectionWrapper>
 
           {/* FAQ */}
-          <SectionWrapper id="faq" label="FAQ" divider={true}>
+          <SectionWrapper id="faq">
             <FAQ />
           </SectionWrapper>
 
           {/* Team */}
-          <SectionWrapper id="team" label="Team" divider={true}>
+          <SectionWrapper id="team">
             <Team title="Meet the 2026-2027 Team" />
           </SectionWrapper>
 
           {/* Feedback Forms — hidden for now; uncomment (and the FormsAccordion import) to bring back
-          <SectionWrapper id="help-us-out" label="Feedback" divider={true}>
+          <SectionWrapper id="help-us-out">
             <FormsAccordion />
           </SectionWrapper>
           */}
 
           {/* Calendar */}
-          <SectionWrapper id="calendar" label="Schedule" divider={true}>
+          <SectionWrapper id="calendar">
             <Calendar />
           </SectionWrapper>
 

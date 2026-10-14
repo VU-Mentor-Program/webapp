@@ -42,7 +42,7 @@ export default function Events({ season = "current" }: { season?: "current" | "2
           </div>
 
           {/* Event Galleries */}
-          <SectionWrapper label="Event Galleries" divider={true}>
+          <SectionWrapper>
             <div style={{ display: 'block', width: '100%' }}>
               {Object.entries(galleries).map(([key, gallery]) => (
                 <div key={key} style={{ marginBottom: '4rem' }}>
@@ -61,7 +61,7 @@ export default function Events({ season = "current" }: { season?: "current" | "2
 
           {/* More Events Coming Soon */}
           {!archived && (
-          <SectionWrapper label="Stay Tuned" divider={true} glass={true}>
+          <SectionWrapper glass={true}>
             <div style={{ display: 'block', width: '100%', textAlign: 'center' }}>
               <h2 className="text-2xl font-semibold text-emerald-400" style={{ display: 'block', width: '100%', marginBottom: '1rem' }}>
                 More Events Coming Soon!

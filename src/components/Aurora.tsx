@@ -114,14 +114,35 @@ void main() {
 
 interface AuroraProps {
   colorStops?: string[];
+  /** palettes from the top to the bottom of the page; when set, the aurora glides between them as you scroll */
+  scrollColorStops?: string[][];
   amplitude?: number;
   blend?: number;
   time?: number;
   speed?: number;
 }
 
+type RGB = [number, number, number];
+
+const toRgb = (hex: string): RGB => {
+  const c = new Color(hex);
+  return [c.r, c.g, c.b];
+};
+
+// How far along the scrollColorStops the page is, 0 at the top to (palettes - 1) at the bottom
+const scrollPosition = (paletteCount: number) => {
+  const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = scrollable > 0 ? Math.min(Math.max(window.scrollY / scrollable, 0), 1) : 0;
+  return progress * (paletteCount - 1);
+};
+
+// fraction of the remaining distance the colours move each frame, so they glide instead of jumping
+const COLOR_EASING = 0.06;
+
+const DEFAULT_COLOR_STOPS = ['#1e3a8a', '#0d9488', '#34d399'];
+
 export default function Aurora(props: AuroraProps) {
-  const { colorStops = ['#1e3a8a', '#0d9488', '#34d399'], amplitude = 1.0, blend = 0.5 } = props;
+  const { amplitude = 1.0, blend = 0.5 } = props;
   const propsRef = useRef<AuroraProps>(props);
   propsRef.current = props;
 
@@ -160,10 +181,26 @@ export default function Aurora(props: AuroraProps) {
       delete geometry.attributes.uv;
     }
 
-    const colorStopsArray = colorStops.map(hex => {
-      const c = new Color(hex);
-      return [c.r, c.g, c.b];
-    });
+    // colours are read from props every frame; hex parsing is cached until the props change
+    let parsed: { source?: string[] | string[][]; palettes: RGB[][] } = { palettes: [] };
+    const paletteRgbs = (): RGB[][] => {
+      const { scrollColorStops, colorStops = DEFAULT_COLOR_STOPS } = propsRef.current;
+      const source = scrollColorStops ?? colorStops;
+      if (parsed.source !== source) {
+        parsed = { source, palettes: (scrollColorStops ?? [colorStops]).map((p) => p.map(toRgb)) };
+      }
+      return parsed.palettes;
+    };
+
+    const targetColors = (): RGB[] => {
+      const palettes = paletteRgbs();
+      if (palettes.length === 1) return palettes[0];
+      const pos = scrollPosition(palettes.length);
+      const from = Math.min(Math.floor(pos), palettes.length - 2);
+      const t = pos - from;
+      return palettes[from].map((c, i) => c.map((v, k) => v + (palettes[from + 1][i][k] - v) * t) as RGB);
+    };
+    const currentColors = targetColors().map((c) => [...c] as RGB);
 
     program = new Program(gl, {
       vertex: VERT,
@@ -171,7 +208,7 @@ export default function Aurora(props: AuroraProps) {
       uniforms: {
         uTime: { value: 0 },
         uAmplitude: { value: amplitude },
-        uColorStops: { value: colorStopsArray },
+        uColorStops: { value: currentColors },
         uResolution: { value: [ctn.offsetWidth, ctn.offsetHeight] },
         uBlend: { value: blend }
       }
@@ -188,10 +225,10 @@ export default function Aurora(props: AuroraProps) {
         program.uniforms.uTime.value = time * speed * 0.1;
         program.uniforms.uAmplitude.value = propsRef.current.amplitude ?? 1.0;
         program.uniforms.uBlend.value = propsRef.current.blend ?? blend;
-        const stops = propsRef.current.colorStops ?? colorStops;
-        program.uniforms.uColorStops.value = stops.map((hex: string) => {
-          const c = new Color(hex);
-          return [c.r, c.g, c.b];
+        const target = targetColors();
+        program.uniforms.uColorStops.value = currentColors.map((c, i) => {
+          for (let k = 0; k < 3; k++) c[k] += (target[i][k] - c[k]) * COLOR_EASING;
+          return [...c];
         });
         renderer.render({ scene: mesh });
       }
@@ -208,7 +245,7 @@ export default function Aurora(props: AuroraProps) {
       }
       gl.getExtension('WEBGL_lose_context')?.loseContext();
     };
-  }, [amplitude, blend, colorStops]);
+  }, [amplitude, blend]);
 
   return <div ref={ctnDom} className="w-full h-full" />;
 }
