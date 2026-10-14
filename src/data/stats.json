@@ -2,12 +2,12 @@
   "stats": [
     {
       "key": "eventSignups",
-      "value": 220,
+      "value": 230,
       "suffix": "+"
     },
     {
       "key": "eventsHosted",
-      "value": 5,
+      "value": 6,
       "suffix": ""
     },
     {

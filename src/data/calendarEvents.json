@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-11T19:18:06.100Z",
+  "generated": "2026-10-14T13:35:43.260Z",
   "calendarId": "c_8587df64148f09cdec693c7348104a948c95a65d02ca3f579b41fab013b9ab73@group.calendar.google.com",
   "events": [
     {
@@ -62,9 +62,10 @@
     {
       "id": "58bk6papm86fqgoqau1rv2dk5c@google.com",
       "title": "Halloween Party!",
-      "start": "2026-10-30T18:00:00.000Z",
-      "end": "2026-10-30T22:00:00.000Z",
-      "allDay": false
+      "start": "2026-10-31T22:00:00.000Z",
+      "end": "2026-11-01T03:00:00.000Z",
+      "allDay": false,
+      "location": "THE OTHER SIDE, Rigakade 10, 1013 BC Amsterdam, Netherlands"
     }
   ]
 }
