@@ -22,7 +22,7 @@ const FormAccordionItem: React.FC<FormAccordionItemProps> = ({ link, title, inde
       <div
         className={`rounded-lg overflow-hidden mb-4 transition-all duration-300 ${
           isOpen
-            ? "bg-white/10 backdrop-blur-md border border-white/15 border-l-2 border-l-blue-500 shadow-lg shadow-blue-500/5"
+            ? "bg-white/10 backdrop-blur-md border border-white/15 border-l-2 border-l-blue-500"
             : "bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/8"
         }`}
       >

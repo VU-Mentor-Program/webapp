@@ -175,7 +175,7 @@ export const ChessBoard: React.FC<ChessBoardProps> = ({
     <div className={`relative select-none ${shake ? "chess-shake" : ""}`} style={{ width: "min(100%, 640px)" }}>
       <div
         ref={boardRef}
-        className="grid grid-cols-8 rounded-lg overflow-hidden shadow-2xl border border-white/10"
+        className="grid grid-cols-8 rounded-lg overflow-hidden border border-white/10"
         style={{ aspectRatio: "1 / 1", touchAction: "none" }}
         onPointerDownCapture={onPointerDownCapture}
         onPointerDown={handlePointerDown}

@@ -136,7 +136,7 @@ export const UpcomingEvents: React.FC = () => {
                   viewport={{ once: true, margin: "-40px" }}
                   transition={{ duration: 0.3, delay: Math.min(i, 5) * 0.05 }}
                   className={`flex items-stretch gap-4 rounded-2xl border p-3 sm:p-4 transition-colors ${
-                    isNext ? "bg-emerald-500/10 border-emerald-400/40 shadow-lg shadow-emerald-500/10" : "bg-white/5 border-white/10 hover:border-white/20"
+                    isNext ? "bg-emerald-500/10 border-emerald-400/40" : "bg-white/5 border-white/10 hover:border-white/20"
                   }`}
                 >
                   <div

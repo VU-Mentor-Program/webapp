@@ -6,7 +6,7 @@ interface ChessButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>
 }
 
 const VARIANTS = {
-  primary: "bg-emerald-500 hover:bg-emerald-400 text-white shadow-lg shadow-emerald-500/25",
+  primary: "bg-emerald-500 hover:bg-emerald-400 text-white",
   glass: "bg-white/10 hover:bg-white/20 border border-white/10 text-white",
   danger: "bg-white/10 hover:bg-red-500/30 border border-white/10 hover:border-red-400/40 text-white",
 } as const;

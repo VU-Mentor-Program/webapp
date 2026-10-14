@@ -236,7 +236,7 @@ export const AnimatedHeader: React.FC = () => {
           {navCategories.map((category, idx) => (
             <div
               key={category.id}
-              className="relative flex flex-col gap-1.5 p-1.5 md:p-2.5 rounded-xl min-w-0 flex-1 h-auto md:h-full shadow-lg"
+              className="relative flex flex-col gap-1.5 p-1.5 md:p-2.5 rounded-xl min-w-0 flex-1 h-auto md:h-full"
               ref={setCardRef(idx)}
               style={{ backgroundColor: category.bgColor, color: category.textColor }}
             >
@@ -254,7 +254,7 @@ export const AnimatedHeader: React.FC = () => {
                       no-underline cursor-pointer
                       transition-all duration-300 hover:bg-white/25 hover:border-white/50 hover:scale-105"
                   >
-                  <link.icon className="text-xl md:text-2xl text-white drop-shadow-sm" />
+                  <link.icon className="text-xl md:text-2xl text-white" />
                   </Link>
                 ))}
               </div>

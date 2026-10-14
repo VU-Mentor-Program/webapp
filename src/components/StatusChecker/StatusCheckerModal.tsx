@@ -118,8 +118,7 @@ export const StatusCheckerModal: React.FC<StatusCheckerModalProps> = ({ onClose 
                     disabled={!canCheck || loading}
                     className="w-full py-3 bg-emerald-500 hover:bg-emerald-600
                              rounded-lg font-semibold text-white transition-all duration-300
-                             disabled:opacity-50 disabled:cursor-not-allowed
-                             shadow-lg hover:shadow-xl transform hover:scale-105"
+                             disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105"
                 >
                     {loading ? t("checking") : t("checkButton")}
                 </button>

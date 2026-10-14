@@ -21,7 +21,7 @@ export const ErrorPage: React.FC = () => {
 
             {/* Error Message */}
             <div className="mb-8 w-full px-8" style={{ maxWidth: '800px' }}>
-                <div className="bg-gray-900/40 border border-red-500/30 rounded-xl p-6 backdrop-blur-sm shadow-lg" style={{ width: '100%', minWidth: '300px' }}>
+                <div className="bg-gray-900/40 border border-red-500/30 rounded-xl p-6 backdrop-blur-sm" style={{ width: '100%', minWidth: '300px' }}>
                     <p className="text-lg leading-relaxed" style={{ wordBreak: 'break-word', whiteSpace: 'normal', overflowWrap: 'break-word', wordWrap: 'break-word', width: '100%', display: 'block', minWidth: '250px' }}>
                         {t("message")}
                     </p>
@@ -31,7 +31,7 @@ export const ErrorPage: React.FC = () => {
             {/* Back to Home Button */}
             <a
                 href="#/"
-                className="inline-block bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                className="inline-block bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105"
             >
                 {t("back_home")}
             </a>

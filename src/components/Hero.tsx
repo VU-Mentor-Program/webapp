@@ -15,7 +15,7 @@ export const Hero: React.FC = () => {
           <Logo />
 
           <video
-            className="w-full max-w-[36rem] rounded-2xl border border-white/10 shadow-lg"
+            className="w-full max-w-[36rem] rounded-2xl border border-white/10"
             src="/webapp/assets/images/videos/mentor_program_intro.mp4"
             autoPlay
             muted

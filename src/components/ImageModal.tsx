@@ -145,12 +145,12 @@ export const ImageModal: React.FC<ImageModalProps> = ({
               transition: 'all 0.2s ease'
             }}
             onMouseEnter={(e) => {
-              const target = e.target as HTMLElement;
+              const target = e.currentTarget;
               target.style.backgroundColor = 'rgba(255, 255, 255, 1)';
               target.style.transform = 'translateY(-50%) scale(1.1)';
             }}
             onMouseLeave={(e) => {
-              const target = e.target as HTMLElement;
+              const target = e.currentTarget;
               target.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
               target.style.transform = 'translateY(-50%) scale(1)';
             }}
@@ -194,12 +194,12 @@ export const ImageModal: React.FC<ImageModalProps> = ({
               transition: 'all 0.2s ease'
             }}
             onMouseEnter={(e) => {
-              const target = e.target as HTMLElement;
+              const target = e.currentTarget;
               target.style.backgroundColor = 'rgba(255, 255, 255, 1)';
               target.style.transform = 'translateY(-50%) scale(1.1)';
             }}
             onMouseLeave={(e) => {
-              const target = e.target as HTMLElement;
+              const target = e.currentTarget;
               target.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
               target.style.transform = 'translateY(-50%) scale(1)';
             }}

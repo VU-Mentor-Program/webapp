@@ -45,7 +45,7 @@ const Team: React.FC<TeamProps> = ({ title, description, background, onMemberCli
           <div className="absolute top-2 right-2">
             <CircleFlag
               countryCode={m.country.toLowerCase()}
-              className="rounded-full shadow-lg"
+              className="rounded-full"
               width="32"
               height="32"
             />

@@ -204,7 +204,7 @@ const EventCarousel: React.FC<EventCarouselProps> = ({
                     key={index} 
                     className="flex-shrink-0 w-full h-72 md:h-96 lg:h-[28rem] px-2"
                   >
-                    <div className="w-full h-full rounded-lg overflow-hidden border border-white/15 shadow-lg">
+                    <div className="w-full h-full rounded-lg overflow-hidden border border-white/15">
                       <img
                         src={src}
                         alt={`${title} ${index + 1}`}
@@ -236,7 +236,7 @@ const EventCarousel: React.FC<EventCarouselProps> = ({
               className="absolute top-1/2 left-4 transform -translate-y-1/2 z-20
                          bg-black/40 backdrop-blur-md text-white p-3 rounded-full 
                          hover:bg-black/60 hover:scale-110 transition-all duration-300
-                         border border-white/30 shadow-lg hover:shadow-xl
+                         border border-white/30
                          focus:outline-none focus:ring-2 focus:ring-white/50
                          hidden md:block"
               aria-label="Previous image"
@@ -250,7 +250,7 @@ const EventCarousel: React.FC<EventCarouselProps> = ({
               className="absolute top-1/2 right-4 transform -translate-y-1/2 z-20
                          bg-black/40 backdrop-blur-md text-white p-3 rounded-full 
                          hover:bg-black/60 hover:scale-110 transition-all duration-300
-                         border border-white/30 shadow-lg hover:shadow-xl
+                         border border-white/30
                          focus:outline-none focus:ring-2 focus:ring-white/50
                          hidden md:block"
               aria-label="Next image"
@@ -271,7 +271,7 @@ const EventCarousel: React.FC<EventCarouselProps> = ({
                 onClick={() => goToSlide(index)}
                 className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
                   index + 1 === currentIndex
-                    ? 'bg-white scale-125 shadow-md'
+                    ? 'bg-white scale-125'
                     : 'bg-white/50 hover:bg-white/70 hover:scale-110'
                 }`}
                 aria-label={`Go to image ${index + 1}`}

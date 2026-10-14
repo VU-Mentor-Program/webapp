@@ -46,7 +46,7 @@ export function ModeSwitcher<T extends string>({ options, value, onChange, size 
             {active && (
               <motion.span
                 layoutId={`${layoutGroup}-active`}
-                className="absolute inset-0 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/30"
+                className="absolute inset-0 rounded-full bg-emerald-500"
                 transition={{ type: "spring", stiffness: 420, damping: 32 }}
               />
             )}
