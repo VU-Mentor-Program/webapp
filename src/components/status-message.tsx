@@ -3,7 +3,7 @@ import { Logo } from "./logo";
 import { LoadingAnimation } from "./LoadingAnimation";
 import { useTranslations } from "../contexts/TranslationContext";
 import Confetti from "react-confetti";
-import { seagullImages } from "../assets/images";
+import { mascotImages } from "../assets/images";
 
 interface StatusMessageProps {
     status: "loading" | "error" | "success" | "idle";
@@ -51,8 +51,8 @@ export const StatusMessage: React.FC<StatusMessageProps> = ({
             <div className="flex flex-col items-center justify-center h-screen text-white text-center px-5">
                 <Logo />
                 <img 
-                    src={seagullImages.sad} 
-                    alt="Sad seagull" 
+                    src={mascotImages.gryphon}
+                    alt="Kevyn the Gryphon" 
                     className="w-32 h-32 md:w-40 md:h-40 mb-8 object-contain"
                     style={{ animation: 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite' }}
                 />
@@ -87,8 +87,8 @@ export const StatusMessage: React.FC<StatusMessageProps> = ({
                     <Logo />
                     {isAccept && (
                         <img 
-                            src={seagullImages.starEyes} 
-                            alt="Excited seagull" 
+                            src={mascotImages.gryphon}
+                            alt="Kevyn the Gryphon" 
                             className="w-32 h-32 md:w-40 md:h-40 mb-8 object-contain"
                             style={{ animation: 'bounce 2s infinite' }}
                         />

@@ -719,11 +719,7 @@ export const logoImages = {
   white: '/webapp/assets/images/logos/2026-2027.png',
 } as const;
 
-// Seagull mascot images
-export const seagullImages = {
-  normal: '/webapp/assets/images/logos/seagullimages/normalseagul.png',
-  chipInMouth: '/webapp/assets/images/logos/seagullimages/seagulchipinmouth.png',
-  confused: '/webapp/assets/images/logos/seagullimages/seagullconfused.png',
-  sad: '/webapp/assets/images/logos/seagullimages/seagullsad.png',
-  starEyes: '/webapp/assets/images/logos/seagullimages/seagullwithstareyes.png',
+// Mascot: Kevyn the Gryphon (white line art on a transparent background)
+export const mascotImages = {
+  gryphon: '/webapp/assets/images/logos/kevyn-gryphon.png',
 } as const;

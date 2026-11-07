@@ -4,7 +4,7 @@ import { SocialLinks } from "./social-link";
 import JoinCommunityButton from "./JoinCommunityButton";
 import FadeIn from "./Fadein-Wrapper";
 import HeroPhotoColumns from "./HeroPhotoColumns";
-import { seagullImages } from "../assets/images";
+import { mascotImages } from "../assets/images";
 
 export const Hero: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -54,8 +54,8 @@ export const Hero: React.FC = () => {
           <SocialLinks />
 
           <img 
-            src={seagullImages.chipInMouth} 
-            alt="Seagull mascot" 
+            src={mascotImages.gryphon}
+            alt="Kevyn the Gryphon" 
             className="w-20 h-20 md:w-24 md:h-24 object-contain opacity-80 hover:opacity-100 transition-opacity mt-4"
           />
         </div>

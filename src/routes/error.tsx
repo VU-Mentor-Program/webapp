@@ -2,7 +2,7 @@ import React from "react";
 import { Logo } from "../components/logo";
 import { useTranslations } from "../contexts/TranslationContext";
 import { SocialLinks } from "../components/social-link";
-import { seagullImages } from "../assets/images";
+import { mascotImages } from "../assets/images";
 
 export const ErrorPage: React.FC = () => {
     const t = useTranslations("errorPage");
@@ -11,10 +11,10 @@ export const ErrorPage: React.FC = () => {
         <div className="flex flex-col items-center justify-center h-screen text-white text-center px-5">
             <Logo />
 
-            {/* Confused Seagull */}
+            {/* Mascot */}
             <img 
-                src={seagullImages.confused} 
-                alt="Confused seagull" 
+                src={mascotImages.gryphon}
+                alt="Kevyn the Gryphon" 
                 className="w-32 h-32 md:w-40 md:h-40 mb-8 object-contain"
                 style={{ animation: 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite' }}
             />

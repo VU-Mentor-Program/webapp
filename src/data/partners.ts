@@ -26,6 +26,7 @@ export const partnerGroups: PartnerGroup[] = [
       { name: "Meta", logo: `${LOGO_DIR}/meta.svg` },
       { name: "Disney Streaming", logo: `${LOGO_DIR}/disney-streaming.png` },
       { name: "Apple", logo: `${LOGO_DIR}/apple.svg` },
+      { name: "ING", logo: `${LOGO_DIR}/ing.png` },
     ],
   },
   {

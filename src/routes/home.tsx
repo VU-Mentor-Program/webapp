@@ -14,7 +14,7 @@ import PartnerLogos from "../components/PartnerLogos";
 import Stats from "../components/Stats";
 import ScrollReveal from "../components/ScrollReveal";
 import { SocialLinks } from "../components/social-link";
-import { logoImages, seagullImages } from "../assets/images";
+import { logoImages, mascotImages } from "../assets/images";
 import { FaChessKnight } from "react-icons/fa";
 
 const locale = "nl";
@@ -105,8 +105,8 @@ export default function Home() {
               </div>
 
               <img 
-                src={seagullImages.normal} 
-                alt="Seagull mascot" 
+                src={mascotImages.gryphon}
+                alt="Kevyn the Gryphon" 
                 className="w-24 h-24 md:w-28 md:h-28 object-contain opacity-60 hover:opacity-100 transition-opacity mt-4"
               />
 

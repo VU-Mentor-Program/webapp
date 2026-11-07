@@ -13,7 +13,7 @@ import { opposite, type Color } from "../theme";
 type ColorChoice = Color | "random";
 
 // One opponent per level, weakest to strongest. Names are proper nouns, so they are not translated.
-const BOT_NAMES = ["Seagull", "Tamagotchi", "Roomba", "Siri", "Vitor", "HAL 9000", "Kasparov", "Deep Blue", "Alan Turing", "Andrew Tanenbaum"] as const;
+const BOT_NAMES = ["Kevyn the Gryphon", "Tamagotchi", "Roomba", "Siri", "Vitor", "HAL 9000", "Kasparov", "Deep Blue", "Alan Turing", "Andrew Tanenbaum"] as const;
 const botNameFor = (level: number) => BOT_NAMES[Math.min(BOT_NAMES.length, Math.max(1, level)) - 1];
 
 const kingSquare = (chess: Chess, color: Color): Square | null => {
