@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-14T13:35:43.260Z",
+  "generated": "2026-11-07T19:00:28.364Z",
   "calendarId": "c_8587df64148f09cdec693c7348104a948c95a65d02ca3f579b41fab013b9ab73@group.calendar.google.com",
   "events": [
     {
@@ -50,13 +50,24 @@
       "title": "C++ Hackathon",
       "start": "2026-10-16T13:30:00.000Z",
       "end": "2026-10-16T15:30:00.000Z",
-      "allDay": false
+      "allDay": false,
+      "location": "NU-3A47",
+      "description": "Join us for our CP final exam prep!"
     },
     {
       "id": "1hvfsf91s5drrj4e29i2ilopft@google.com",
-      "title": "Equinix Data Centre Tour",
+      "title": "Equinix Data Centre Tour (Invite Only)",
       "start": "2026-10-26T08:00:00.000Z",
       "end": "2026-10-26T11:00:00.000Z",
+      "allDay": false,
+      "location": "Equinix AM4, Science Park 610, 1098 XH Amsterdam, Netherlands",
+      "description": "The first office tour of the year!"
+    },
+    {
+      "id": "7peeopk9m5nmql8frbr30q5bff@google.com",
+      "title": "Pre-event drinks",
+      "start": "2026-10-31T21:15:00.000Z",
+      "end": "2026-10-31T22:00:00.000Z",
       "allDay": false
     },
     {
@@ -66,6 +77,48 @@
       "end": "2026-11-01T03:00:00.000Z",
       "allDay": false,
       "location": "THE OTHER SIDE, Rigakade 10, 1013 BC Amsterdam, Netherlands"
+    },
+    {
+      "id": "6qb4hiec59pugu5or3keetv8h7@google.com",
+      "title": "Quantum Computing Guest Lecture (NU-2B17)",
+      "start": "2026-11-02T13:00:00.000Z",
+      "end": "2026-11-02T14:15:00.000Z",
+      "allDay": false
+    },
+    {
+      "id": "6s4rhiu258eafvcp7jb17cm36v@google.com",
+      "title": "Prosus Office Tour",
+      "start": "2026-11-11T15:00:00.000Z",
+      "end": "2026-11-11T18:00:00.000Z",
+      "allDay": false
+    },
+    {
+      "id": "4jkk6sjvnatb4fljh8c3ful7cv@google.com",
+      "title": "Study Session",
+      "start": "2026-11-16T16:30:00.000Z",
+      "end": "2026-11-16T18:15:00.000Z",
+      "allDay": false
+    },
+    {
+      "id": "1fo3a6hsbh8k4eccf9hngej0gq@google.com",
+      "title": "Intelligent Systems Exam Prep",
+      "start": "2026-11-20T16:30:00.000Z",
+      "end": "2026-11-20T18:15:00.000Z",
+      "allDay": false
+    },
+    {
+      "id": "7p1dj7d11n0av51pg9jdf3uc76@google.com",
+      "title": "Gingerbread Houses and Cookie Decoration",
+      "start": "2026-11-27T16:30:00.000Z",
+      "end": "2026-11-27T18:15:00.000Z",
+      "allDay": false
+    },
+    {
+      "id": "3jkib4k5ekiq8pk61o48dfa0cd@google.com",
+      "title": "Uber Office Tour",
+      "start": "2026-11-30T09:15:00.000Z",
+      "end": "2026-11-30T11:15:00.000Z",
+      "allDay": false
     }
   ]
 }

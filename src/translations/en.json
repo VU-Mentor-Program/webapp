@@ -187,7 +187,18 @@
     "git_workshop_date": "September 16, 2026",
     "git_workshop_desc": "From 'what is a commit?' to merge conflicts in one morning. Nobody force-pushed to main. We think.",
     "game_night_2026_date": "September 30, 2026",
-    "game_night_2026_desc": "Board games, card games and the kind of friendships that only survive a round of Uno."
+    "game_night_2026_desc": "Board games, card games and the kind of friendships that only survive a round of Uno.",
+    "exam_preps_2026_date": "09/2026 - 06/2027",
+    "guest_lectures_2026_date": "09/2026 - 06/2027",
+    "pumpkin_carving_2026_date": "October 7, 2026",
+    "cpp_hackathon_title": "C++ Hackathon",
+    "hackathon_2026_date": "October 16, 2026",
+    "equinix_tour_title": "Equinix Data Centre Tour",
+    "equinix_tour_date": "October 26, 2026",
+    "equinix_tour_desc": "Our first office tour of the year: a look inside one of Amsterdam's data centres, all the way up to the rooftop. Turns out the cloud is a very real building.",
+    "halloween_party_title": "Halloween Party",
+    "halloween_party_date": "October 31, 2026",
+    "halloween_party_desc": "Costumes on, lights down: Halloween night at The Other Side, from pre-drinks to the dance floor."
   },
   "forms": {
     "exam_title": "Exam Preparation Feedback",
