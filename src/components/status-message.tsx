@@ -8,11 +8,13 @@ import { mascotImages } from "../assets/images";
 interface StatusMessageProps {
     status: "loading" | "error" | "success" | "idle";
     type: "accept" | "decline";
+    onConfirm: () => void;
 }
 
 export const StatusMessage: React.FC<StatusMessageProps> = ({
     status,
     type,
+    onConfirm,
 }) => {
 
     const t = useTranslations("statusMessage");
@@ -31,6 +33,26 @@ export const StatusMessage: React.FC<StatusMessageProps> = ({
             return () => clearTimeout(timer);
         }
     }, [status, type]);
+
+    if (status === "idle") {
+        const isAccept = type === "accept";
+
+        return (
+            <div className="flex flex-col items-center justify-center h-screen text-white text-center px-5">
+                <Logo />
+                <p className="text-xl mb-8">
+                    {isAccept ? t("prompt_accept") : t("prompt_decline")}
+                </p>
+                <button
+                    type="button"
+                    onClick={onConfirm}
+                    className={`${isAccept ? "bg-emerald-500 hover:bg-emerald-600" : "bg-red-500 hover:bg-red-600"} text-white font-semibold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 cursor-pointer`}
+                >
+                    {isAccept ? t("button_accept") : t("button_decline")}
+                </button>
+            </div>
+        );
+    }
 
     if (status === "loading") {
         return (

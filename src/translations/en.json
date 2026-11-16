@@ -22,7 +22,11 @@
     "confetti_burst": "🎉 Confetti Burst! 🎉",
     "title_accept": "Accepted Spot",
     "title_decline": "Cancelled Spot",
-    "loading": "Loading... Please wait."
+    "loading": "Loading... Please wait.",
+    "prompt_accept": "Click the button below to confirm your spot.",
+    "prompt_decline": "Click the button below to cancel your spot.",
+    "button_accept": "Confirm my spot",
+    "button_decline": "Cancel my spot"
   },
   "faq": {
     "title": "Frequently Asked Questions",

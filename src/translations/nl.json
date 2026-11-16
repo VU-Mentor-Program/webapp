@@ -22,7 +22,11 @@
     "confetti_burst": "🎉 Confetti Explosie! 🎉",
     "title_accept": "Geaccepteerde Plek",
     "title_decline": "Geannuleerde Plek",
-    "loading": "Laden... Een ogenblik geduld"
+    "loading": "Laden... Een ogenblik geduld",
+    "prompt_accept": "Klik op de knop hieronder om je plek te bevestigen.",
+    "prompt_decline": "Klik op de knop hieronder om je plek te annuleren.",
+    "button_accept": "Bevestig mijn plek",
+    "button_decline": "Annuleer mijn plek"
   },
   "faq": {
     "title": "Veelgestelde vragen",

@@ -6,12 +6,13 @@ import { PageTransition } from "../components/PageTransition";
 
 const Decline: React.FC = () => {
     const [searchParams] = useSearchParams();
-    const status = useApiRequest(searchParams);
+    const { status, submit } = useApiRequest(searchParams);
 
     return (
         <PageTransition>
             <StatusMessage
                 status={status}
+                onConfirm={submit}
                 type="decline"
             />
         </PageTransition>

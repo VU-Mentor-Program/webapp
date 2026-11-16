@@ -1,50 +1,47 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { API_URL } from "../utils/apiUtils";
 
 type FetchStatus = "idle" | "loading" | "success" | "error";
 
+// The request is only sent when the user clicks the confirm button, never on page load.
+// Outlook / Microsoft Defender Safe Links open every link in an email in a headless
+// browser (and run its JavaScript) to scan it, so firing on load made the scanner
+// accept or decline spots before the recipient had clicked anything.
 export function useApiRequest(allParams: URLSearchParams) {
     const [status, setStatus] = useState<FetchStatus>("idle");
 
-    useEffect(() => {
+    const submit = useCallback(async () => {
         if (!API_URL) {
             return;
         }
 
         setStatus("loading");
 
-        const fetchData = async () => {
-            try {
-                const params = new URLSearchParams(allParams);
+        try {
+            const data = {
+                email: allParams.get('email'),
+                type: allParams.get('type')
+            }
 
-                const data = {
-                    email: params.get('email'),
-                    type: params.get('type')
-                }
+            const response = await fetch(API_URL, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
 
-                const response = await fetch(API_URL, {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                if (!response.ok) {
-                    // Redirect to error page immediately
-                    window.location.hash = '#/error';
-                    return;
-                } else {
-                    setStatus("success");
-                }
-            } catch (error) {
+            if (!response.ok) {
                 // Redirect to error page immediately
                 window.location.hash = '#/error';
+                return;
             }
-        };
-
-        fetchData();
+            setStatus("success");
+        } catch {
+            // Redirect to error page immediately
+            window.location.hash = '#/error';
+        }
     }, [allParams]);
 
-    return status;
+    return { status, submit };
 }
